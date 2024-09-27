@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "12826503565",
+    "project_id": "virtual-tourism-7625f",
+    "storage_bucket": "virtual-tourism-7625f.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:12826503565:android:2759028ed589fb252ef5c4",
+        "android_client_info": {
+          "package_name": "com.example.virtual_tourism"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyACWBa7fup4vD0LRMXeIaJgKbijMKgHhdA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

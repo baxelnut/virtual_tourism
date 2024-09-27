@@ -1,0 +1,25 @@
+{
+  "flutter": {
+    "platforms": {
+      "android": {
+        "default": {
+          "projectId": "virtual-tourism-7625f",
+          "appId": "1:12826503565:android:2759028ed589fb252ef5c4",
+          "fileOutput": "android/app/google-services.json"
+        }
+      },
+      "dart": {
+        "lib/firebase_options.dart": {
+          "projectId": "virtual-tourism-7625f",
+          "configurations": {
+            "android": "1:12826503565:android:2759028ed589fb252ef5c4",
+            "ios": "1:12826503565:ios:e58d43f3dfcdd9152ef5c4",
+            "macos": "1:12826503565:ios:e58d43f3dfcdd9152ef5c4",
+            "web": "1:12826503565:web:4ef338522d7a22102ef5c4",
+            "windows": "1:12826503565:web:8b0f065d5347f8822ef5c4"
+          }
+        }
+      }
+    }
+  }
+}
