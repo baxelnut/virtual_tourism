@@ -37,11 +37,11 @@ class ExplorePage extends StatelessWidget {
                 subtitle:
                     'Lorem ipsum dolor sit amet, consectetur adipiscing elit',
               ),
-              SizedBox(
+              const SizedBox(
                 height: 50,
               ),
               const CardsLinear(),
-              SizedBox(
+              const SizedBox(
                 height: 50,
               ),
               const CardsEmerged()

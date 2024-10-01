@@ -33,7 +33,7 @@ class _CardsLinearState extends State<CardsLinear> {
           width: 100,
           height: 120,
           decoration: BoxDecoration(
-            gradient: LinearGradient(
+            gradient: const LinearGradient(
               colors: [
                 Colors.black,
                 Colors.transparent,
