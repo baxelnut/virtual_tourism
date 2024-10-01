@@ -3,12 +3,15 @@ import 'package:panorama_viewer/panorama_viewer%20copy.dart';
 
 class ImageScreen extends StatelessWidget {
   final Image image;
-  const ImageScreen(this.image, {super.key});
+  final dynamic appBarTitle;
+  const ImageScreen(this.image, this.appBarTitle, {super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
+      appBar: AppBar(
+        title: Text(appBarTitle),
+      ),
       body: PanoramaViewer(
         child: image,
       ),

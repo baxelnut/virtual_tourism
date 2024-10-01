@@ -31,7 +31,7 @@ ThemeData lightMode = ThemeData(
       textStyle: const TextStyle(fontWeight: FontWeight.normal),
     ),
     headlineSmall: GoogleFonts.outfit(
-      textStyle: const TextStyle(fontWeight: FontWeight.normal),
+      textStyle: const TextStyle(fontWeight: FontWeight.bold),
     ),
     titleLarge: GoogleFonts.italiana(
       textStyle: const TextStyle(fontWeight: FontWeight.bold),
@@ -94,7 +94,7 @@ ThemeData darkMode = ThemeData(
       textStyle: const TextStyle(fontWeight: FontWeight.normal),
     ),
     headlineSmall: GoogleFonts.outfit(
-      textStyle: const TextStyle(fontWeight: FontWeight.normal),
+      textStyle: const TextStyle(fontWeight: FontWeight.bold),
     ),
     titleLarge: GoogleFonts.italiana(
       textStyle: const TextStyle(fontWeight: FontWeight.bold),

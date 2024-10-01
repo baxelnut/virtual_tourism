@@ -2,9 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:provider/provider.dart';
+import 'package:virtual_tourism/src/pages/explore/explore_page.dart';
+import 'package:virtual_tourism/src/pages/settings/settings_page.dart';
+import 'package:virtual_tourism/src/pages/tour/tour_page.dart';
 
 import 'data/theme/theme_provider.dart';
-import 'pages/badges/badges_page.dart';
+import 'pages/medals/medals_page.dart';
 import 'pages/home/home_page.dart';
 
 class MyApp extends StatefulWidget {
@@ -37,13 +40,13 @@ class _MyAppState extends State<MyApp> {
               case 0:
                 return const HomePage();
               case 1:
-                return const Placeholder();
+                return const TourPage();
               case 2:
-                return const Placeholder();
+                return const ExplorePage();
               case 3:
-                return const BadgesPage();
+                return const MedalsPage();
               case 4:
-                return const Placeholder();
+                return const SettingsPage();
               default:
                 return const HomePage();
             }
@@ -99,14 +102,14 @@ class _MyAppState extends State<MyApp> {
                       text: 'Tour',
                       textStyle: customTextStyle),
                   GButton(
-                      icon: Icons.search_rounded,
+                      icon: Icons.travel_explore_rounded,
                       iconSize: 30,
-                      text: 'Search',
+                      text: 'Explore',
                       textStyle: customTextStyle),
                   GButton(
-                      icon: Icons.badge_rounded,
+                      icon: Icons.military_tech_rounded,
                       iconSize: 30,
-                      text: 'Badges',
+                      text: 'Medals',
                       textStyle: customTextStyle),
                   GButton(
                       icon: Icons.settings_rounded,

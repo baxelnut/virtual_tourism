@@ -28,9 +28,8 @@ class Thumbnail extends StatelessWidget {
           // move to image screen
           Navigator.of(context).push(
             MaterialPageRoute(
-              builder: (context) => ImageScreen(
-                Image.asset(imagePath),
-              ),
+              builder: (context) => ImageScreen(Image.asset(imagePath),
+                  imagePath.split('/').last.split('.').first),
             ),
           );
         },
