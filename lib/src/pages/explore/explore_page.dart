@@ -7,6 +7,8 @@ import '../../components/cards_linear.dart';
 import '../../components/chips_component.dart';
 import '../home/user_overview.dart';
 
+// must be applied to all pages
+// padding: const EdgeInsets.symmetric(horizontal: 20),
 class ExplorePage extends StatelessWidget {
   const ExplorePage({super.key});
 
@@ -16,38 +18,91 @@ class ExplorePage extends StatelessWidget {
     return Scaffold(
       body: SingleChildScrollView(
         child: Padding(
-          // must be applied to all pages
-          padding: const EdgeInsets.symmetric(vertical: 50, horizontal: 20),
+          padding: const EdgeInsets.symmetric(vertical: 50),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const UserOverview(username: 'Jeremiah'),
-              const ChipsComponent(
-                  listOfThangz: ['Places', 'Conservation', 'News']),
+              homeHeader(),
               Padding(
-                padding: const EdgeInsets.symmetric(vertical: 15),
+                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
                 child: Text(
                   'Where do we go now?',
                   style: theme.textTheme.displayLarge,
                 ),
               ),
-              const CardsHeader(cardsTitle: 'Top Picks'),
-              const CardsCurved(
-                title: 'LOREM IPSUM',
-                subtitle:
-                    'Lorem ipsum dolor sit amet, consectetur adipiscing elit',
-              ),
+              topPicks(),
+              topCountries(),
+              popularDestionation(),
               const SizedBox(
-                height: 50,
+                height: 200,
               ),
-              const CardsLinear(),
-              const SizedBox(
-                height: 50,
-              ),
-              const CardsEmerged()
             ],
           ),
         ),
+      ),
+    );
+  }
+
+  Widget homeHeader() {
+    return const Column(
+      children: [
+        UserOverview(username: 'Basil'),
+        ChipsComponent(listOfThangz: ['Places', 'Conservation', 'News']),
+      ],
+    );
+  }
+
+  Widget topPicks() {
+    return const Column(
+      children: [
+        CardsHeader(cardsTitle: 'Top Picks'),
+        CardsCurved(
+          destination: 'LOREM IPSUM',
+          description:
+              'Lorem ipsum dolor sit amet, consectetur adipiscing elit',
+        ),
+      ],
+    );
+  }
+
+  Widget topCountries() {
+    final List<Map<String, String>> countries = [
+      {'flag': '🇮🇩', 'country': 'Indonesia'},
+      {'flag': '🇺🇸', 'country': 'United States'},
+      {'flag': '🇯🇵', 'country': 'Japan'},
+      {'flag': '🇬🇧', 'country': 'United Kingdom'},
+      {'flag': '🇮🇳', 'country': 'India'},
+    ];
+
+    return Column(
+      children: [
+        const CardsHeader(cardsTitle: 'Top Countries'),
+        SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          child: Row(
+            children: countries.map((countryData) {
+              return CardsLinear(
+                flag: countryData['flag']!,
+                country: countryData['country']!,
+              );
+            }).toList(),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget popularDestionation() {
+    return const Padding(
+      padding: EdgeInsets.symmetric(vertical: 25),
+      child: Column(
+        children: [
+          CardsHeader(cardsTitle: 'Popular'),
+          CardsEmerged(
+            country: 'Indonesia',
+            destination: 'Nusa Penida',
+          ),
+        ],
       ),
     );
   }

@@ -13,7 +13,7 @@ class _UserOverviewState extends State<UserOverview> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 15),
+      padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
       child: Row(
         children: [
           Expanded(
@@ -37,16 +37,24 @@ class _UserOverviewState extends State<UserOverview> {
           GestureDetector(
             onTap: () {
               showDialog(
-                  context: context,
-                  builder: (_) {
-                    return AlertDialog(
-                      title: Image.asset('assets/3d_avatar_21.png'),
-                    );
-                  });
+                context: context,
+                builder: (_) {
+                  return AlertDialog(
+                    title: AspectRatio(
+                      aspectRatio: 1.0,
+                      child: Image.asset(
+                        'assets/profile.jpg',
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                    content: const Text('This is your profile image',
+                        textAlign: TextAlign.center),
+                  );
+                },
+              );
             },
-            child: CircleAvatar(
-              child: Image.asset('assets/3d_avatar_21.png'),
-            ),
+            child: const CircleAvatar(
+                backgroundImage: AssetImage('assets/profile.jpg')),
           )
         ],
       ),
