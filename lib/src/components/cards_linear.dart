@@ -3,7 +3,8 @@ import 'package:flutter/material.dart';
 class CardsLinear extends StatefulWidget {
   final String flag;
   final String country;
-  const CardsLinear({super.key, required this.country, required this.flag});
+  final String imagePath;
+  const CardsLinear({super.key, required this.country, required this.flag, required this.imagePath});
 
   @override
   State<CardsLinear> createState() => _CardsLinearState();
@@ -27,7 +28,7 @@ class _CardsLinearState extends State<CardsLinear> {
             child: ClipRRect(
               borderRadius: BorderRadius.circular(20),
               child: Image.asset(
-                'assets/nusa_penida.jpeg',
+                widget.imagePath,
                 fit: BoxFit.cover,
                 width: screenSize.width / 3,
                 height: screenSize.width / 2,

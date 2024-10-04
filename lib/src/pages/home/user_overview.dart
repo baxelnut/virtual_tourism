@@ -47,7 +47,7 @@ class _UserOverviewState extends State<UserOverview> {
                         fit: BoxFit.cover,
                       ),
                     ),
-                    content: const Text('This is your profile image',
+                    content: const Text('This is your profile picture',
                         textAlign: TextAlign.center),
                   );
                 },

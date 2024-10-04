@@ -24,15 +24,16 @@ class ExplorePage extends StatelessWidget {
             children: [
               homeHeader(),
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
                 child: Text(
                   'Where do we go now?',
                   style: theme.textTheme.displayLarge,
                 ),
               ),
-              topPicks(),
+              topPicks(context),
               topCountries(),
-              popularDestionation(),
+              popularDestionation(context),
               const SizedBox(
                 height: 200,
               ),
@@ -52,14 +53,54 @@ class ExplorePage extends StatelessWidget {
     );
   }
 
-  Widget topPicks() {
-    return const Column(
+  Widget topPicks(BuildContext context) {
+    final List<Map<String, String>> topPicks = [
+      {
+        'destination': 'LOREM IPSUM',
+        'description':
+            'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+        'imagePath': 'assets/nusa_penida.jpeg'
+      },
+      {
+        'destination': 'LOREM IPSUM',
+        'description':
+            'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+        'imagePath': 'assets/nusa_penida.jpeg'
+      },
+      {
+        'destination': 'LOREM IPSUM',
+        'description':
+            'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+        'imagePath': 'assets/nusa_penida.jpeg'
+      },
+      {
+        'destination': 'LOREM IPSUM',
+        'description':
+            'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+        'imagePath': 'assets/nusa_penida.jpeg'
+      },
+      {
+        'destination': 'LOREM IPSUM',
+        'description':
+            'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+        'imagePath': 'assets/nusa_penida.jpeg'
+      },
+    ];
+
+    return Column(
       children: [
-        CardsHeader(cardsTitle: 'Top Picks'),
-        CardsCurved(
-          destination: 'LOREM IPSUM',
-          description:
-              'Lorem ipsum dolor sit amet, consectetur adipiscing elit',
+        const CardsHeader(cardsTitle: 'Popular'),
+        SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          child: Row(
+            children: topPicks.map((topPicksData) {
+              return CardsCurved(
+                destination: topPicksData['destination']!,
+                description: topPicksData['description']!,
+                imagePath: topPicksData['imagePath']!,
+              );
+            }).toList(),
+          ),
         ),
       ],
     );
@@ -67,11 +108,31 @@ class ExplorePage extends StatelessWidget {
 
   Widget topCountries() {
     final List<Map<String, String>> countries = [
-      {'flag': '🇮🇩', 'country': 'Indonesia'},
-      {'flag': '🇺🇸', 'country': 'United States'},
-      {'flag': '🇯🇵', 'country': 'Japan'},
-      {'flag': '🇬🇧', 'country': 'United Kingdom'},
-      {'flag': '🇮🇳', 'country': 'India'},
+      {
+        'flag': '🇮🇩',
+        'country': 'Indonesia',
+        'imagePath': 'assets/nusa_penida.jpeg'
+      },
+      {
+        'flag': '🇺🇸',
+        'country': 'United States',
+        'imagePath': 'assets/nusa_penida.jpeg'
+      },
+      {
+        'flag': '🇯🇵',
+        'country': 'Japan',
+        'imagePath': 'assets/nusa_penida.jpeg'
+      },
+      {
+        'flag': '🇬🇧',
+        'country': 'United Kingdom',
+        'imagePath': 'assets/nusa_penida.jpeg'
+      },
+      {
+        'flag': '🇮🇳',
+        'country': 'India',
+        'imagePath': 'assets/nusa_penida.jpeg'
+      },
     ];
 
     return Column(
@@ -84,6 +145,7 @@ class ExplorePage extends StatelessWidget {
               return CardsLinear(
                 flag: countryData['flag']!,
                 country: countryData['country']!,
+                imagePath: countryData['imagePath']!,
               );
             }).toList(),
           ),
@@ -92,15 +154,60 @@ class ExplorePage extends StatelessWidget {
     );
   }
 
-  Widget popularDestionation() {
-    return const Padding(
-      padding: EdgeInsets.symmetric(vertical: 25),
+  Widget popularDestionation(BuildContext context) {
+    final List<Map<String, String>> popular = [
+      {
+        'country': 'Indonesia',
+        'destination': 'Nusa Penida',
+        'imagePath': 'assets/nusa_penida.jpeg',
+      },
+      {
+        'country': 'United States',
+        'destination': 'Grand Canyon',
+        'imagePath': 'assets/nusa_penida.jpeg',
+      },
+      {
+        'country': 'Japan',
+        'destination': 'Mount Fuji',
+        'imagePath': 'assets/nusa_penida.jpeg',
+      },
+      {
+        'country': 'United Kingdom',
+        'destination': 'Stonehenge',
+        'imagePath': 'assets/nusa_penida.jpeg',
+      },
+      {
+        'country': 'India',
+        'destination': 'Taj Mahal',
+        'imagePath': 'assets/nusa_penida.jpeg',
+      },
+    ];
+    final double cardSize = MediaQuery.of(context).size.width / 2;
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 25),
       child: Column(
         children: [
-          CardsHeader(cardsTitle: 'Popular'),
-          CardsEmerged(
-            country: 'Indonesia',
-            destination: 'Nusa Penida',
+          const CardsHeader(cardsTitle: 'Popular'),
+          SizedBox(
+            height: cardSize, // height dynamic based on card size
+            child: RotatedBox(
+              quarterTurns: -1, // rotate content by 90 degrees
+              child: ListWheelScrollView(
+                itemExtent: cardSize, // item extent dynamic
+                squeeze: 1.05,
+                physics: const FixedExtentScrollPhysics(),
+                children: popular.map((popularData) {
+                  return RotatedBox(
+                    quarterTurns: 1, // rotate back normal orientation
+                    child: CardsEmerged(
+                      country: popularData['country']!,
+                      destination: popularData['destination']!,
+                      imagePath: popularData['imagePath']!,
+                    ),
+                  );
+                }).toList(),
+              ),
+            ),
           ),
         ],
       ),
