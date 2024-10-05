@@ -1,20 +1,19 @@
 import 'package:flutter/material.dart';
 
-class CardsEmerged extends StatefulWidget {
+import '../pages/home/image_screen.dart';
+
+class CardsEmerged extends StatelessWidget {
   final String country;
   final String destination;
+  final String thumbnailPath;
   final String imagePath;
   const CardsEmerged(
       {super.key,
       required this.country,
       required this.destination,
+      required this.thumbnailPath,
       required this.imagePath});
 
-  @override
-  State<CardsEmerged> createState() => _CardsEmergedState();
-}
-
-class _CardsEmergedState extends State<CardsEmerged> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -31,8 +30,8 @@ class _CardsEmergedState extends State<CardsEmerged> {
             ),
             child: ClipRRect(
               borderRadius: BorderRadius.circular(16),
-              child: Image.asset(
-                widget.imagePath,
+              child: Image.network(
+                thumbnailPath,
                 fit: BoxFit.cover,
                 width: screenSize.width / 2,
                 height: screenSize.width / 2,
@@ -80,14 +79,18 @@ class _CardsEmergedState extends State<CardsEmerged> {
                               ),
                             ),
                             Text(
-                              widget.country,
+                              country,
+                              overflow: TextOverflow.visible,
+                              maxLines: 2,
                               style: theme.textTheme.labelMedium
                                   ?.copyWith(color: theme.colorScheme.surface),
                             )
                           ],
                         ),
                         Text(
-                          widget.destination,
+                          destination,
+                          overflow: TextOverflow.ellipsis,
+                          maxLines: 1,
                           style: theme.textTheme.bodyLarge?.copyWith(
                               color: theme.colorScheme.surface,
                               fontWeight: FontWeight.bold),
@@ -116,7 +119,16 @@ class _CardsEmergedState extends State<CardsEmerged> {
                                       theme.colorScheme.onSecondary,
                                   backgroundColor: theme.colorScheme.secondary,
                                 ),
-                                onPressed: () {},
+                                onPressed: () {
+                                  Navigator.of(context).push(
+                                    MaterialPageRoute(
+                                      builder: (context) => ImageScreen(
+                                        image: Image.network(imagePath),
+                                        appBarTitle: destination,
+                                      ),
+                                    ),
+                                  );
+                                },
                                 child: const Text('Visit')),
                           ),
                         ),

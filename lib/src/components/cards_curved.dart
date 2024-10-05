@@ -1,20 +1,19 @@
 import 'package:flutter/material.dart';
 
-class CardsCurved extends StatefulWidget {
+import '../pages/home/image_screen.dart';
+
+class CardsCurved extends StatelessWidget {
   final String destination;
   final String description;
+  final String thumbnailPath;
   final String imagePath;
   const CardsCurved(
       {super.key,
       required this.destination,
       required this.description,
+      required this.thumbnailPath,
       required this.imagePath});
 
-  @override
-  State<CardsCurved> createState() => _CardsCurvedState();
-}
-
-class _CardsCurvedState extends State<CardsCurved> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -35,33 +34,44 @@ class _CardsCurvedState extends State<CardsCurved> {
           children: [
             Padding(
               padding: const EdgeInsets.all(5),
-              child: CircleAvatar(
-                radius: screenSize.width / 4,
-                backgroundImage: AssetImage(widget.imagePath),
+              child: InkWell(
+                child: CircleAvatar(
+                  radius: screenSize.width / 4,
+                  backgroundImage: AssetImage(thumbnailPath),
+                ),
+                onTap: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => ImageScreen(
+                        image: Image.asset(imagePath),
+                        appBarTitle: destination,
+                      ),
+                    ),
+                  );
+                },
               ),
             ),
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+              padding: const EdgeInsets.symmetric(horizontal: 8),
               child: Text(
-                widget.destination,
+                destination.toUpperCase(),
                 textAlign: TextAlign.center,
+                overflow: TextOverflow.ellipsis,
+                maxLines: 2,
                 style: theme.textTheme.headlineSmall?.copyWith(
                   color: theme.colorScheme.onPrimary,
                 ),
               ),
             ),
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
-              child: SizedBox(
-                height: 50,
-                child: Text(
-                  widget.description,
-                  overflow: TextOverflow.ellipsis,
-                  maxLines: 4,
-                  textAlign: TextAlign.center,
-                  style: theme.textTheme.labelMedium?.copyWith(
-                    color: theme.colorScheme.onPrimary,
-                  ),
+              padding: const EdgeInsets.only(right: 8, left: 14, top: 5),
+              child: Text(
+                description,
+                overflow: TextOverflow.ellipsis,
+                maxLines: 3,
+                textAlign: TextAlign.center,
+                style: theme.textTheme.labelMedium?.copyWith(
+                  color: theme.colorScheme.onPrimary,
                 ),
               ),
             )

@@ -25,11 +25,17 @@ class Thumbnail extends StatelessWidget {
           cacheHeight: (thumbWidth ~/ 2),
         ),
         onTap: () {
-          // move to image screen
           Navigator.of(context).push(
             MaterialPageRoute(
-              builder: (context) => ImageScreen(Image.asset(imagePath),
-                  imagePath.split('/').last.split('.').first),
+              builder: (context) => ImageScreen(
+                  image: Image.asset(imagePath),
+                  appBarTitle: imagePath
+                      .split('/')
+                      .last
+                      .split('.')
+                      .first
+                      .toUpperCase()
+                      .replaceAll('_', ' ')),
             ),
           );
         },
