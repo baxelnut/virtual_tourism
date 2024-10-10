@@ -112,9 +112,9 @@ class _MyAppState extends State<MyApp> {
                       text: 'Medals',
                       textStyle: customTextStyle),
                   GButton(
-                      icon: Icons.settings_rounded,
+                      icon: Icons.person_rounded,
                       iconSize: 30,
-                      text: 'Settings',
+                      text: 'User',
                       textStyle: customTextStyle),
                 ],
               ),

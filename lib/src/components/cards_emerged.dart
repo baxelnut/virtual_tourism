@@ -35,6 +35,17 @@ class CardsEmerged extends StatelessWidget {
                 fit: BoxFit.cover,
                 width: screenSize.width / 2,
                 height: screenSize.width / 2,
+                loadingBuilder: (context, child, loadingProgress) {
+                  if (loadingProgress == null) return child;
+                  return Center(
+                    child: CircularProgressIndicator(
+                      value: loadingProgress.expectedTotalBytes != null
+                          ? loadingProgress.cumulativeBytesLoaded /
+                              (loadingProgress.expectedTotalBytes ?? 1)
+                          : null,
+                    ),
+                  );
+                },
               ),
             ),
           ),
@@ -90,7 +101,7 @@ class CardsEmerged extends StatelessWidget {
                         Text(
                           destination,
                           overflow: TextOverflow.ellipsis,
-                          maxLines: 1,
+                          maxLines: 2,
                           style: theme.textTheme.bodyLarge?.copyWith(
                               color: theme.colorScheme.surface,
                               fontWeight: FontWeight.bold),

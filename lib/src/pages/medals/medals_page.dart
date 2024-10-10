@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../components/cards_header.dart';
 import '../../components/chips_component.dart';
-import '../home/user_overview.dart';
+import '../../components/user_overview.dart';
 
 class MedalsPage extends StatelessWidget {
   const MedalsPage({super.key});
@@ -23,35 +23,44 @@ class MedalsPage extends StatelessWidget {
             children: [
               // component
               const Text('UserOverview()'),
-            const Divider(),
-            const UserOverview(
-              username: '_username_',
-            ),
-            const UserOverview(
-              username: 'bazelnut',
-            ),
-            const UserOverview(
-              username: 'Jeremiah',
-            ),
-            const Text('ChipsComponent()'),
-            const Divider(),
-            const ChipsComponent(
-              listOfThangz: ['Places', 'Conservation', 'News'],
-            ),
-            const SizedBox(
-              height: 50,
-            ),
-            const Text('CardsHeader()'),
-            const Divider(),
-            const CardsHeader(
-              cardsTitle: 'Top Picks',
-            ),
-            const CardsHeader(
-              cardsTitle: 'Top Countries',
-            ),
-            const CardsHeader(
-              cardsTitle: 'Popular',
-            ),
+              const Divider(),
+              const UserOverview(
+                username: '_username_',
+                imagePath: 'assets/profile.jpg',
+                isFull: false,
+                email: 'basiliustengang24@gmail.com',
+              ),
+              const UserOverview(
+                username: 'bazelnut',
+                imagePath: 'assets/profile.jpg',
+                isFull: false,
+                email: 'basiliustengang24@gmail.com',
+              ),
+              const UserOverview(
+                username: 'Jeremiah',
+                imagePath: 'assets/profile.jpg',
+                isFull: false,
+                email: 'basiliustengang24@gmail.com',
+              ),
+              const Text('ChipsComponent()'),
+              const Divider(),
+              const ChipsComponent(
+                listOfThangz: ['Places', 'Conservation', 'News'],
+              ),
+              const SizedBox(
+                height: 50,
+              ),
+              const Text('CardsHeader()'),
+              const Divider(),
+              const CardsHeader(
+                cardsTitle: 'Top Picks',
+              ),
+              const CardsHeader(
+                cardsTitle: 'Top Countries',
+              ),
+              const CardsHeader(
+                cardsTitle: 'Popular',
+              ),
               // theme
               Container(
                 width: MediaQuery.of(context).size.width,

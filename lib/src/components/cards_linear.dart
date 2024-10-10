@@ -36,11 +36,11 @@ class CardsLinear extends StatelessWidget {
           //   ),
           // );
           // appBarTitle: imagePath
-                        //     .split('/')
-                        //     .last
-                        //     .split('.')
-                        //     .first
-                        //     .replaceAll('_', ' ')
+          //     .split('/')
+          //     .last
+          //     .split('.')
+          //     .first
+          //     .replaceAll('_', ' ')
         },
         child: Stack(
           children: [
@@ -57,6 +57,17 @@ class CardsLinear extends StatelessWidget {
                   fit: BoxFit.cover,
                   width: screenSize.width / 3,
                   height: screenSize.width / 2,
+                  loadingBuilder: (context, child, loadingProgress) {
+                    if (loadingProgress == null) return child;
+                    return Center(
+                      child: CircularProgressIndicator(
+                        value: loadingProgress.expectedTotalBytes != null
+                            ? loadingProgress.cumulativeBytesLoaded /
+                                (loadingProgress.expectedTotalBytes ?? 1)
+                            : null,
+                      ),
+                    );
+                  },
                 ),
               ),
             ),
