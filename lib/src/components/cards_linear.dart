@@ -97,7 +97,7 @@ class CardsLinear extends StatelessWidget {
                 overflow: TextOverflow.visible,
                 textAlign: TextAlign.center,
                 style: theme.textTheme.labelMedium?.copyWith(
-                    color: theme.colorScheme.surface,
+                    color: theme.colorScheme.onPrimary,
                     fontWeight: FontWeight.bold),
               ),
             ),

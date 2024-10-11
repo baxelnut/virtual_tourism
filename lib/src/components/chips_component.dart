@@ -27,7 +27,9 @@ class _ChipsComponentState extends State<ChipsComponent> {
               selectedColor: theme.colorScheme.secondary,
               labelStyle: theme.textTheme.bodyLarge?.copyWith(
                 fontWeight: FontWeight.bold,
-                color: isSelected ? Colors.white : Colors.black,
+                color: isSelected
+                    ? theme.colorScheme.onSecondary
+                    : theme.colorScheme.onSurface,
               ),
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(60),

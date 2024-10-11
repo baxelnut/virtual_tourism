@@ -85,7 +85,7 @@ class CardsEmerged extends StatelessWidget {
                               padding: const EdgeInsets.only(right: 5),
                               child: Icon(
                                 Icons.location_on_rounded,
-                                color: theme.colorScheme.surface,
+                                color: theme.colorScheme.onPrimary,
                                 size: 16,
                               ),
                             ),
@@ -94,7 +94,7 @@ class CardsEmerged extends StatelessWidget {
                               overflow: TextOverflow.visible,
                               maxLines: 2,
                               style: theme.textTheme.labelMedium
-                                  ?.copyWith(color: theme.colorScheme.surface),
+                                  ?.copyWith(color: theme.colorScheme.onPrimary),
                             )
                           ],
                         ),
@@ -103,7 +103,7 @@ class CardsEmerged extends StatelessWidget {
                           overflow: TextOverflow.ellipsis,
                           maxLines: 2,
                           style: theme.textTheme.bodyLarge?.copyWith(
-                              color: theme.colorScheme.surface,
+                              color: theme.colorScheme.onPrimary,
                               fontWeight: FontWeight.bold),
                         ),
                         Padding(

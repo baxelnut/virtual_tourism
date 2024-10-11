@@ -8,21 +8,18 @@ import 'src/app.dart';
 
 void main() async {
   await dotenv.load(fileName: ".env");
-//   try {
-//   await dotenv.load(fileName: ".env");
-// } catch (e) {
-//   print('Error loading .env file: $e');
-// }
-
   WidgetsFlutterBinding.ensureInitialized();
 
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
 
+  final themeProvider = ThemeProvider();
+  await themeProvider.loadTheme();
+
   runApp(
     ChangeNotifierProvider(
-      create: (context) => ThemeProvider(),
+      create: (_) => themeProvider,
       child: const MyApp(),
     ),
   );

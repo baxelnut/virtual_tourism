@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:virtual_tourism/src/pages/explore/explore_page.dart';
 import 'package:virtual_tourism/src/pages/settings/settings_page.dart';
 import 'package:virtual_tourism/src/pages/tour/tour_page.dart';
@@ -20,7 +21,22 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  int pageIndex = 0; // Index of the current page
+  @override
+  void initState() {
+    super.initState();
+    _loadSelectedButton();
+  }
+
+  Future<void> _loadSelectedButton() async {
+    List<bool> isSelected = [true, false];
+
+    final prefs = await SharedPreferences.getInstance();
+    setState(() {
+      isSelected = [prefs.getBool('isDarkMode') ?? true, !isSelected[0]];
+    });
+  }
+
+  int pageIndex = 0; // current page
 
   @override
   Widget build(BuildContext context) {
@@ -112,7 +128,7 @@ class _MyAppState extends State<MyApp> {
                       text: 'Medals',
                       textStyle: customTextStyle),
                   GButton(
-                      icon: Icons.person_rounded,
+                      icon: Icons.person_2_rounded,
                       iconSize: 30,
                       text: 'User',
                       textStyle: customTextStyle),

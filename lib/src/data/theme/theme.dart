@@ -67,13 +67,13 @@ ThemeData lightMode = ThemeData(
 ThemeData darkMode = ThemeData(
   useMaterial3: true,
   brightness: Brightness.dark,
-  colorScheme: const ColorScheme.light(
+  colorScheme: const ColorScheme.dark(
     primary: Color(0xff1289B4),
     secondary: Color(0xffB43D12),
     onPrimary: Color(0xffEFFFFB),
     onSecondary: Color(0xffEFFFFB),
-    surface: Color(0xffEFFFFB),
-    onSurface: Color(0xff151515),
+    surface: Color(0xff121212),
+    onSurface: Color(0xffEFFFFB),
     // error: Color(0xffF12200),
     // onError: Color(0xffEFFFFB),
   ),
