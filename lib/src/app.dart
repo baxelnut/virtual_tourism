@@ -79,9 +79,8 @@ class _MyAppState extends State<MyApp> {
           padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 12),
           child: Container(
             decoration: BoxDecoration(
-              color: isDark ? const Color(0xff045980) : const Color(0xff1289B4),
+              color: isDark ? const Color(0xff1289B4) : const Color(0xff1178A1),
               borderRadius: BorderRadius.circular(28),
-              // border: Border.all(color: Colors.black),
               boxShadow: [
                 BoxShadow(
                   color: theme.colorScheme.onSurface.withOpacity(0.6),

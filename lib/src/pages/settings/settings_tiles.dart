@@ -4,14 +4,12 @@ class SettingsTiles extends StatelessWidget {
   final String heading;
   final List<IconData> leadingIcon;
   final List<String> title;
-  // final List<String> subtitle;
   final List<Widget> trailingWidget;
   const SettingsTiles({
     super.key,
     required this.heading,
     required this.leadingIcon,
     required this.title,
-    // required this.subtitle,
     required this.trailingWidget,
   });
 

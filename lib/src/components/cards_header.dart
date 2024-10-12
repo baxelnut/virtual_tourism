@@ -36,7 +36,8 @@ class CardsHeader extends StatelessWidget {
               },
               child: Text(
                 'See All',
-                style: theme.textTheme.labelSmall,
+                style: theme.textTheme.labelSmall
+                    ?.copyWith(decoration: TextDecoration.underline),
               ))
         ],
       ),
