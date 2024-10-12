@@ -68,8 +68,8 @@ ThemeData darkMode = ThemeData(
   useMaterial3: true,
   brightness: Brightness.dark,
   colorScheme: const ColorScheme.dark(
-    primary: Color(0xff1289B4),
-    secondary: Color(0xffB43D12),
+    primary: Color(0xff045980),
+    secondary: Color(0xffCE4919),
     onPrimary: Color(0xffEFFFFB),
     onSecondary: Color(0xffEFFFFB),
     surface: Color(0xff121212),

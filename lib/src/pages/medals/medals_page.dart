@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../components/cards_header.dart';
 import '../../components/chips_component.dart';
 import '../../components/user_overview.dart';
+import '../../login/login_page.dart';
 
 class MedalsPage extends StatelessWidget {
   const MedalsPage({super.key});
@@ -21,6 +22,22 @@ class MedalsPage extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              // page test
+              GestureDetector(
+                onTap: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(builder: (context) => const LoginPage()),
+                  );
+                },
+                child: Container(
+                  width: 100,
+                  height: 100,
+                  color: Colors.amber,
+                  child: const Center(
+                    child: Text('Login Page'),
+                  ),
+                ),
+              ),
               // component
               const Text('UserOverview()'),
               const Divider(),

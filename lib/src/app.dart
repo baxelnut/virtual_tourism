@@ -7,6 +7,7 @@ import 'package:virtual_tourism/src/pages/explore/explore_page.dart';
 import 'package:virtual_tourism/src/pages/settings/settings_page.dart';
 import 'package:virtual_tourism/src/pages/tour/tour_page.dart';
 
+import 'data/theme/theme.dart';
 import 'data/theme/theme_provider.dart';
 import 'pages/medals/medals_page.dart';
 import 'pages/home/home_page.dart';
@@ -41,11 +42,16 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     final themeProvider = Provider.of<ThemeProvider>(context);
+    final bool isDark =
+        Provider.of<ThemeProvider>(context).themeData == darkMode;
     final theme = Theme.of(context);
     TextStyle customTextStyle = GoogleFonts.outfit(
-      textStyle: const TextStyle(
-          fontSize: 16, fontWeight: FontWeight.w600, color: Color(0xffB43D12)),
+      textStyle: TextStyle(
+          fontSize: 16,
+          fontWeight: FontWeight.w600,
+          color: isDark ? const Color(0xffCE4919) : const Color(0xffB43D12)),
     );
+
     return MaterialApp(
       theme: themeProvider.themeData,
       debugShowCheckedModeBanner: false,
@@ -73,7 +79,7 @@ class _MyAppState extends State<MyApp> {
           padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 12),
           child: Container(
             decoration: BoxDecoration(
-              color: const Color(0xff1289B4),
+              color: isDark ? const Color(0xff045980) : const Color(0xff1289B4),
               borderRadius: BorderRadius.circular(28),
               // border: Border.all(color: Colors.black),
               boxShadow: [

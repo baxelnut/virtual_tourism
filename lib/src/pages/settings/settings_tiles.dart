@@ -39,23 +39,27 @@ class SettingsTiles extends StatelessWidget {
                   bottomRight: Radius.circular(i == quantity - 1 ? 25 : 0),
                 ),
               ),
-              // dense: subtitle[i] != '',
               dense: false,
               onTap: () {
                 print(title[i]);
               },
-              leading: Icon(leadingIcon[i]),
+              leading: Container(
+                  decoration: BoxDecoration(
+                      color: theme.colorScheme.surface,
+                      borderRadius: BorderRadius.circular(10)),
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Icon(
+                      leadingIcon[i],
+                      size: 25,
+                      color: title[i] == 'Logout' ? Colors.red : null,
+                    ),
+                  )),
               title: Text(
                 title[i],
                 style: theme.textTheme.bodyLarge
-                    ?.copyWith(fontWeight: FontWeight.bold),
+                    ?.copyWith(color: title[i] == 'Logout' ? Colors.red : null),
               ),
-              // subtitle: subtitle[i] != ''
-              //     ? Text(
-              //         subtitle[i],
-              //         style: theme.textTheme.labelMedium,
-              //       )
-              //     : null,
               trailing: trailingWidget[i]),
       ],
     );
