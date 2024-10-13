@@ -10,15 +10,90 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage> {
   List<bool> isSelected = [true, false];
+  List<String> selectionOps = ['Login', 'Register'];
+  bool obscurial = true;
+
+  TextEditingController emailController = TextEditingController();
+  TextEditingController passwordController = TextEditingController();
+  TextEditingController confirmPasswordController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    emailController.dispose();
+    passwordController.dispose();
+    confirmPasswordController.dispose();
+    super.dispose();
+  }
+
+  void switchSelected(int index) {
+    setState(() {
+      isSelected[0] = index == 0;
+      isSelected[1] = index == 1;
+    });
+  }
+
+  void showAlertDialog(BuildContext context, String message) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text("Notification"),
+          content: Text(message),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text("OK"),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void handleAuthentication(BuildContext context) {
+    bool isEmailFilled = emailController.text.trim().isNotEmpty;
+    bool isPasswordFilled = passwordController.text.trim().isNotEmpty;
+    bool isRegistering = isSelected[1];
+
+    if (isEmailFilled && isPasswordFilled) {
+      if (isRegistering) {
+        bool isConfirmPasswordFilled =
+            confirmPasswordController.text.trim().isNotEmpty;
+        bool passwordsMatch = passwordController.text.trim() ==
+            confirmPasswordController.text.trim();
+
+        if (isConfirmPasswordFilled && passwordsMatch) {
+          showAlertDialog(context, 'Successfully registered');
+        } else {
+          showAlertDialog(
+            context,
+            'Failed to register: \n${!isConfirmPasswordFilled ? 'Fill all fields' : 'Passwords do not match'}',
+          );
+        }
+      } else {
+        showAlertDialog(context, 'Successfully logged in');
+      }
+    } else {
+      showAlertDialog(context,
+          'Failed to ${isRegistering ? 'register' : 'login'}: \nFill all fields');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final screenSize = MediaQuery.of(context).size;
+    final ThemeData theme = Theme.of(context);
     const Color absoluteBlack = Color(0xff121212);
     final Color absoluteWhite = theme.colorScheme.onPrimary;
 
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       appBar: AppBar(
         surfaceTintColor: absoluteBlack,
         shadowColor: absoluteBlack,
@@ -26,187 +101,290 @@ class _LoginPageState extends State<LoginPage> {
         foregroundColor: absoluteWhite,
       ),
       backgroundColor: absoluteWhite,
-      body: Column(
-        children: [
-          Container(
-            color: absoluteBlack,
-            width: screenSize.width,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                const SizedBox(height: 20),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20),
-                  child: Text(
-                    'Go ahead and set up your account',
-                    style: theme.textTheme.headlineMedium
-                        ?.copyWith(color: absoluteWhite),
-                  ),
-                ),
-                const SizedBox(height: 10),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20),
-                  child: Text(
-                    'Sign in-up to experience your odyssey!',
-                    style: theme.textTheme.bodyMedium
-                        ?.copyWith(color: absoluteWhite),
-                  ),
-                ),
-                const SizedBox(height: 20),
-                Container(
-                  width: screenSize.width,
-                  height: 80,
-                  decoration: BoxDecoration(
-                      color: absoluteWhite,
-                      borderRadius: const BorderRadius.only(
-                          topLeft: Radius.circular(40),
-                          topRight: Radius.circular(40))),
-                  child: Center(
-                      child: toggleButton(
-                          isSelected: isSelected,
-                          absoluteBlack: absoluteBlack)),
-                )
-              ],
+      body: LayoutBuilder(
+        builder: (context, constraints) {
+          return ConstrainedBox(
+            constraints: BoxConstraints(
+              minHeight: constraints.maxHeight,
             ),
-          ),
-          Expanded(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
+            child: IntrinsicHeight(
               child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  const SizedBox(height: 20),
-                  ListTile(
-                    dense: true,
-                    shape: RoundedRectangleBorder(
-                        side: BorderSide(
-                            color: absoluteBlack.withOpacity(0.5), width: 1),
-                        borderRadius: BorderRadius.circular(15)),
-                    leading: const Icon(
-                      Icons.add_ic_call,
-                      size: 25,
-                      color: absoluteBlack,
+                  _headerSection(),
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 20),
+                      child: Column(
+                        children: [
+                          _inputSection(
+                              controller: emailController,
+                              hintText: 'Email',
+                              icon: Icons.email_rounded),
+                          _inputSection(
+                              controller: passwordController,
+                              hintText: 'Password',
+                              icon: Icons.lock_rounded),
+                          Visibility(
+                            visible: isSelected[1],
+                            child: _inputSection(
+                                controller: confirmPasswordController,
+                                hintText: 'Confirm password',
+                                icon: Icons.lock_rounded),
+                          ),
+                          _additionalAction(),
+                          const Spacer(),
+                          _authButton(),
+                          const Spacer(),
+                          _alternativeMethods(),
+                        ],
+                      ),
                     ),
-                    title: Text('Email Address',
-                        style: theme.textTheme.labelMedium
-                            ?.copyWith(color: absoluteBlack)),
-                    subtitle: Text('input anjay',
-                        style: theme.textTheme.bodyLarge
-                            ?.copyWith(color: absoluteBlack)),
-                    trailing: Text('data',
-                        style: theme.textTheme.bodyLarge
-                            ?.copyWith(color: absoluteBlack)),
-                  ),
-                  
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        "Don't have an account?",
-                        style: theme.textTheme.labelMedium?.copyWith(
-                            fontWeight: FontWeight.bold, color: absoluteBlack),
-                      ),
-                      Text(
-                        'Forgot Password?',
-                        style: theme.textTheme.labelMedium?.copyWith(
-                            fontWeight: FontWeight.bold,
-                            color: theme.colorScheme.secondary),
-                      )
-                    ],
-                  ),
-                  ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                          fixedSize: Size(screenSize.width, 50),
-                          backgroundColor: theme.colorScheme.primary),
-                      onPressed: () {},
-                      child: Text(
-                        'Login',
-                        style: theme.textTheme.bodyLarge
-                            ?.copyWith(fontWeight: FontWeight.bold),
-                      )),
-                  
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      Container(
-                          height: 1,
-                          width: screenSize.width / 4,
-                          color: absoluteBlack),
-                      Text(
-                        'OR',
-                        style: theme.textTheme.bodyMedium
-                            ?.copyWith(color: absoluteBlack),
-                      ),
-                      Container(
-                          height: 1,
-                          width: screenSize.width / 4,
-                          color: absoluteBlack),
-                    ],
-                  ),
-                  const Spacer(),
-                  Wrap(
-                    spacing: 20,
-                    runSpacing: 5,
-                    alignment: WrapAlignment.spaceEvenly,
-                    children: [
-                      methodButton(methodName: 'Google'),
-                      methodButton(methodName: 'Facebook'),
-                      methodButton(methodName: 'Apple'),
-                    ],
-                  ),
-                  const SizedBox(height: 50),
-                  Container(
-                    width: 100,
-                    height: 100,
-                    color: isSelected[0] ? Colors.red : Colors.green,
                   ),
                 ],
               ),
             ),
+          );
+        },
+      ),
+    );
+  }
+
+  Widget _headerSection() {
+    final ThemeData theme = Theme.of(context);
+    final Size screenSize = MediaQuery.of(context).size;
+    const Color absoluteBlack = Color(0xff121212);
+    final Color absoluteWhite = theme.colorScheme.onPrimary;
+
+    return Container(
+      color: absoluteBlack,
+      width: screenSize.width,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          const SizedBox(height: 20),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20),
+            child: Text(
+              'Go ahead and set up your account',
+              style: theme.textTheme.headlineMedium
+                  ?.copyWith(color: absoluteWhite),
+            ),
+          ),
+          const SizedBox(height: 10),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20),
+            child: Text(
+              'Sign in-up to experience your odyssey!',
+              style: theme.textTheme.bodyMedium?.copyWith(color: absoluteWhite),
+            ),
+          ),
+          const SizedBox(height: 20),
+          Container(
+            width: screenSize.width,
+            height: 100,
+            decoration: BoxDecoration(
+                color: absoluteWhite,
+                borderRadius: const BorderRadius.only(
+                    topLeft: Radius.circular(40),
+                    topRight: Radius.circular(40))),
+            child: Center(child: _toggleButton(isSelected: isSelected)),
           ),
         ],
       ),
     );
   }
 
-  Widget toggleButton(
-      {required List<bool> isSelected, required Color absoluteBlack}) {
-    final theme = Theme.of(context);
-    final screenSize = MediaQuery.of(context).size;
-    List<String> ops = ['Login', 'Register'];
+  Widget _toggleButton({required List<bool> isSelected}) {
+    final ThemeData theme = Theme.of(context);
+    final Size screenSize = MediaQuery.of(context).size;
+    const Color absoluteBlack = Color(0xff121212);
+    final Color absoluteWhite = theme.colorScheme.onPrimary;
+
     return Padding(
-      padding: const EdgeInsets.only(top: 16),
+      padding: const EdgeInsets.symmetric(vertical: 16),
       child: ToggleButtons(
         isSelected: isSelected,
-        fillColor: absoluteBlack.withOpacity(0.3),
-        borderColor: absoluteBlack,
-        selectedBorderColor: absoluteBlack,
-        borderWidth: 1,
+        borderWidth: 0,
+        borderColor: Colors.transparent,
+        selectedBorderColor: Colors.transparent,
+        disabledBorderColor: Colors.transparent,
+        color: Colors.transparent,
+        fillColor: Colors.transparent,
         borderRadius: BorderRadius.circular(30),
-        onPressed: (index) {
-          setState(() {
-            isSelected[0] = index == 0;
-            isSelected[1] = index == 1;
-          });
-        },
+        onPressed: (int index) => switchSelected(index),
         children: [
-          for (int i = 0; i < ops.length; i++)
-            Padding(
-              padding: EdgeInsets.symmetric(
-                  vertical: 12, horizontal: screenSize.width / 8),
-              child: Text(ops[i],
-                  style: theme.textTheme.bodyLarge?.copyWith(
-                      color: absoluteBlack, fontWeight: FontWeight.bold)),
+          for (int i = 0; i < selectionOps.length; i++)
+            Container(
+              color: absoluteBlack.withOpacity(0.3),
+              child: Padding(
+                padding: const EdgeInsets.all(5),
+                child: Container(
+                  width: screenSize.width / 2.5,
+                  alignment: Alignment.center,
+                  decoration: BoxDecoration(
+                    color: isSelected[i] ? absoluteWhite : Colors.transparent,
+                    borderRadius: BorderRadius.circular(30),
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(10),
+                    child: Text(
+                      selectionOps[i],
+                      style: theme.textTheme.bodyLarge?.copyWith(
+                        color: absoluteBlack,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
             ),
         ],
       ),
     );
   }
 
-  Widget methodButton({
+  Widget _inputSection({
+    required TextEditingController controller,
+    required String hintText,
+    required IconData icon,
+  }) {
+    final ThemeData theme = Theme.of(context);
+    const Color absoluteBlack = Color(0xff121212);
+
+    return Padding(
+      padding: const EdgeInsets.only(top: 20),
+      child: ListTile(
+        dense: true,
+        shape: RoundedRectangleBorder(
+            side: BorderSide(color: absoluteBlack.withOpacity(0.5), width: 1),
+            borderRadius: BorderRadius.circular(15)),
+        leading: Icon(
+          icon,
+          color: absoluteBlack,
+          size: 20,
+        ),
+        title: TextField(
+          controller: controller,
+          obscureText:
+              hintText.toLowerCase().contains('password') ? obscurial : false,
+          style: theme.textTheme.bodyLarge
+              ?.copyWith(color: absoluteBlack, fontWeight: FontWeight.bold),
+          decoration: InputDecoration(
+            border: InputBorder.none,
+            hintText: hintText,
+            hintStyle: theme.textTheme.bodyLarge?.copyWith(
+              color: absoluteBlack,
+            ),
+          ),
+        ),
+        trailing: Visibility(
+          visible: hintText.toLowerCase().contains('password'),
+          child: GestureDetector(
+            onTap: () {
+              setState(() {
+                obscurial = !obscurial;
+              });
+            },
+            child: Icon(
+              obscurial
+                  ? Icons.visibility_off_rounded
+                  : Icons.visibility_rounded,
+              color: absoluteBlack,
+              size: 20,
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _additionalAction() {
+    final ThemeData theme = Theme.of(context);
+    const Color absoluteBlack = Color(0xff121212);
+    return Padding(
+      padding: const EdgeInsets.only(top: 20),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          GestureDetector(
+            onTap: () {
+              int index = isSelected[0] ? 1 : 0;
+              switchSelected(index);
+            },
+            child: Text(
+              isSelected[0]
+                  ? "Don't have an account?"
+                  : "Already have an account?",
+              style: theme.textTheme.labelMedium
+                  ?.copyWith(fontWeight: FontWeight.bold, color: absoluteBlack),
+            ),
+          ),
+          Text(
+            isSelected[0] ? 'Forgot Password?' : '',
+            style: theme.textTheme.labelMedium?.copyWith(
+                fontWeight: FontWeight.bold,
+                color: absoluteBlack,
+                decoration: TextDecoration.underline),
+          )
+        ],
+      ),
+    );
+  }
+
+  Widget _authButton() {
+    final ThemeData theme = Theme.of(context);
+    final Size screenSize = MediaQuery.of(context).size;
+    return ElevatedButton(
+        style: ElevatedButton.styleFrom(
+            fixedSize: Size(screenSize.width, 50),
+            backgroundColor: theme.colorScheme.primary),
+        onPressed: () => handleAuthentication(context),
+        child: Text(
+          isSelected[0] ? selectionOps[0] : selectionOps[1],
+          style:
+              theme.textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.bold),
+        ));
+  }
+
+  Widget _alternativeMethods() {
+    final ThemeData theme = Theme.of(context);
+    final Size screenSize = MediaQuery.of(context).size;
+    const Color absoluteBlack = Color(0xff121212);
+    return Column(
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            Container(
+                height: 1, width: screenSize.width / 5, color: absoluteBlack),
+            Text(
+              'OR',
+              style: theme.textTheme.bodyMedium?.copyWith(color: absoluteBlack),
+            ),
+            Container(
+                height: 1, width: screenSize.width / 5, color: absoluteBlack),
+          ],
+        ),
+        const SizedBox(height: 10),
+        Wrap(
+          spacing: 20,
+          runSpacing: 5,
+          alignment: WrapAlignment.spaceEvenly,
+          children: [
+            _methodButton(methodName: 'Google'),
+            _methodButton(methodName: 'Facebook'),
+            _methodButton(methodName: 'Apple'),
+          ],
+        ),
+        const SizedBox(height: 50),
+      ],
+    );
+  }
+
+  Widget _methodButton({
     required String methodName,
   }) {
-    final theme = Theme.of(context);
+    final ThemeData theme = Theme.of(context);
     const Color absoluteBlack = Color(0xff121212);
     final Color absoluteWhite = theme.colorScheme.onPrimary;
     return ElevatedButton.icon(
