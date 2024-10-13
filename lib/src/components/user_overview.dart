@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:virtual_tourism/src/pages/settings/user_profile.dart';
 
 import '../data/theme/theme.dart';
 import '../data/theme/theme_provider.dart';
@@ -41,7 +42,14 @@ class _UserOverviewState extends State<UserOverview> {
   }
 
   handleEditProfile() {
-    return print('edit profile bro');
+    Navigator.of(context).push(
+      MaterialPageRoute(
+          builder: (context) => UserProfile(
+                username: widget.username,
+                imagePath: widget.imagePath,
+                email: widget.email,
+              )),
+    );
   }
 
   handleBookmarks() {
@@ -126,7 +134,7 @@ class _UserOverviewState extends State<UserOverview> {
               onTap: () {
                 handleBookmarks();
               },
-              child:  Padding(
+              child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 15),
                 child: Icon(isDark
                     ? Icons.bookmarks_outlined

@@ -33,7 +33,12 @@ class _SettingsPageState extends State<SettingsPage> {
           Icons.language_rounded,
           Icons.admin_panel_settings_rounded,
         ],
-        'title': ['Dark mode', 'Push notification', 'Language', 'Manage permission'],
+        'title': [
+          'Dark mode',
+          'Push notification',
+          'Language',
+          'Manage permission'
+        ],
         'trailingWidget': [
           buildSwitch(
               context: context,
@@ -53,25 +58,31 @@ class _SettingsPageState extends State<SettingsPage> {
         ]
       },
       {
+        'heading': 'Account',
+        'leadingIcon': [Icons.info_outline_rounded, Icons.lock_outline_rounded],
+        'title': ['Privacy policy', 'Change password'],
+        'trailingWidget': [
+          const Icon(Icons.chevron_right_rounded),
+          const Icon(Icons.chevron_right_rounded),
+        ]
+      },
+      {
         'heading': 'About',
         'leadingIcon': [
           Icons.help_rounded,
           Icons.star_rate_rounded,
           Icons.check_rounded,
         ],
-        'title': ['Help', 'Rate app', 'Version'],
+        'title': ['Help & support', 'Rate app', 'Version'],
         'trailingWidget': [
           const Icon(Icons.chevron_right_rounded),
           const Icon(Icons.chevron_right_rounded),
           const Text('1.0.0'),
         ]
       },
-
       {
         'heading': '',
-        'leadingIcon': [
-          Icons.logout_rounded
-        ],
+        'leadingIcon': [Icons.logout_rounded],
         'title': ['Logout'],
         'trailingWidget': [
           const SizedBox(),
