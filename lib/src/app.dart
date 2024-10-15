@@ -3,14 +3,16 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:virtual_tourism/src/pages/explore/explore_page.dart';
-import 'package:virtual_tourism/src/pages/settings/settings_page.dart';
-import 'package:virtual_tourism/src/pages/tour/tour_page.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 import 'data/theme/theme.dart';
 import 'data/theme/theme_provider.dart';
-import 'pages/medals/medals_page.dart';
+import 'login/login_page.dart';
+import 'pages/explore/explore_page.dart';
 import 'pages/home/home_page.dart';
+import 'pages/medals/medals_page.dart';
+import 'pages/settings/settings_page.dart';
+import 'pages/tour/tour_page.dart';
 
 class MyApp extends StatefulWidget {
   const MyApp({
@@ -37,7 +39,7 @@ class _MyAppState extends State<MyApp> {
     });
   }
 
-  int pageIndex = 0; // current page
+  int pageIndex = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -56,91 +58,112 @@ class _MyAppState extends State<MyApp> {
       theme: themeProvider.themeData,
       debugShowCheckedModeBanner: false,
       home: Scaffold(
-        body: Builder(
-          builder: (context) {
-            switch (pageIndex) {
-              case 0:
-                return const HomePage();
-              case 1:
-                return const TourPage();
-              case 2:
-                return const ExplorePage();
-              case 3:
-                return const MedalsPage();
-              case 4:
-                return const SettingsPage();
-              default:
-                return const HomePage();
+        body: StreamBuilder<User?>(
+          stream: FirebaseAuth.instance.authStateChanges(),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return const Center(child: CircularProgressIndicator());
+            }
+            if (snapshot.hasData) {
+              switch (pageIndex) {
+                case 0:
+                  return const HomePage();
+                case 1:
+                  return const TourPage();
+                case 2:
+                  return const ExplorePage();
+                case 3:
+                  return const MedalsPage();
+                case 4:
+                  return const SettingsPage();
+                default:
+                  return const HomePage();
+              }
+            } else {
+              return const LoginPage();
             }
           },
         ),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-        floatingActionButton: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 12),
-          child: Container(
-            decoration: BoxDecoration(
-              color: isDark ? const Color(0xff1289B4) : const Color(0xff1178A1),
-              borderRadius: BorderRadius.circular(28),
-              boxShadow: [
-                BoxShadow(
-                  color: theme.colorScheme.onSurface.withOpacity(0.6),
-                  spreadRadius: 3.5,
-                  blurRadius: 6.9,
-                  offset: const Offset(0, 0),
-                ),
-              ],
-            ),
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 12),
-              child: GNav(
-                color: theme.colorScheme.onPrimary,
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                selectedIndex: pageIndex,
-                onTabChange: (index) {
-                  setState(() {
-                    pageIndex = index;
-                  });
-                },
+        floatingActionButton: StreamBuilder<User?>(
+          stream: FirebaseAuth.instance.authStateChanges(),
+          builder: (context, snapshot) {
+            if (snapshot.hasData) {
+              return Padding(
                 padding:
-                    const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
-                gap: 10,
-                tabBackgroundColor:
-                    theme.colorScheme.onPrimary, // .withOpacity(0.5)
-                tabActiveBorder: const Border(
-                  top: BorderSide(color: Color(0xffB43D12), width: 1.69),
-                  bottom: BorderSide(color: Color(0xffB43D12), width: 1.69),
+                    const EdgeInsets.symmetric(horizontal: 10, vertical: 12),
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: isDark
+                        ? const Color(0xff1289B4)
+                        : const Color(0xff1178A1),
+                    borderRadius: BorderRadius.circular(28),
+                    boxShadow: [
+                      BoxShadow(
+                        color: theme.colorScheme.onSurface.withOpacity(0.6),
+                        spreadRadius: 3.5,
+                        blurRadius: 6.9,
+                        offset: const Offset(0, 0),
+                      ),
+                    ],
+                  ),
+                  child: Padding(
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 0, vertical: 12),
+                    child: GNav(
+                      color: theme.colorScheme.onPrimary,
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      selectedIndex: pageIndex,
+                      onTabChange: (index) {
+                        setState(() {
+                          pageIndex = index;
+                        });
+                      },
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 10, vertical: 8),
+                      gap: 10,
+                      tabBackgroundColor: theme.colorScheme.onPrimary,
+                      tabActiveBorder: const Border(
+                        top: BorderSide(color: Color(0xffB43D12), width: 1.69),
+                        bottom:
+                            BorderSide(color: Color(0xffB43D12), width: 1.69),
+                      ),
+                      activeColor: const Color(0xffB43D12),
+                      tabs: [
+                        GButton(
+                            icon: Icons.home_rounded,
+                            iconSize: 30,
+                            text: 'Home',
+                            textStyle: customTextStyle),
+                        GButton(
+                            icon: Icons.tour_rounded,
+                            iconSize: 30,
+                            text: 'Tour',
+                            textStyle: customTextStyle),
+                        GButton(
+                            icon: Icons.travel_explore_rounded,
+                            iconSize: 30,
+                            text: 'Explore',
+                            textStyle: customTextStyle),
+                        GButton(
+                            icon: Icons.military_tech_rounded,
+                            iconSize: 30,
+                            text: 'Medals',
+                            textStyle: customTextStyle),
+                        GButton(
+                            icon: Icons.person_2_rounded,
+                            iconSize: 30,
+                            text: 'User',
+                            textStyle: customTextStyle),
+                      ],
+                    ),
+                  ),
                 ),
-                activeColor: const Color(0xffB43D12),
-                tabs: [
-                  GButton(
-                      icon: Icons.home_rounded,
-                      iconSize: 30,
-                      text: 'Home',
-                      textStyle: customTextStyle),
-                  GButton(
-                      icon: Icons.tour_rounded,
-                      iconSize: 30,
-                      text: 'Tour',
-                      textStyle: customTextStyle),
-                  GButton(
-                      icon: Icons.travel_explore_rounded,
-                      iconSize: 30,
-                      text: 'Explore',
-                      textStyle: customTextStyle),
-                  GButton(
-                      icon: Icons.military_tech_rounded,
-                      iconSize: 30,
-                      text: 'Medals',
-                      textStyle: customTextStyle),
-                  GButton(
-                      icon: Icons.person_2_rounded,
-                      iconSize: 30,
-                      text: 'User',
-                      textStyle: customTextStyle),
-                ],
-              ),
-            ),
-          ),
+              );
+            } else {
+              return const SizedBox.shrink();
+            }
+          },
         ),
       ),
     );

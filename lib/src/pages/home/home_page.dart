@@ -8,8 +8,6 @@ import '../../components/chips_component.dart';
 import '../../components/user_overview.dart';
 import '../../data/destination_data.dart';
 
-// must be applied to all pages
-// padding: const EdgeInsets.symmetric(horizontal: 20),
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
 
@@ -114,16 +112,16 @@ class HomePage extends StatelessWidget {
         children: [
           const CardsHeader(cardsTitle: 'Popular'),
           SizedBox(
-            height: cardSize, // height dynamic based on card size
+            height: cardSize,
             child: RotatedBox(
-              quarterTurns: -1, // rotate content by 90 degrees
+              quarterTurns: -1,
               child: ListWheelScrollView(
-                itemExtent: cardSize, // item extent dynamic
+                itemExtent: cardSize,
                 squeeze: 1.05,
                 physics: const FixedExtentScrollPhysics(),
                 children: popularList.map((popularData) {
                   return RotatedBox(
-                    quarterTurns: 1, // rotate back normal orientation
+                    quarterTurns: 1,
                     child: CardsEmerged(
                       country: popularData['country']!,
                       destination: popularData['destination']!,

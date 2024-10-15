@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:panorama_viewer/panorama_viewer%20copy.dart';
+import 'package:panorama_viewer/panorama_viewer.dart';
 
 class ImageScreen extends StatelessWidget {
   final Image image;

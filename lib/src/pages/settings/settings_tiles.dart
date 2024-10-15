@@ -5,18 +5,22 @@ class SettingsTiles extends StatelessWidget {
   final List<IconData> leadingIcon;
   final List<String> title;
   final List<Widget> trailingWidget;
+  final List<VoidCallback> onTap;
+
   const SettingsTiles({
     super.key,
     required this.heading,
     required this.leadingIcon,
     required this.title,
     required this.trailingWidget,
+    required this.onTap,
   });
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     int quantity = title.length;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -26,39 +30,40 @@ class SettingsTiles extends StatelessWidget {
         ),
         for (var i = 0; i < quantity; i++)
           ListTile(
-              tileColor: theme.colorScheme.onSurface.withOpacity(0.1),
-              shape: RoundedRectangleBorder(
-                side:
-                    BorderSide(color: theme.colorScheme.onSurface, width: 0.15),
-                borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(i == 0 ? 25 : 0),
-                  topRight: Radius.circular(i == 0 ? 25 : 0),
-                  bottomLeft: Radius.circular(i == quantity - 1 ? 25 : 0),
-                  bottomRight: Radius.circular(i == quantity - 1 ? 25 : 0),
+            tileColor: theme.colorScheme.onSurface.withOpacity(0.1),
+            shape: RoundedRectangleBorder(
+              side: BorderSide(color: theme.colorScheme.onSurface, width: 0.15),
+              borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(i == 0 ? 25 : 0),
+                topRight: Radius.circular(i == 0 ? 25 : 0),
+                bottomLeft: Radius.circular(i == quantity - 1 ? 25 : 0),
+                bottomRight: Radius.circular(i == quantity - 1 ? 25 : 0),
+              ),
+            ),
+            dense: false,
+            onTap: onTap[i],
+            leading: Container(
+              decoration: BoxDecoration(
+                color: theme.colorScheme.surface,
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Icon(
+                  leadingIcon[i],
+                  size: 25,
+                  color: title[i] == 'Logout' ? Colors.red : null,
                 ),
               ),
-              dense: false,
-              onTap: () {
-                print(title[i]);
-              },
-              leading: Container(
-                  decoration: BoxDecoration(
-                      color: theme.colorScheme.surface,
-                      borderRadius: BorderRadius.circular(10)),
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Icon(
-                      leadingIcon[i],
-                      size: 25,
-                      color: title[i] == 'Logout' ? Colors.red : null,
-                    ),
-                  )),
-              title: Text(
-                title[i],
-                style: theme.textTheme.bodyLarge
-                    ?.copyWith(color: title[i] == 'Logout' ? Colors.red : null),
+            ),
+            title: Text(
+              title[i],
+              style: theme.textTheme.bodyLarge?.copyWith(
+                color: title[i] == 'Logout' ? Colors.red : null,
               ),
-              trailing: trailingWidget[i]),
+            ),
+            trailing: trailingWidget[i],
+          ),
       ],
     );
   }

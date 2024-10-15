@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
+import '../app.dart';
+import '../auth/auth.dart';
+
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
 
@@ -13,9 +16,15 @@ class _LoginPageState extends State<LoginPage> {
   List<String> selectionOps = ['Login', 'Register'];
   bool obscurial = true;
 
-  TextEditingController emailController = TextEditingController();
-  TextEditingController passwordController = TextEditingController();
-  TextEditingController confirmPasswordController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _confirmPasswordController =
+      TextEditingController();
+
+  final Color _absoluteBlack = const Color(0xff121212);
+  final Color _absoluteWhite = const Color(0xffEFFFFB);
+
+  final Auth _auth = Auth();
 
   @override
   void initState() {
@@ -24,9 +33,9 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   void dispose() {
-    emailController.dispose();
-    passwordController.dispose();
-    confirmPasswordController.dispose();
+    _emailController.dispose();
+    _passwordController.dispose();
+    _confirmPasswordController.dispose();
     super.dispose();
   }
 
@@ -57,94 +66,114 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  void handleAuthentication(BuildContext context) {
-    bool isEmailFilled = emailController.text.trim().isNotEmpty;
-    bool isPasswordFilled = passwordController.text.trim().isNotEmpty;
+  void handleAuthentication(BuildContext context) async {
+    bool isEmailFilled = _emailController.text.trim().isNotEmpty;
+    bool isPasswordFilled = _passwordController.text.trim().isNotEmpty;
     bool isRegistering = isSelected[1];
 
     if (isEmailFilled && isPasswordFilled) {
       if (isRegistering) {
         bool isConfirmPasswordFilled =
-            confirmPasswordController.text.trim().isNotEmpty;
-        bool passwordsMatch = passwordController.text.trim() ==
-            confirmPasswordController.text.trim();
+            _confirmPasswordController.text.trim().isNotEmpty;
+        bool passwordsMatch = _passwordController.text.trim() ==
+            _confirmPasswordController.text.trim();
 
         if (isConfirmPasswordFilled && passwordsMatch) {
-          showAlertDialog(context, 'Successfully registered');
+          try {
+            await _auth.registerWithEmailAndPassword(
+              email: _emailController.text.trim(),
+              password: _passwordController.text.trim(),
+            );
+
+            if (context.mounted) {
+              showAlertDialog(context, 'Successfully registered');
+            }
+          } catch (e) {
+            if (context.mounted) {
+              showAlertDialog(context, 'Failed to register: ${e.toString()}');
+            }
+          }
         } else {
-          showAlertDialog(
-            context,
-            'Failed to register: \n${!isConfirmPasswordFilled ? 'Fill all fields' : 'Passwords do not match'}',
-          );
+          if (context.mounted) {
+            showAlertDialog(
+              context,
+              'Failed to register: \n${!isConfirmPasswordFilled ? 'Fill all fields' : 'Passwords do not match'}',
+            );
+          }
         }
       } else {
-        showAlertDialog(context, 'Successfully logged in');
+        try {
+          await _auth.signInWithEmailAndPassword(
+            email: _emailController.text.trim(),
+            password: _passwordController.text.trim(),
+          );
+
+          if (context.mounted) {
+            showAlertDialog(context, 'Successfully logged in');
+            Navigator.of(context).pushReplacement(
+              MaterialPageRoute(builder: (context) => const MyApp()),
+            );
+          }
+        } catch (e) {
+          if (context.mounted) {
+            showAlertDialog(context, 'Failed to login: ${e.toString()}');
+          }
+        }
       }
     } else {
-      showAlertDialog(context,
-          'Failed to ${isRegistering ? 'register' : 'login'}: \nFill all fields');
+      if (context.mounted) {
+        showAlertDialog(context,
+            'Failed to ${isRegistering ? 'register' : 'login'}: \nFill all fields');
+      }
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    final ThemeData theme = Theme.of(context);
-    const Color absoluteBlack = Color(0xff121212);
-    final Color absoluteWhite = theme.colorScheme.onPrimary;
-
     return Scaffold(
-      resizeToAvoidBottomInset: false,
+      resizeToAvoidBottomInset: true,
       appBar: AppBar(
-        surfaceTintColor: absoluteBlack,
-        shadowColor: absoluteBlack,
-        backgroundColor: absoluteBlack,
-        foregroundColor: absoluteWhite,
+        surfaceTintColor: _absoluteBlack,
+        shadowColor: _absoluteBlack,
+        backgroundColor: _absoluteBlack,
+        foregroundColor: _absoluteWhite,
       ),
-      backgroundColor: absoluteWhite,
-      body: LayoutBuilder(
-        builder: (context, constraints) {
-          return ConstrainedBox(
-            constraints: BoxConstraints(
-              minHeight: constraints.maxHeight,
-            ),
-            child: IntrinsicHeight(
-              child: Column(
-                children: [
-                  _headerSection(),
-                  Expanded(
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 20),
-                      child: Column(
-                        children: [
-                          _inputSection(
-                              controller: emailController,
-                              hintText: 'Email',
-                              icon: Icons.email_rounded),
-                          _inputSection(
-                              controller: passwordController,
-                              hintText: 'Password',
-                              icon: Icons.lock_rounded),
-                          Visibility(
-                            visible: isSelected[1],
-                            child: _inputSection(
-                                controller: confirmPasswordController,
-                                hintText: 'Confirm password',
-                                icon: Icons.lock_rounded),
-                          ),
-                          _additionalAction(),
-                          const Spacer(),
-                          _authButton(),
-                          const Spacer(),
-                          _alternativeMethods(),
-                        ],
-                      ),
+      backgroundColor: _absoluteWhite,
+      body: SafeArea(
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              _headerSection(),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                child: Column(
+                  children: [
+                    _inputSection(
+                        controller: _emailController,
+                        hintText: 'Email',
+                        icon: Icons.email_rounded),
+                    _inputSection(
+                        controller: _passwordController,
+                        hintText: 'Password',
+                        icon: Icons.lock_rounded),
+                    Visibility(
+                      visible: isSelected[1],
+                      child: _inputSection(
+                          controller: _confirmPasswordController,
+                          hintText: 'Confirm password',
+                          icon: Icons.lock_rounded),
                     ),
-                  ),
-                ],
+                    _additionalAction(),
+                    const SizedBox(height: 20),
+                    _authButton(),
+                    const SizedBox(height: 20),
+                    _alternativeMethods(),
+                  ],
+                ),
               ),
-            ),
-          );
-        },
+            ],
+          ),
+        ),
       ),
     );
   }
@@ -152,11 +181,9 @@ class _LoginPageState extends State<LoginPage> {
   Widget _headerSection() {
     final ThemeData theme = Theme.of(context);
     final Size screenSize = MediaQuery.of(context).size;
-    const Color absoluteBlack = Color(0xff121212);
-    final Color absoluteWhite = theme.colorScheme.onPrimary;
 
     return Container(
-      color: absoluteBlack,
+      color: _absoluteBlack,
       width: screenSize.width,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -167,15 +194,16 @@ class _LoginPageState extends State<LoginPage> {
             child: Text(
               'Go ahead and set up your account',
               style: theme.textTheme.headlineMedium
-                  ?.copyWith(color: absoluteWhite),
+                  ?.copyWith(color: _absoluteWhite),
             ),
           ),
           const SizedBox(height: 10),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20),
             child: Text(
-              'Sign in-up to experience your odyssey!',
-              style: theme.textTheme.bodyMedium?.copyWith(color: absoluteWhite),
+              'Sign in-up to experience your epic odyssey!',
+              style:
+                  theme.textTheme.bodyMedium?.copyWith(color: _absoluteWhite),
             ),
           ),
           const SizedBox(height: 20),
@@ -183,7 +211,7 @@ class _LoginPageState extends State<LoginPage> {
             width: screenSize.width,
             height: 100,
             decoration: BoxDecoration(
-                color: absoluteWhite,
+                color: _absoluteWhite,
                 borderRadius: const BorderRadius.only(
                     topLeft: Radius.circular(40),
                     topRight: Radius.circular(40))),
@@ -197,8 +225,6 @@ class _LoginPageState extends State<LoginPage> {
   Widget _toggleButton({required List<bool> isSelected}) {
     final ThemeData theme = Theme.of(context);
     final Size screenSize = MediaQuery.of(context).size;
-    const Color absoluteBlack = Color(0xff121212);
-    final Color absoluteWhite = theme.colorScheme.onPrimary;
 
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 16),
@@ -215,14 +241,14 @@ class _LoginPageState extends State<LoginPage> {
         children: [
           for (int i = 0; i < selectionOps.length; i++)
             Container(
-              color: absoluteBlack.withOpacity(0.3),
+              color: _absoluteBlack.withOpacity(0.3),
               child: Padding(
                 padding: const EdgeInsets.all(5),
                 child: Container(
                   width: screenSize.width / 2.5,
                   alignment: Alignment.center,
                   decoration: BoxDecoration(
-                    color: isSelected[i] ? absoluteWhite : Colors.transparent,
+                    color: isSelected[i] ? _absoluteWhite : Colors.transparent,
                     borderRadius: BorderRadius.circular(30),
                   ),
                   child: Padding(
@@ -230,7 +256,7 @@ class _LoginPageState extends State<LoginPage> {
                     child: Text(
                       selectionOps[i],
                       style: theme.textTheme.bodyLarge?.copyWith(
-                        color: absoluteBlack,
+                        color: _absoluteBlack,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
@@ -249,18 +275,17 @@ class _LoginPageState extends State<LoginPage> {
     required IconData icon,
   }) {
     final ThemeData theme = Theme.of(context);
-    const Color absoluteBlack = Color(0xff121212);
 
     return Padding(
       padding: const EdgeInsets.only(top: 20),
       child: ListTile(
         dense: true,
         shape: RoundedRectangleBorder(
-            side: BorderSide(color: absoluteBlack.withOpacity(0.5), width: 1),
+            side: BorderSide(color: _absoluteBlack.withOpacity(0.5), width: 1),
             borderRadius: BorderRadius.circular(15)),
         leading: Icon(
           icon,
-          color: absoluteBlack,
+          color: _absoluteBlack,
           size: 20,
         ),
         title: TextField(
@@ -268,12 +293,12 @@ class _LoginPageState extends State<LoginPage> {
           obscureText:
               hintText.toLowerCase().contains('password') ? obscurial : false,
           style: theme.textTheme.bodyLarge
-              ?.copyWith(color: absoluteBlack, fontWeight: FontWeight.bold),
+              ?.copyWith(color: _absoluteBlack, fontWeight: FontWeight.bold),
           decoration: InputDecoration(
             border: InputBorder.none,
             hintText: hintText,
             hintStyle: theme.textTheme.bodyLarge?.copyWith(
-              color: absoluteBlack,
+              color: _absoluteBlack,
             ),
           ),
         ),
@@ -289,7 +314,7 @@ class _LoginPageState extends State<LoginPage> {
               obscurial
                   ? Icons.visibility_off_rounded
                   : Icons.visibility_rounded,
-              color: absoluteBlack,
+              color: _absoluteBlack,
               size: 20,
             ),
           ),
@@ -300,7 +325,7 @@ class _LoginPageState extends State<LoginPage> {
 
   Widget _additionalAction() {
     final ThemeData theme = Theme.of(context);
-    const Color absoluteBlack = Color(0xff121212);
+
     return Padding(
       padding: const EdgeInsets.only(top: 20),
       child: Row(
@@ -315,15 +340,15 @@ class _LoginPageState extends State<LoginPage> {
               isSelected[0]
                   ? "Don't have an account?"
                   : "Already have an account?",
-              style: theme.textTheme.labelMedium
-                  ?.copyWith(fontWeight: FontWeight.bold, color: absoluteBlack),
+              style: theme.textTheme.labelMedium?.copyWith(
+                  fontWeight: FontWeight.bold, color: _absoluteBlack),
             ),
           ),
           Text(
             isSelected[0] ? 'Forgot Password?' : '',
             style: theme.textTheme.labelMedium?.copyWith(
                 fontWeight: FontWeight.bold,
-                color: absoluteBlack,
+                color: _absoluteBlack,
                 decoration: TextDecoration.underline),
           )
         ],
@@ -341,28 +366,29 @@ class _LoginPageState extends State<LoginPage> {
         onPressed: () => handleAuthentication(context),
         child: Text(
           isSelected[0] ? selectionOps[0] : selectionOps[1],
-          style:
-              theme.textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.bold),
+          style: theme.textTheme.bodyLarge
+              ?.copyWith(fontWeight: FontWeight.bold, color: _absoluteWhite),
         ));
   }
 
   Widget _alternativeMethods() {
     final ThemeData theme = Theme.of(context);
     final Size screenSize = MediaQuery.of(context).size;
-    const Color absoluteBlack = Color(0xff121212);
+
     return Column(
       children: [
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
             Container(
-                height: 1, width: screenSize.width / 5, color: absoluteBlack),
+                height: 1, width: screenSize.width / 5, color: _absoluteBlack),
             Text(
               'OR',
-              style: theme.textTheme.bodyMedium?.copyWith(color: absoluteBlack),
+              style:
+                  theme.textTheme.bodyMedium?.copyWith(color: _absoluteBlack),
             ),
             Container(
-                height: 1, width: screenSize.width / 5, color: absoluteBlack),
+                height: 1, width: screenSize.width / 5, color: _absoluteBlack),
           ],
         ),
         const SizedBox(height: 10),
@@ -376,7 +402,7 @@ class _LoginPageState extends State<LoginPage> {
             _methodButton(methodName: 'Apple'),
           ],
         ),
-        const SizedBox(height: 50),
+        const SizedBox(height: 20),
       ],
     );
   }
@@ -385,14 +411,13 @@ class _LoginPageState extends State<LoginPage> {
     required String methodName,
   }) {
     final ThemeData theme = Theme.of(context);
-    const Color absoluteBlack = Color(0xff121212);
-    final Color absoluteWhite = theme.colorScheme.onPrimary;
+
     return ElevatedButton.icon(
         style: ElevatedButton.styleFrom(
-            backgroundColor: absoluteWhite,
+            backgroundColor: _absoluteWhite,
             side: BorderSide(
               width: 1,
-              color: absoluteBlack.withOpacity(0.5),
+              color: _absoluteBlack.withOpacity(0.5),
             )),
         onPressed: () {},
         icon: CircleAvatar(
@@ -406,7 +431,7 @@ class _LoginPageState extends State<LoginPage> {
         label: Text(
           methodName,
           style: theme.textTheme.bodyLarge
-              ?.copyWith(color: absoluteBlack, fontWeight: FontWeight.bold),
+              ?.copyWith(color: _absoluteBlack, fontWeight: FontWeight.bold),
         ));
   }
 }

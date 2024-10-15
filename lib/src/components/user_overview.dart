@@ -6,10 +6,10 @@ import '../data/theme/theme.dart';
 import '../data/theme/theme_provider.dart';
 
 class UserOverview extends StatefulWidget {
-  final String username;
+  final String? username;
   final String imagePath;
   final bool isFull;
-  final String email;
+  final String? email;
   const UserOverview(
       {super.key,
       required this.username,
@@ -45,9 +45,9 @@ class _UserOverviewState extends State<UserOverview> {
     Navigator.of(context).push(
       MaterialPageRoute(
           builder: (context) => UserProfile(
-                username: widget.username,
+                username: widget.username?? 'username',
                 imagePath: widget.imagePath,
-                email: widget.email,
+                email: widget.email!,
               )),
     );
   }
@@ -78,12 +78,12 @@ class _UserOverviewState extends State<UserOverview> {
               ),
             ),
             Text(
-              widget.username,
+              widget.username?? 'username',
               style: theme.textTheme.headlineSmall
                   ?.copyWith(fontWeight: FontWeight.bold),
             ),
             Text(
-              widget.email,
+              widget.email!,
               style: theme.textTheme.labelMedium,
             ),
             Padding(

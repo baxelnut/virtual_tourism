@@ -1,6 +1,8 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../auth/auth.dart';
 import '../../components/user_overview.dart';
 import '../../data/theme/theme.dart';
 import '../../data/theme/theme_provider.dart';
@@ -16,6 +18,14 @@ class SettingsPage extends StatefulWidget {
 class _SettingsPageState extends State<SettingsPage> {
   bool notifAllowed = false;
   bool languageEN = true;
+
+  final Auth _auth = Auth();
+
+  void handleOnTap() {
+    print('fuck');
+  }
+
+  final user = FirebaseAuth.instance.currentUser;
 
   @override
   Widget build(BuildContext context) {
@@ -55,7 +65,13 @@ class _SettingsPageState extends State<SettingsPage> {
               }),
           const Icon(Icons.g_translate_rounded),
           const Icon(Icons.chevron_right_rounded),
-        ]
+        ],
+        'function': [
+          () => handleOnTap(),
+          () => handleOnTap(),
+          () => handleOnTap(),
+          () => handleOnTap(),
+        ],
       },
       {
         'heading': 'Account',
@@ -64,7 +80,11 @@ class _SettingsPageState extends State<SettingsPage> {
         'trailingWidget': [
           const Icon(Icons.chevron_right_rounded),
           const Icon(Icons.chevron_right_rounded),
-        ]
+        ],
+        'function': [
+          () => handleOnTap(),
+          () => handleOnTap(),
+        ],
       },
       {
         'heading': 'About',
@@ -78,7 +98,12 @@ class _SettingsPageState extends State<SettingsPage> {
           const Icon(Icons.chevron_right_rounded),
           const Icon(Icons.chevron_right_rounded),
           const Text('1.0.0'),
-        ]
+        ],
+        'function': [
+          () => handleOnTap(),
+          () => handleOnTap(),
+          () => handleOnTap(),
+        ],
       },
       {
         'heading': '',
@@ -86,7 +111,8 @@ class _SettingsPageState extends State<SettingsPage> {
         'title': ['Logout'],
         'trailingWidget': [
           const SizedBox(),
-        ]
+        ],
+        'function': [() => _auth.signOut()],
       },
     ];
 
@@ -98,19 +124,19 @@ class _SettingsPageState extends State<SettingsPage> {
             child: Column(
               children: [
                 const SizedBox(height: 50),
-                const UserOverview(
-                  username: 'Basil',
+                UserOverview(
+                  username: user?.displayName,
                   imagePath: 'assets/profile.jpg',
                   isFull: true,
-                  email: 'basiliustengang24@gmail.com',
+                  email: user?.email,
                 ),
                 for (var thang in listOfThangz)
                   SettingsTiles(
                     heading: thang['heading'],
                     leadingIcon: List<IconData>.from(thang['leadingIcon']),
                     title: List<String>.from(thang['title']),
-                    // subtitle: List<String>.from(thang['subtitle']),
                     trailingWidget: List<Widget>.from(thang['trailingWidget']),
+                    onTap: thang['function'],
                   ),
                 const SizedBox(height: 125)
               ],
