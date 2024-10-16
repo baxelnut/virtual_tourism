@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:virtual_tourism/src/pages/settings/user_profile.dart';
 
-import '../data/theme/theme.dart';
-import '../data/theme/theme_provider.dart';
+import '../services/theme/theme.dart';
+import '../services/theme/theme_provider.dart';
 
 class UserOverview extends StatefulWidget {
   final String? username;

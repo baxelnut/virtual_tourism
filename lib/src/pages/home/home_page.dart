@@ -7,7 +7,7 @@ import '../../components/cards_header.dart';
 import '../../components/cards_linear.dart';
 import '../../components/chips_component.dart';
 import '../../components/user_overview.dart';
-import '../../data/destination_data.dart';
+import '../../services/destination_data.dart';
 
 class HomePage extends StatelessWidget {
   HomePage({super.key});

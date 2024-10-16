@@ -7,8 +7,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 
 import 'auth/auth_page.dart';
 import 'auth/verify_email_page.dart';
-import 'data/theme/theme.dart';
-import 'data/theme/theme_provider.dart';
+import 'services/theme/theme.dart';
+import 'services/theme/theme_provider.dart';
 import 'pages/explore/explore_page.dart';
 import 'pages/home/home_page.dart';
 import 'pages/medals/medals_page.dart';

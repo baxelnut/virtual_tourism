@@ -4,8 +4,8 @@ import 'package:provider/provider.dart';
 
 import '../../auth/auth.dart';
 import '../../components/user_overview.dart';
-import '../../data/theme/theme.dart';
-import '../../data/theme/theme_provider.dart';
+import '../../services/theme/theme.dart';
+import '../../services/theme/theme_provider.dart';
 import 'settings_tiles.dart';
 import 'user_profile.dart';
 
