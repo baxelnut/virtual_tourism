@@ -7,6 +7,7 @@ import '../../components/user_overview.dart';
 import '../../data/theme/theme.dart';
 import '../../data/theme/theme_provider.dart';
 import 'settings_tiles.dart';
+import 'user_profile.dart';
 
 class SettingsPage extends StatefulWidget {
   const SettingsPage({super.key});
@@ -20,12 +21,17 @@ class _SettingsPageState extends State<SettingsPage> {
   bool languageEN = true;
 
   final Auth _auth = Auth();
+  final user = FirebaseAuth.instance.currentUser;
 
   void handleOnTap() {
     print('fuck');
   }
 
-  final user = FirebaseAuth.instance.currentUser;
+  handleEditProfile() {
+    Navigator.of(context).push(
+      MaterialPageRoute(builder: (context) => UserProfile()),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -75,13 +81,19 @@ class _SettingsPageState extends State<SettingsPage> {
       },
       {
         'heading': 'Account',
-        'leadingIcon': [Icons.info_outline_rounded, Icons.lock_outline_rounded],
-        'title': ['Privacy policy', 'Change password'],
+        'leadingIcon': [
+          Icons.info_outline_rounded,
+          Icons.email_rounded,
+          Icons.lock_outline_rounded
+        ],
+        'title': ['Privacy policy', 'Change email', 'Change password'],
         'trailingWidget': [
+          const Icon(Icons.chevron_right_rounded),
           const Icon(Icons.chevron_right_rounded),
           const Icon(Icons.chevron_right_rounded),
         ],
         'function': [
+          () => handleOnTap(),
           () => handleOnTap(),
           () => handleOnTap(),
         ],
@@ -126,7 +138,7 @@ class _SettingsPageState extends State<SettingsPage> {
                 const SizedBox(height: 50),
                 UserOverview(
                   username: user?.displayName,
-                  imagePath: 'assets/profile.jpg',
+                  imagePath: 'assets/profile.png',
                   isFull: true,
                   email: user?.email,
                 ),

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
+import '../../auth/auth_page.dart';
 import '../../components/cards_header.dart';
 import '../../components/chips_component.dart';
 import '../../components/user_overview.dart';
-import '../../login/login_page.dart';
 
 class MedalsPage extends StatelessWidget {
   const MedalsPage({super.key});
@@ -26,7 +26,7 @@ class MedalsPage extends StatelessWidget {
               GestureDetector(
                 onTap: () {
                   Navigator.of(context).push(
-                    MaterialPageRoute(builder: (context) => const LoginPage()),
+                    MaterialPageRoute(builder: (context) => const AuthPage()),
                   );
                 },
                 child: Container(
@@ -43,19 +43,19 @@ class MedalsPage extends StatelessWidget {
               const Divider(),
               const UserOverview(
                 username: '_username_',
-                imagePath: 'assets/profile.jpg',
+                imagePath: 'assets/profile.png',
                 isFull: false,
                 email: 'basiliustengang24@gmail.com',
               ),
               const UserOverview(
                 username: 'bazelnut',
-                imagePath: 'assets/profile.jpg',
+                imagePath: 'assets/profile.png',
                 isFull: false,
                 email: 'basiliustengang24@gmail.com',
               ),
               const UserOverview(
                 username: 'Jeremiah',
-                imagePath: 'assets/profile.jpg',
+                imagePath: 'assets/profile.png',
                 isFull: false,
                 email: 'basiliustengang24@gmail.com',
               ),

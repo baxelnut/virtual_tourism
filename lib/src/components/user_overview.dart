@@ -43,12 +43,7 @@ class _UserOverviewState extends State<UserOverview> {
 
   handleEditProfile() {
     Navigator.of(context).push(
-      MaterialPageRoute(
-          builder: (context) => UserProfile(
-                username: widget.username?? 'username',
-                imagePath: widget.imagePath,
-                email: widget.email!,
-              )),
+      MaterialPageRoute(builder: (context) => UserProfile()),
     );
   }
 
@@ -78,7 +73,7 @@ class _UserOverviewState extends State<UserOverview> {
               ),
             ),
             Text(
-              widget.username?? 'username',
+              widget.username ?? 'guest',
               style: theme.textTheme.headlineSmall
                   ?.copyWith(fontWeight: FontWeight.bold),
             ),
@@ -122,9 +117,10 @@ class _UserOverviewState extends State<UserOverview> {
                   style: theme.textTheme.bodyLarge,
                   children: [
                     TextSpan(
-                      text: widget.username,
-                      style: theme.textTheme.bodyLarge
-                          ?.copyWith(fontWeight: FontWeight.bold),
+                      text: widget.username ?? 'guest',
+                      style: theme.textTheme.bodyLarge?.copyWith(
+                          fontWeight: FontWeight.bold,
+                          color: theme.colorScheme.onSurface),
                     ),
                   ],
                 ),

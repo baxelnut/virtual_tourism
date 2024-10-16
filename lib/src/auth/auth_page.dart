@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:virtual_tourism/src/app.dart';
 
-import '../app.dart';
-import '../auth/auth.dart';
+import 'auth.dart';
 
-class LoginPage extends StatefulWidget {
-  const LoginPage({super.key});
+class AuthPage extends StatefulWidget {
+  const AuthPage({super.key});
 
   @override
-  State<LoginPage> createState() => _LoginPageState();
+  State<AuthPage> createState() => _AuthPageState();
 }
 
-class _LoginPageState extends State<LoginPage> {
+class _AuthPageState extends State<AuthPage> {
   List<bool> isSelected = [true, false];
   List<String> selectionOps = ['Login', 'Register'];
   bool obscurial = true;
@@ -80,17 +80,20 @@ class _LoginPageState extends State<LoginPage> {
 
         if (isConfirmPasswordFilled && passwordsMatch) {
           try {
-            await _auth.registerWithEmailAndPassword(
+            await _auth.register(
               email: _emailController.text.trim(),
               password: _passwordController.text.trim(),
             );
 
             if (context.mounted) {
               showAlertDialog(context, 'Successfully registered');
+              Navigator.of(context).pushReplacement(
+                MaterialPageRoute(builder: (context) => const MyApp()),
+              );
             }
           } catch (e) {
             if (context.mounted) {
-              showAlertDialog(context, 'Failed to register: ${e.toString()}');
+              showAlertDialog(context, 'Failed to register: \n${e.toString()}');
             }
           }
         } else {
@@ -103,7 +106,7 @@ class _LoginPageState extends State<LoginPage> {
         }
       } else {
         try {
-          await _auth.signInWithEmailAndPassword(
+          await _auth.logIn(
             email: _emailController.text.trim(),
             password: _passwordController.text.trim(),
           );
@@ -116,7 +119,7 @@ class _LoginPageState extends State<LoginPage> {
           }
         } catch (e) {
           if (context.mounted) {
-            showAlertDialog(context, 'Failed to login: ${e.toString()}');
+            showAlertDialog(context, 'Failed to login: \n${e.toString()}');
           }
         }
       }

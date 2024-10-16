@@ -1,14 +1,38 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:virtual_tourism/src/auth/auth.dart';
 
 class UserProfile extends StatelessWidget {
-  final String username;
-  final String imagePath;
-  final String email;
-  const UserProfile(
-      {super.key,
-      required this.username,
-      required this.imagePath,
-      required this.email});
+  UserProfile({super.key});
+
+  final user = FirebaseAuth.instance.currentUser;
+
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _usernameController = TextEditingController();
+  final TextEditingController _phoneNumberController = TextEditingController();
+
+  void handleProfileClick(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (_) {
+        return AlertDialog(
+          title: ClipOval(
+            child: AspectRatio(
+              aspectRatio: 1.0,
+              child: Image.asset(
+                user?.photoURL ?? 'assets/profile.png',
+                fit: BoxFit.cover,
+              ),
+            ),
+          ),
+          content: const Text(
+            'This is your profile picture',
+            textAlign: TextAlign.center,
+          ),
+        );
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -18,105 +42,115 @@ class UserProfile extends StatelessWidget {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
-        title: const Text('Edit Profile'),
+        title: const Text(
+          'Edit Profile',
+        ),
       ),
-      body: LayoutBuilder(builder: (context, constraints) {
-        return ConstrainedBox(
-          constraints: BoxConstraints(
-            minHeight: constraints.maxHeight,
-          ),
-          child: Center(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(vertical: 30, horizontal: 20),
-              child: Column(
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.all(12),
-                    child: GestureDetector(
-                      onTap: () {
-                        showDialog(
-                          context: context,
-                          builder: (_) {
-                            return AlertDialog(
-                              title: AspectRatio(
-                                aspectRatio: 1.0,
-                                child: Image.asset(
-                                  imagePath,
-                                  fit: BoxFit.cover,
-                                ),
-                              ),
-                              content: const Text(
-                                  'This is your profile picture',
-                                  textAlign: TextAlign.center),
-                            );
-                          },
-                        );
-                      },
-                      child: CircleAvatar(
-                          radius: 50, backgroundImage: AssetImage(imagePath)),
-                    ),
-                  ),
-                  Text(
-                    username,
-                    style: theme.textTheme.headlineSmall
-                        ?.copyWith(fontWeight: FontWeight.bold),
-                  ),
-                  Text(
-                    email,
-                    style: theme.textTheme.labelMedium,
-                  ),
-                  const Divider(thickness: 0.5),
-                  _inputSection(label: 'Username', theme: theme),
-                  _inputSection(label: 'Email', theme: theme),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Expanded(
-                        child: SizedBox(
-                            child:
-                                _inputSection(label: 'Gender', theme: theme)),
+      body: LayoutBuilder(
+        builder: (context, constraints) {
+          return ConstrainedBox(
+            constraints: BoxConstraints(
+              minHeight: constraints.maxHeight,
+            ),
+            child: Center(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(
+                  vertical: 30,
+                  horizontal: 20,
+                ),
+                child: Column(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(12),
+                      child: GestureDetector(
+                        onTap: () => handleProfileClick(context),
+                        child: CircleAvatar(
+                          radius: 69,
+                          backgroundImage: AssetImage(
+                            user?.photoURL ?? 'assets/profile.png',
+                          ),
+                        ),
                       ),
-                      Expanded(
-                          child:
-                              _inputSection(label: 'Birthday', theme: theme)),
-                    ],
-                  ),
-                  _inputSection(label: 'Phone number', theme: theme),
-                  const Spacer(),
-                  ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                          fixedSize: Size(screenSize.width, 60),
-                          backgroundColor: theme.colorScheme.primary),
-                      onPressed: () {},
-                      child: Text('Save',
-                          style: theme.textTheme.bodyLarge?.copyWith(
-                              fontWeight: FontWeight.bold,
-                              color: theme.colorScheme.onPrimary))),
-                 
-                ],
+                    ),
+                    _inputSection(
+                      label: 'Username',
+                      controller: _usernameController,
+                      theme: theme,
+                    ),
+                    _inputSection(
+                      label: 'Email',
+                      controller: _emailController,
+                      theme: theme,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Expanded(
+                          child: SizedBox(
+                            child: _inputSection(
+                              label: 'Gender',
+                              theme: theme,
+                            ),
+                          ),
+                        ),
+                        Expanded(
+                          child: _inputSection(
+                            label: 'Birthday',
+                            theme: theme,
+                          ),
+                        ),
+                      ],
+                    ),
+                    _inputSection(
+                      label: 'Phone number',
+                      controller: _phoneNumberController,
+                      theme: theme,
+                    ),
+                    Text(Auth().currentUser!.emailVerified.toString()),
+                    const Spacer(),
+                    saveChanges(
+                      theme: theme,
+                      screenSize: screenSize,
+                    ),
+                  ],
+                ),
               ),
             ),
-          ),
-        );
-      }),
+          );
+        },
+      ),
     );
   }
 
-  Widget _inputSection({
-    required String label,
-    required ThemeData theme,
-  }) {
+  Widget _inputSection(
+      {required String label, required ThemeData theme, controller}) {
     return Padding(
       padding: const EdgeInsets.all(8),
       child: TextField(
-        // controller: controller,
+        controller: controller,
+        // onSubmitted: (value) {},
         style: theme.textTheme.bodyLarge,
         decoration: InputDecoration(
           border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(10),
-              borderSide: const BorderSide(width: 0.5)),
+            borderRadius: BorderRadius.circular(10),
+            borderSide: const BorderSide(width: 0.5),
+          ),
           label: Text(label, style: theme.textTheme.bodyLarge),
         ),
+      ),
+    );
+  }
+
+  Widget saveChanges({required ThemeData theme, required Size screenSize}) {
+    return ElevatedButton(
+      style: ElevatedButton.styleFrom(
+          fixedSize: Size(screenSize.width, 60),
+          backgroundColor: theme.colorScheme.primary),
+      onPressed: () {},
+      child: Text(
+        'Save',
+        style: theme.textTheme.bodyLarge?.copyWith(
+            fontWeight: FontWeight.bold, color: theme.colorScheme.onPrimary),
       ),
     );
   }

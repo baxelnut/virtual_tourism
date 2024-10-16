@@ -5,9 +5,10 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
+import 'auth/auth_page.dart';
+import 'auth/verify_email_page.dart';
 import 'data/theme/theme.dart';
 import 'data/theme/theme_provider.dart';
-import 'login/login_page.dart';
 import 'pages/explore/explore_page.dart';
 import 'pages/home/home_page.dart';
 import 'pages/medals/medals_page.dart';
@@ -41,6 +42,8 @@ class _MyAppState extends State<MyApp> {
 
   int pageIndex = 0;
 
+  final user = FirebaseAuth.instance.currentUser;
+
   @override
   Widget build(BuildContext context) {
     final themeProvider = Provider.of<ThemeProvider>(context);
@@ -65,22 +68,27 @@ class _MyAppState extends State<MyApp> {
               return const Center(child: CircularProgressIndicator());
             }
             if (snapshot.hasData) {
-              switch (pageIndex) {
-                case 0:
-                  return const HomePage();
-                case 1:
-                  return const TourPage();
-                case 2:
-                  return const ExplorePage();
-                case 3:
-                  return const MedalsPage();
-                case 4:
-                  return const SettingsPage();
-                default:
-                  return const HomePage();
+              final user = FirebaseAuth.instance.currentUser;
+              if (user != null && !user.emailVerified) {
+                return const VerifyEmailPage(); // Redirect to VerifyEmailPage if not verified
+              } else {
+                switch (pageIndex) {
+                  case 0:
+                    return HomePage();
+                  case 1:
+                    return const TourPage();
+                  case 2:
+                    return const ExplorePage();
+                  case 3:
+                    return const MedalsPage();
+                  case 4:
+                    return const SettingsPage();
+                  default:
+                    return HomePage();
+                }
               }
             } else {
-              return const LoginPage();
+              return const AuthPage();
             }
           },
         ),

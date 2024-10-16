@@ -7,10 +7,11 @@ class Auth {
 
   Stream<User?> get authStateChanges => _firebaseAuth.authStateChanges();
 
-  Future<void> signInWithEmailAndPassword({
+  Future<void> logIn({
     required String email,
     required String password,
-  }) async {
+  }) 
+  async {
     try {
       await _firebaseAuth.signInWithEmailAndPassword(
           email: email, password: password);
@@ -19,13 +20,15 @@ class Auth {
     }
   }
 
-  Future<void> registerWithEmailAndPassword({
+  Future<void> register({
     required String email,
     required String password,
   }) async {
     try {
-      await _firebaseAuth.createUserWithEmailAndPassword(
-          email: email, password: password);
+      UserCredential userCredential = await _firebaseAuth
+          .createUserWithEmailAndPassword(email: email, password: password);
+
+      await userCredential.user?.sendEmailVerification();
     } on FirebaseAuthException catch (e) {
       throw Exception(e.message);
     }

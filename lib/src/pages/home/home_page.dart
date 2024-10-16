@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 import '../../components/cards_curved.dart';
@@ -9,7 +10,9 @@ import '../../components/user_overview.dart';
 import '../../data/destination_data.dart';
 
 class HomePage extends StatelessWidget {
-  const HomePage({super.key});
+  HomePage({super.key});
+
+  final user = FirebaseAuth.instance.currentUser;
 
   @override
   Widget build(BuildContext context) {
@@ -44,15 +47,15 @@ class HomePage extends StatelessWidget {
   }
 
   Widget homeHeader() {
-    return const Column(
+    return Column(
       children: [
         UserOverview(
-          username: 'Basil',
-          imagePath: 'assets/profile.jpg',
+          username: user?.displayName,
+          imagePath: 'assets/profile.png',
           isFull: false,
           email: 'basiliustengang24@gmail.com',
         ),
-        ChipsComponent(listOfThangz: ['Places', 'Conservation', 'News']),
+        const ChipsComponent(listOfThangz: ['Places', 'Conservation', 'News']),
       ],
     );
   }
