@@ -124,7 +124,7 @@ class _SettingsPageState extends State<SettingsPage> {
         'trailingWidget': [
           const SizedBox(),
         ],
-        'function': [() => _auth.signOut()],
+        'function': [() => _auth.logout()],
       },
     ];
 

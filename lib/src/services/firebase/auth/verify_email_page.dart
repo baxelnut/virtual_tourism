@@ -2,8 +2,8 @@ import 'dart:async';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
-
 import '../../../app.dart';
+import '../firebase_api.dart';
 import 'auth.dart';
 import 'auth_page.dart';
 
@@ -16,6 +16,7 @@ class VerifyEmailPage extends StatefulWidget {
 
 class _VerifyEmailPageState extends State<VerifyEmailPage> {
   final Auth _auth = Auth();
+  final FirebaseApi _firebaseApi = FirebaseApi();
   bool isEmailVerified = false;
   Timer? timer;
   bool canResend = false;
@@ -54,12 +55,15 @@ class _VerifyEmailPageState extends State<VerifyEmailPage> {
       });
 
       timer?.cancel();
-
       navigateToMyApp();
     }
   }
 
   void navigateToMyApp() {
+    final user = FirebaseAuth.instance.currentUser;
+    _firebaseApi.updateUserVerificationStatus(
+        userUid: user!.uid, isVerified: user.emailVerified);
+
     Navigator.of(context).pushReplacement(
       MaterialPageRoute(builder: (context) => const MyApp()),
     );
@@ -108,7 +112,7 @@ class _VerifyEmailPageState extends State<VerifyEmailPage> {
                       color: theme.colorScheme.onPrimary,
                     ),
                   ),
-                  onPressed: canResend ? sendVerificationEmail : (){},
+                  onPressed: canResend ? sendVerificationEmail : () {},
                 ),
               if (!isEmailVerified)
                 TextButton(
@@ -120,7 +124,7 @@ class _VerifyEmailPageState extends State<VerifyEmailPage> {
                     ),
                   ),
                   onPressed: () {
-                    _auth.signOut();
+                    _auth.logout();
                     Navigator.of(context).pushReplacement(
                       MaterialPageRoute(builder: (context) => const AuthPage()),
                     );

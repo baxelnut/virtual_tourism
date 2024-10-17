@@ -26,7 +26,7 @@ class _ImageStorageTestState extends State<ImageStorageTest> {
 
   @override
   Widget build(BuildContext context) {
-    final ThemeData theme = Theme.of(context);
+    // final ThemeData theme = Theme.of(context);
     final Size screenSize = MediaQuery.of(context).size;
 
     return Scaffold(

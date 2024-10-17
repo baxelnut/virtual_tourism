@@ -106,7 +106,7 @@ class _AuthPageState extends State<AuthPage> {
         }
       } else {
         try {
-          await _auth.logIn(
+          await _auth.login(
             email: _emailController.text.trim(),
             password: _passwordController.text.trim(),
           );

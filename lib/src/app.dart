@@ -74,6 +74,7 @@ class _MyAppState extends State<MyApp> {
               } else {
                 switch (pageIndex) {
                   case 0:
+                    // print(user!.uid);
                     return HomePage();
                   case 1:
                     return const TourPage();
@@ -108,7 +109,7 @@ class _MyAppState extends State<MyApp> {
                     borderRadius: BorderRadius.circular(28),
                     boxShadow: [
                       BoxShadow(
-                        color: theme.colorScheme.onSurface.withOpacity(0.6),
+                        color: const Color(0xff151515).withOpacity(0.6),
                         spreadRadius: 3.5,
                         blurRadius: 6.9,
                         offset: const Offset(0, 0),

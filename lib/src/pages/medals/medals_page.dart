@@ -1,9 +1,11 @@
+// import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 import '../../components/cards_header.dart';
 import '../../components/chips_component.dart';
 import '../../components/user_overview.dart';
 import '../../services/firebase/auth/auth_page.dart';
+// import '../../services/firebase/firebase_api.dart';
 import 'image_storage_test.dart';
 
 class MedalsPage extends StatelessWidget {
@@ -24,6 +26,24 @@ class MedalsPage extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               // page test
+              // GestureDetector(
+              //   onTap: () async {
+              //     print('Adding user data');
+              //     final user = FirebaseAuth.instance.currentUser;
+              //     await FirebaseApi().addUserData(
+              //       userUid: user!.uid,
+              //       isVerified: user.emailVerified,
+              //       email: user.email!,
+              //     );
+              //     print('User data added');
+              //   },
+              //   child: Container(
+              //     color: Colors.red,
+              //     height: 100,
+              //     width: 200,
+              //     child: Text('add user data'),
+              //   ),
+              // ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [

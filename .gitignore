@@ -50,3 +50,7 @@ app.*.map.json
 
 # Ignore Gradle build output directory
 build
+
+# Ignore specific Dart files
+virtual_tourism/lib/src/services/firebase/firebase_api.dart
+virtual_tourism/lib/src/services/firebase/auth/auth.dart
