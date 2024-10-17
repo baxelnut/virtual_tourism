@@ -10,7 +10,7 @@ class StorageService with ChangeNotifier {
   bool _isUploading = false;
 
   // GETTERS
-  List<String> get imageUrls => imageUrls;
+  List<String> get imageUrls => _imageUrls;
   bool get isLoading => _isLoading;
   bool get isUploading => _isUploading;
 

@@ -1,6 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:virtual_tourism/src/auth/auth.dart';
+
+import '../../services/firebase/auth/auth.dart';
+
 
 class UserProfile extends StatelessWidget {
   UserProfile({super.key});

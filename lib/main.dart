@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:virtual_tourism/src/services/storage/storage_service.dart';
 
 import 'src/app.dart';
 import 'src/services/firebase/firebase_options.dart';
+import 'src/services/firebase/storage/storage_service.dart';
 import 'src/services/theme/theme_provider.dart';
 
 void main() async {
@@ -21,11 +21,11 @@ void main() async {
   await themeProvider.loadTheme();
 
   runApp(
-    ChangeNotifierProvider(
-      create: (_) {
-        storageService;
-        themeProvider;
-      },
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider<StorageService>.value(value: storageService),
+        ChangeNotifierProvider<ThemeProvider>.value(value: themeProvider),
+      ],
       child: const MyApp(),
     ),
   );

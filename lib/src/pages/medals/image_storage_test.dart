@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../../services/storage/storage_service.dart';
+import '../../components/cards_emerged.dart';
+import '../../services/firebase/storage/storage_service.dart';
 
 class ImageStorageTest extends StatefulWidget {
   const ImageStorageTest({super.key});
@@ -11,41 +12,80 @@ class ImageStorageTest extends StatefulWidget {
 }
 
 class _ImageStorageTestState extends State<ImageStorageTest> {
+  late Future<void> _fetchImagesFuture;
+
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
-    fetchImages();
+    _fetchImagesFuture = fetchImages();
   }
 
-  Future fetchImages() async {
+  Future<void> fetchImages() async {
     await Provider.of<StorageService>(context, listen: false).fetchImages();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<StorageService>(builder: (context, storageService, child) {
-      final List<String> imageUrls = storageService.imageUrls;
+    final ThemeData theme = Theme.of(context);
+    final Size screenSize = MediaQuery.of(context).size;
 
-      return Scaffold(
-        appBar: AppBar(
-          title: const Text('Storage Service'),
-        ),
-        body: ListView.builder(
-          itemCount: imageUrls.length,
-          itemBuilder: (context, index) {
-            final String imageUrl = imageUrls[index];
-
-            return Image.network(imageUrl);
-          },
-        ),
-        floatingActionButton: FloatingActionButton(
-          onPressed: () {
-            storageService.uploadImage();
-          },
-          child: const Icon(Icons.add_a_photo_rounded),
-        ),
-      );
-    });
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Storage Service'),
+      ),
+      body: FutureBuilder<void>(
+        future: _fetchImagesFuture,
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(child: CircularProgressIndicator());
+          } else if (snapshot.hasError) {
+            return Center(child: Text('Error: ${snapshot.error}'));
+          } else {
+            return Consumer<StorageService>(
+              builder: (context, storageService, child) {
+                final List<String> imageUrls = storageService.imageUrls;
+                return Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  child: Container(
+                    color: Colors.amber,
+                    width: screenSize.width,
+                    height: screenSize.height,
+                    child: ListView.builder(
+                      itemCount: imageUrls.length,
+                      itemBuilder: (context, index) {
+                        final String imageUrl = imageUrls[index];
+                        print(imageUrls);
+                        return Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 10),
+                            child: CardsEmerged(
+                                country: 'country',
+                                destination: 'destination',
+                                thumbnailPath: imageUrl,
+                                imagePath: imageUrl));
+                      },
+                    ),
+                    // CardsLinear(
+                    //             country: imageUrl,
+                    //             flag: imageUrl,
+                    //             thumbnailPath: imageUrl,
+                    //             imagePath: imageUrl)
+                  ),
+                );
+              },
+            );
+          }
+        },
+      ),
+      floatingActionButton: Consumer<StorageService>(
+        builder: (context, storageService, child) {
+          return FloatingActionButton(
+            onPressed: () {
+              storageService.uploadImage();
+            },
+            child: const Icon(Icons.add_a_photo_rounded),
+          );
+        },
+      ),
+    );
   }
 }

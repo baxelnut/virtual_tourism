@@ -5,8 +5,8 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
-import 'auth/auth_page.dart';
-import 'auth/verify_email_page.dart';
+import 'services/firebase/auth/auth_page.dart';
+import 'services/firebase/auth/verify_email_page.dart';
 import 'services/theme/theme.dart';
 import 'services/theme/theme_provider.dart';
 import 'pages/explore/explore_page.dart';

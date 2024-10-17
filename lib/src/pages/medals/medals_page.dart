@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 
-import '../../auth/auth_page.dart';
 import '../../components/cards_header.dart';
 import '../../components/chips_component.dart';
 import '../../components/user_overview.dart';
+import '../../services/firebase/auth/auth_page.dart';
+import 'image_storage_test.dart';
 
 class MedalsPage extends StatelessWidget {
   const MedalsPage({super.key});
@@ -23,20 +24,45 @@ class MedalsPage extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               // page test
-              GestureDetector(
-                onTap: () {
-                  Navigator.of(context).push(
-                    MaterialPageRoute(builder: (context) => const AuthPage()),
-                  );
-                },
-                child: Container(
-                  width: 100,
-                  height: 100,
-                  color: Colors.amber,
-                  child: const Center(
-                    child: Text('Login Page'),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                            builder: (context) => const AuthPage()),
+                      );
+                    },
+                    child: Container(
+                      width: 100,
+                      height: 100,
+                      color: Colors.green,
+                      child: const Center(
+                        child: Text('Login Page'),
+                      ),
+                    ),
                   ),
-                ),
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                            builder: (context) => const ImageStorageTest()),
+                      );
+                    },
+                    child: Container(
+                      width: 100,
+                      height: 100,
+                      color: Colors.amber,
+                      child: const Center(
+                        child: Text(
+                          'Image Storage',
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
               ),
               // component
               const Text('UserOverview()'),
