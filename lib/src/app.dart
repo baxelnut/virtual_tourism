@@ -74,8 +74,11 @@ class _MyAppState extends State<MyApp> {
               } else {
                 switch (pageIndex) {
                   case 0:
-                    // print(user!.uid);
-                    return HomePage();
+                    return HomePage(onPageChange: (index) {
+                      setState(() {
+                        pageIndex = index;
+                      });
+                    });
                   case 1:
                     return const TourPage();
                   case 2:
@@ -85,7 +88,11 @@ class _MyAppState extends State<MyApp> {
                   case 4:
                     return const SettingsPage();
                   default:
-                    return HomePage();
+                    return HomePage(onPageChange: (index) {
+                      setState(() {
+                        pageIndex = index;
+                      });
+                    });
                 }
               }
             } else {

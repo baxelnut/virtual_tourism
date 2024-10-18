@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_print
+
 import 'dart:io';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
@@ -9,29 +11,26 @@ class StorageService with ChangeNotifier {
   bool _isLoading = false;
   bool _isUploading = false;
 
-  // GETTERS
   List<String> get imageUrls => _imageUrls;
   bool get isLoading => _isLoading;
   bool get isUploading => _isUploading;
 
-  // READ
   Future<void> fetchImages() async {
     _isLoading = true;
-    // get list
+
     final ListResult result =
         await firebaseStorage.ref('uploaded_images/').listAll();
-    // get download urls
+
     final urls =
         await Future.wait(result.items.map((ref) => ref.getDownloadURL()));
-    _imageUrls = urls; // update urls
+    _imageUrls = urls;
     _isLoading = false;
     notifyListeners();
   }
 
-  // DELETE
   Future<void> deleteImages(String imageUrl) async {
     try {
-      _imageUrls.remove(imageUrl); // remove from local list
+      _imageUrls.remove(imageUrl);
       final String path = extractPathFromUrl(imageUrl);
       await firebaseStorage.ref(path).delete();
     } catch (e) {
@@ -43,10 +42,9 @@ class StorageService with ChangeNotifier {
   String extractPathFromUrl(String url) {
     Uri uri = Uri.parse(url);
     String encodedPath = uri.pathSegments.last;
-    return Uri.decodeComponent(encodedPath); // url decoding the path
+    return Uri.decodeComponent(encodedPath);
   }
 
-  // UPLOAD
   Future<void> uploadImage() async {
     _isUploading = true;
     notifyListeners();
@@ -79,7 +77,7 @@ class StorageService with ChangeNotifier {
     try {
       final ImagePicker picker = ImagePicker();
       final XFile? image = await picker.pickImage(source: ImageSource.gallery);
-
+      _isLoading = true;
       if (image != null) {
         String fileExtension = image.path.split('.').last;
         String filePath = 'users/profile/$userUid.$fileExtension';
@@ -90,6 +88,8 @@ class StorageService with ChangeNotifier {
         String downloadUrl =
             await firebaseStorage.ref(filePath).getDownloadURL();
 
+        _isLoading = false;
+        notifyListeners();
         return downloadUrl;
       } else if (image == null) {
         return null;

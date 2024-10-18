@@ -1,11 +1,10 @@
-// import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:virtual_tourism/src/services/firebase/firebase_api.dart';
 
 import '../../components/cards_header.dart';
 import '../../components/chips_component.dart';
-import '../../components/user_overview.dart';
+// import '../../components/user_overview.dart';
 import '../../services/firebase/auth/auth_page.dart';
 // import '../../services/firebase/firebase_api.dart';
 import 'image_storage_test.dart';
@@ -49,11 +48,11 @@ class MedalsPage extends StatelessWidget {
 
               GestureDetector(
                 onTap: () async {
-                  print('uploading profile picture');
+                  // print('uploading profile picture');
                   final user = FirebaseAuth.instance.currentUser;
                   FirebaseApi firebaseApi = FirebaseApi();
                   await firebaseApi.updateProfilePicture(userUid: user!.uid);
-                  print('profile picture uploaded');
+                  // print('profile picture uploaded');
                 },
                 child: Container(
                   color: Colors.red,
@@ -103,26 +102,26 @@ class MedalsPage extends StatelessWidget {
                 ],
               ),
               // component
-              const Text('UserOverview()'),
-              const Divider(),
-              const UserOverview(
-                username: '_username_',
-                imagePath: '',
-                isFull: false,
-                email: '',
-              ),
-              const UserOverview(
-                username: 'bazelnut',
-                imagePath: '',
-                isFull: false,
-                email: '',
-              ),
-              const UserOverview(
-                username: 'Jeremiah',
-                imagePath: '',
-                isFull: true,
-                email: 'jeremiah_jemeriah@gmail.com',
-              ),
+              // const Text('UserOverview()'),
+              // const Divider(),
+              // const UserOverview(
+              //   username: '_username_',
+              //   imagePath: '',
+              //   isFull: false,
+              //   email: '',
+              // ),
+              // const UserOverview(
+              //   username: 'bazelnut',
+              //   imagePath: '',
+              //   isFull: false,
+              //   email: '',
+              // ),
+              // const UserOverview(
+              //   username: 'Jeremiah',
+              //   imagePath: '',
+              //   isFull: true,
+              //   email: 'jeremiah_jemeriah@gmail.com',
+              // ),
               const Text('ChipsComponent()'),
               const Divider(),
               const ChipsComponent(

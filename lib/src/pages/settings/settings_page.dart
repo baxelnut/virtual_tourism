@@ -29,7 +29,7 @@ class _SettingsPageState extends State<SettingsPage> {
 
   handleEditProfile() {
     Navigator.of(context).push(
-      MaterialPageRoute(builder: (context) => UserProfile()),
+      MaterialPageRoute(builder: (context) => const UserProfile()),
     );
   }
 
@@ -138,7 +138,7 @@ class _SettingsPageState extends State<SettingsPage> {
                 const SizedBox(height: 50),
                 UserOverview(
                   username: user?.displayName ?? 'guest',
-                  imagePath: user?.photoURL ??  'assets/profile.png',
+                  imagePath: user?.photoURL ?? 'assets/profile.png',
                   isFull: true,
                   email: user!.email!,
                 ),

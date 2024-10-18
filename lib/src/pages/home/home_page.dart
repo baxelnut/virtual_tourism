@@ -9,9 +9,15 @@ import '../../components/chips_component.dart';
 import '../../components/user_overview.dart';
 import '../../services/destination_data.dart';
 
-class HomePage extends StatelessWidget {
-  HomePage({super.key});
+class HomePage extends StatefulWidget {
+  final Function(int) onPageChange;
+  const HomePage({super.key, required this.onPageChange});
 
+  @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
   final user = FirebaseAuth.instance.currentUser;
 
   @override
@@ -55,6 +61,7 @@ class HomePage extends StatelessWidget {
           imagePath: user!.photoURL!,
           isFull: false,
           email: user!.email!,
+          onPageChange: widget.onPageChange,
         ),
         const ChipsComponent(listOfThangz: ['Places', 'Conservation', 'News']),
       ],

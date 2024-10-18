@@ -9,6 +9,7 @@ class UserOverview extends StatefulWidget {
   final String imagePath;
   final bool isFull;
   final String email;
+  final Function(int)? onPageChange;
 
   const UserOverview({
     super.key,
@@ -16,6 +17,7 @@ class UserOverview extends StatefulWidget {
     required this.imagePath,
     required this.isFull,
     required this.email,
+    this.onPageChange,
   });
 
   @override
@@ -44,7 +46,7 @@ class _UserOverviewState extends State<UserOverview> {
 
   handleEditProfile() {
     Navigator.of(context).push(
-      MaterialPageRoute(builder: (context) => UserProfile()),
+      MaterialPageRoute(builder: (context) => const UserProfile()),
     );
   }
 
@@ -118,9 +120,7 @@ class _UserOverviewState extends State<UserOverview> {
           children: [
             Expanded(
               child: GestureDetector(
-                onTap: () {
-                  print('go to settings page');
-                },
+                onTap: () => widget.onPageChange!(4),
                 child: Text.rich(
                   TextSpan(
                     text: 'Hi, ',
