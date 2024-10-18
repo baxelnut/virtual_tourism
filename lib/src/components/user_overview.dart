@@ -1,21 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:virtual_tourism/src/pages/settings/user_profile.dart';
-
 import '../services/theme/theme.dart';
 import '../services/theme/theme_provider.dart';
+import '../pages/settings/user_profile.dart';
 
 class UserOverview extends StatefulWidget {
-  final String? username;
+  final String username;
   final String imagePath;
   final bool isFull;
-  final String? email;
-  const UserOverview(
-      {super.key,
-      required this.username,
-      required this.imagePath,
-      required this.isFull,
-      required this.email});
+  final String email;
+
+  const UserOverview({
+    super.key,
+    required this.username,
+    required this.imagePath,
+    required this.isFull,
+    required this.email,
+  });
 
   @override
   State<UserOverview> createState() => _UserOverviewState();
@@ -29,8 +30,8 @@ class _UserOverviewState extends State<UserOverview> {
         return AlertDialog(
           title: AspectRatio(
             aspectRatio: 1.0,
-            child: Image.asset(
-              widget.imagePath,
+            child: Image(
+              image: _getImageProvider(),
               fit: BoxFit.cover,
             ),
           ),
@@ -48,7 +49,15 @@ class _UserOverviewState extends State<UserOverview> {
   }
 
   handleBookmarks() {
-    return print('handle bookmarks blud');
+    print('handle bookmarks');
+  }
+
+  ImageProvider<Object> _getImageProvider() {
+    if (widget.imagePath.isEmpty) {
+      return const AssetImage('assets/profile.png');
+    } else {
+      return NetworkImage(widget.imagePath);
+    }
   }
 
   @override
@@ -56,7 +65,7 @@ class _UserOverviewState extends State<UserOverview> {
     final theme = Theme.of(context);
     final bool isDark =
         Provider.of<ThemeProvider>(context).themeData == darkMode;
-    // final screenSize = MediaQuery.of(context).size;
+
     if (widget.isFull) {
       return Padding(
         padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
@@ -69,32 +78,36 @@ class _UserOverviewState extends State<UserOverview> {
                   handleShowPict();
                 },
                 child: CircleAvatar(
-                    radius: 50, backgroundImage: AssetImage(widget.imagePath)),
+                  radius: 50,
+                  backgroundImage: _getImageProvider(),
+                ),
               ),
             ),
             Text(
-              widget.username ?? 'guest',
+              widget.username,
               style: theme.textTheme.headlineSmall
                   ?.copyWith(fontWeight: FontWeight.bold),
             ),
             Text(
-              widget.email!,
+              widget.email,
               style: theme.textTheme.labelMedium,
             ),
             Padding(
               padding: const EdgeInsets.all(12),
               child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                      backgroundColor: theme.colorScheme.secondary),
-                  onPressed: () {
-                    handleEditProfile();
-                  },
-                  child: Text(
-                    'Edit Profile',
-                    style: theme.textTheme.bodyLarge
-                        ?.copyWith(color: theme.colorScheme.onSecondary),
-                  )),
-            )
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: theme.colorScheme.secondary,
+                ),
+                onPressed: () {
+                  handleEditProfile();
+                },
+                child: Text(
+                  'Edit Profile',
+                  style: theme.textTheme.bodyLarge
+                      ?.copyWith(color: theme.colorScheme.onSecondary),
+                ),
+              ),
+            ),
           ],
         ),
       );
@@ -104,45 +117,45 @@ class _UserOverviewState extends State<UserOverview> {
         child: Row(
           children: [
             Expanded(
-                child: GestureDetector(
-              onTap: () {
-                // Navigator.of(context).push(
-                //   MaterialPageRoute(builder: (context) => const SettingsPage()),
-                // );
-                print('go to settings page');
-              },
-              child: Text.rich(
-                TextSpan(
-                  text: 'Hi, ',
-                  style: theme.textTheme.bodyLarge,
-                  children: [
-                    TextSpan(
-                      text: widget.username ?? 'guest',
-                      style: theme.textTheme.bodyLarge?.copyWith(
+              child: GestureDetector(
+                onTap: () {
+                  print('go to settings page');
+                },
+                child: Text.rich(
+                  TextSpan(
+                    text: 'Hi, ',
+                    style: theme.textTheme.bodyLarge,
+                    children: [
+                      TextSpan(
+                        text: widget.username,
+                        style: theme.textTheme.bodyLarge?.copyWith(
                           fontWeight: FontWeight.bold,
-                          color: theme.colorScheme.onSurface),
-                    ),
-                  ],
+                          color: theme.colorScheme.onSurface,
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
-            )),
+            ),
             GestureDetector(
               onTap: () {
                 handleBookmarks();
               },
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 15),
-                child: Icon(isDark
-                    ? Icons.bookmarks_outlined
-                    : Icons.bookmarks_rounded),
+                child: Icon(
+                  isDark ? Icons.bookmarks_outlined : Icons.bookmarks_rounded,
+                ),
               ),
             ),
             GestureDetector(
               onTap: () {
                 handleShowPict();
               },
-              child:
-                  CircleAvatar(backgroundImage: AssetImage(widget.imagePath)),
+              child: CircleAvatar(
+                backgroundImage: _getImageProvider(),
+              ),
             ),
           ],
         ),

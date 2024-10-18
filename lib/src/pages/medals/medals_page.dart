@@ -1,5 +1,7 @@
 // import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:virtual_tourism/src/services/firebase/firebase_api.dart';
 
 import '../../components/cards_header.dart';
 import '../../components/chips_component.dart';
@@ -44,6 +46,22 @@ class MedalsPage extends StatelessWidget {
               //     child: Text('add user data'),
               //   ),
               // ),
+
+              GestureDetector(
+                onTap: () async {
+                  print('uploading profile picture');
+                  final user = FirebaseAuth.instance.currentUser;
+                  FirebaseApi firebaseApi = FirebaseApi();
+                  await firebaseApi.updateProfilePicture(userUid: user!.uid);
+                  print('profile picture uploaded');
+                },
+                child: Container(
+                  color: Colors.red,
+                  height: 100,
+                  width: 200,
+                  child: const Text('upload proflie picture'),
+                ),
+              ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
@@ -89,21 +107,21 @@ class MedalsPage extends StatelessWidget {
               const Divider(),
               const UserOverview(
                 username: '_username_',
-                imagePath: 'assets/profile.png',
+                imagePath: '',
                 isFull: false,
-                email: 'basiliustengang24@gmail.com',
+                email: '',
               ),
               const UserOverview(
                 username: 'bazelnut',
-                imagePath: 'assets/profile.png',
+                imagePath: '',
                 isFull: false,
-                email: 'basiliustengang24@gmail.com',
+                email: '',
               ),
               const UserOverview(
                 username: 'Jeremiah',
-                imagePath: 'assets/profile.png',
-                isFull: false,
-                email: 'basiliustengang24@gmail.com',
+                imagePath: '',
+                isFull: true,
+                email: 'jeremiah_jemeriah@gmail.com',
               ),
               const Text('ChipsComponent()'),
               const Divider(),

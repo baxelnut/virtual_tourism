@@ -137,10 +137,10 @@ class _SettingsPageState extends State<SettingsPage> {
               children: [
                 const SizedBox(height: 50),
                 UserOverview(
-                  username: user?.displayName,
-                  imagePath: 'assets/profile.png',
+                  username: user?.displayName ?? 'guest',
+                  imagePath: user?.photoURL ??  'assets/profile.png',
                   isFull: true,
-                  email: user?.email,
+                  email: user!.email!,
                 ),
                 for (var thang in listOfThangz)
                   SettingsTiles(

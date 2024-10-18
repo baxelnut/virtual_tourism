@@ -49,11 +49,12 @@ class HomePage extends StatelessWidget {
   Widget homeHeader() {
     return Column(
       children: [
+        const SizedBox(height: 50),
         UserOverview(
-          username: user?.displayName,
-          imagePath: 'assets/profile.png',
+          username: user!.displayName ?? 'guest',
+          imagePath: user!.photoURL!,
           isFull: false,
-          email: 'basiliustengang24@gmail.com',
+          email: user!.email!,
         ),
         const ChipsComponent(listOfThangz: ['Places', 'Conservation', 'News']),
       ],

@@ -56,15 +56,13 @@ class StorageService with ChangeNotifier {
 
     if (image == null) return;
 
-    File file = File(image.path);
-
     try {
-      String filePath = 'uploaded_images/${DateTime.now()}.png';
+      String fileExtension = image.path.split('.').last;
+      String filePath = 'uploaded_images/$fileExtension';
+      File file = File(image.path);
 
       await firebaseStorage.ref(filePath).putFile(file);
-
       String downloadUrl = await firebaseStorage.ref(filePath).getDownloadURL();
-
       _imageUrls.add(downloadUrl);
       notifyListeners();
     } catch (e) {
@@ -73,5 +71,32 @@ class StorageService with ChangeNotifier {
       _isUploading = false;
       notifyListeners();
     }
+  }
+
+  Future<String?> uploadProfilePicture({
+    required String userUid,
+  }) async {
+    try {
+      final ImagePicker picker = ImagePicker();
+      final XFile? image = await picker.pickImage(source: ImageSource.gallery);
+
+      if (image != null) {
+        String fileExtension = image.path.split('.').last;
+        String filePath = 'users/profile/$userUid.$fileExtension';
+        File file = File(image.path);
+
+        await firebaseStorage.ref(filePath).putFile(file);
+
+        String downloadUrl =
+            await firebaseStorage.ref(filePath).getDownloadURL();
+
+        return downloadUrl;
+      } else if (image == null) {
+        return null;
+      }
+    } catch (e) {
+      print('Error updating profile picture: $e');
+    }
+    return null;
   }
 }
