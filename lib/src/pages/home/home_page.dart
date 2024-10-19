@@ -57,10 +57,7 @@ class _HomePageState extends State<HomePage> {
       children: [
         const SizedBox(height: 50),
         UserOverview(
-          username: user!.displayName ?? 'guest',
-          imagePath: user!.photoURL!,
           isFull: false,
-          email: user!.email!,
           onPageChange: widget.onPageChange,
         ),
         const ChipsComponent(listOfThangz: ['Places', 'Conservation', 'News']),

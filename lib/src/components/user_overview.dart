@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../services/theme/theme.dart';
@@ -5,18 +6,12 @@ import '../services/theme/theme_provider.dart';
 import '../pages/settings/user_profile.dart';
 
 class UserOverview extends StatefulWidget {
-  final String username;
-  final String imagePath;
   final bool isFull;
-  final String email;
   final Function(int)? onPageChange;
 
   const UserOverview({
     super.key,
-    required this.username,
-    required this.imagePath,
     required this.isFull,
-    required this.email,
     this.onPageChange,
   });
 
@@ -25,6 +20,8 @@ class UserOverview extends StatefulWidget {
 }
 
 class _UserOverviewState extends State<UserOverview> {
+  final User? user = FirebaseAuth.instance.currentUser;
+
   handleShowPict() {
     return showDialog(
       context: context,
@@ -33,7 +30,8 @@ class _UserOverviewState extends State<UserOverview> {
           title: AspectRatio(
             aspectRatio: 1.0,
             child: Image(
-              image: _getImageProvider(),
+              image: NetworkImage(user?.photoURL ??
+                  'gs://virtual-tourism-7625f.appspot.com/users/.default/profile.png'),
               fit: BoxFit.cover,
             ),
           ),
@@ -52,14 +50,6 @@ class _UserOverviewState extends State<UserOverview> {
 
   handleBookmarks() {
     print('handle bookmarks');
-  }
-
-  ImageProvider<Object> _getImageProvider() {
-    if (widget.imagePath.isEmpty) {
-      return const AssetImage('assets/profile.png');
-    } else {
-      return NetworkImage(widget.imagePath);
-    }
   }
 
   @override
@@ -81,17 +71,18 @@ class _UserOverviewState extends State<UserOverview> {
                 },
                 child: CircleAvatar(
                   radius: 50,
-                  backgroundImage: _getImageProvider(),
+                  backgroundImage: NetworkImage(user?.photoURL ??
+                      'gs://virtual-tourism-7625f.appspot.com/users/.default/profile.png'),
                 ),
               ),
             ),
             Text(
-              widget.username,
+              user?.displayName ?? 'username',
               style: theme.textTheme.headlineSmall
                   ?.copyWith(fontWeight: FontWeight.bold),
             ),
             Text(
-              widget.email,
+              user?.email ?? 'user@email.com',
               style: theme.textTheme.labelMedium,
             ),
             Padding(
@@ -127,7 +118,7 @@ class _UserOverviewState extends State<UserOverview> {
                     style: theme.textTheme.bodyLarge,
                     children: [
                       TextSpan(
-                        text: widget.username,
+                        text: user?.displayName ?? 'username',
                         style: theme.textTheme.bodyLarge?.copyWith(
                           fontWeight: FontWeight.bold,
                           color: theme.colorScheme.onSurface,
@@ -154,7 +145,8 @@ class _UserOverviewState extends State<UserOverview> {
                 handleShowPict();
               },
               child: CircleAvatar(
-                backgroundImage: _getImageProvider(),
+                backgroundImage: NetworkImage(user?.photoURL ??
+                    'gs://virtual-tourism-7625f.appspot.com/users/.default/profile.png'),
               ),
             ),
           ],
