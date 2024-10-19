@@ -30,8 +30,7 @@ class _UserOverviewState extends State<UserOverview> {
           title: AspectRatio(
             aspectRatio: 1.0,
             child: Image(
-              image: NetworkImage(user?.photoURL ??
-                  'gs://virtual-tourism-7625f.appspot.com/users/.default/profile.png'),
+              image: _getImageProvider(),
               fit: BoxFit.cover,
             ),
           ),
@@ -50,6 +49,20 @@ class _UserOverviewState extends State<UserOverview> {
 
   handleBookmarks() {
     print('handle bookmarks');
+  }
+
+  _getImageProvider() {
+    if (user?.photoURL != null &&
+        user?.photoURL != '' &&
+        user?.photoURL != 'assets/profile.png' &&
+        user?.photoURL != 'not provided' &&
+        user?.photoURL !=
+            'gs://virtual-tourism-7625f.appspot.com/users/.default/profile.png' &&
+        user?.photoURL != 'users/.default/profile.png') {
+      return NetworkImage(user!.photoURL!);
+    } else {
+      return const AssetImage('assets/profile.png');
+    }
   }
 
   @override
@@ -71,8 +84,7 @@ class _UserOverviewState extends State<UserOverview> {
                 },
                 child: CircleAvatar(
                   radius: 50,
-                  backgroundImage: NetworkImage(user?.photoURL ??
-                      'gs://virtual-tourism-7625f.appspot.com/users/.default/profile.png'),
+                  backgroundImage: _getImageProvider(),
                 ),
               ),
             ),
@@ -145,8 +157,7 @@ class _UserOverviewState extends State<UserOverview> {
                 handleShowPict();
               },
               child: CircleAvatar(
-                backgroundImage: NetworkImage(user?.photoURL ??
-                    'gs://virtual-tourism-7625f.appspot.com/users/.default/profile.png'),
+                backgroundImage: _getImageProvider(),
               ),
             ),
           ],

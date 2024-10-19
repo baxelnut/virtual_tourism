@@ -1,9 +1,11 @@
 // ignore_for_file: avoid_print
 
 import 'dart:io';
+import 'dart:typed_data';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:image/image.dart' as img;
 
 class StorageService with ChangeNotifier {
   final firebaseStorage = FirebaseStorage.instance;
@@ -77,25 +79,48 @@ class StorageService with ChangeNotifier {
     try {
       final ImagePicker picker = ImagePicker();
       final XFile? image = await picker.pickImage(source: ImageSource.gallery);
+
       _isLoading = true;
+
       if (image != null) {
         String fileExtension = image.path.split('.').last;
         String filePath = 'users/profile/$userUid.$fileExtension';
         File file = File(image.path);
 
+        Uint8List imageBytes = await file.readAsBytes();
+
+        // Decode the image to a format for manipulation
+        img.Image? originalImage = img.decodeImage(imageBytes);
+
+        // Check if the image needs to be compressed
+        int quality = 100; // Start with maximum quality
+        int maxSizeInBytes = 1024 * 1024; // 1MB in bytes
+
+        // Compress the image until it is <= 1MB
+        while (imageBytes.length > maxSizeInBytes && quality > 0) {
+          imageBytes = img.encodeJpg(originalImage!, quality: quality);
+          quality -= 10; // Decrease quality by 10% on each iteration
+        }
+
+        // Write the compressed image back to the same file path
+        await file.writeAsBytes(imageBytes); // Overwrite the original file
+
+        // Upload the (possibly compressed) file
         await firebaseStorage.ref(filePath).putFile(file);
 
-        String downloadUrl =
+        String photoURL =
             await firebaseStorage.ref(filePath).getDownloadURL();
 
         _isLoading = false;
         notifyListeners();
-        return downloadUrl;
-      } else if (image == null) {
+        return photoURL;
+      } else {
         return null;
       }
     } catch (e) {
       print('Error updating profile picture: $e');
+    } finally {
+      _isLoading = false;
     }
     return null;
   }

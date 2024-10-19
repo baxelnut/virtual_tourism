@@ -78,7 +78,7 @@ class FirebaseApi with ChangeNotifier {
     String? fullName,
     String? gender,
     String? birthday,
-    String? imageUrl,
+    String? photoURL,
   }) async {
     _isLoading = true;
     notifyListeners();
@@ -94,7 +94,7 @@ class FirebaseApi with ChangeNotifier {
       if (fullName != null) dataToUpdate['fullName'] = fullName;
       if (gender != null) dataToUpdate['gender'] = gender;
       if (birthday != null) dataToUpdate['birthday'] = birthday;
-      if (imageUrl != null) dataToUpdate['imageUrl'] = imageUrl;
+      if (photoURL != null) dataToUpdate['photoURL'] = photoURL;
 
       await _firestore.collection('users').doc(userUid).update(dataToUpdate);
 
@@ -102,8 +102,8 @@ class FirebaseApi with ChangeNotifier {
         if (username != null && username != '') {
           await user?.updateDisplayName(username);
         }
-        if (imageUrl != null && imageUrl != '') {
-          await user?.updatePhotoURL(imageUrl);
+        if (photoURL != null && photoURL != '') {
+          await user?.updatePhotoURL(photoURL);
         }
         if (email != null && email.isNotEmpty) {
           await user?.verifyBeforeUpdateEmail(email);
@@ -148,23 +148,23 @@ class FirebaseApi with ChangeNotifier {
     notifyListeners();
 
     try {
-      String? updatedUrl =
+      String? downloadUrl =
           await _storageService.uploadProfilePicture(userUid: userUid);
 
-      if (updatedUrl == null) {
+      if (downloadUrl == null) {
         return null;
       }
 
       await _firestore
           .collection('users')
           .doc(userUid)
-          .update({'imageUrl': updatedUrl});
+          .update({'imageUrl': downloadUrl});
 
       if (user != null) {
-        await user!.updatePhotoURL(updatedUrl);
+        await user!.updatePhotoURL(downloadUrl);
         await user!.reload();
       }
-      return updatedUrl;
+      return downloadUrl;
     } catch (e) {
       print('Error updating profile picture: $e');
       return null;

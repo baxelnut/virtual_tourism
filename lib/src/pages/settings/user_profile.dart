@@ -56,6 +56,86 @@ class UserProfileState extends State<UserProfile> {
     final navigator = Navigator.of(context);
     final scaffoldMessenger = ScaffoldMessenger.of(context);
 
+    Widget changePhoto() {
+      return ElevatedButton.icon(
+        style: ElevatedButton.styleFrom(
+            backgroundColor: theme.colorScheme.onSurface),
+        onPressed: () async {
+          Navigator.of(context).pop();
+
+          if (mounted) {
+            setState(() {
+              isUploading = true;
+            });
+          }
+
+          showDialog(
+            context: context,
+            barrierDismissible: false,
+            builder: (BuildContext context) {
+              return const Center(
+                child: CircularProgressIndicator(),
+              );
+            },
+          );
+
+          String? updatedUrl = await firebaseApi.updateProfilePicture(
+            userUid: user!.uid,
+          );
+
+          navigator.pop();
+
+          if (mounted) {
+            setState(() {
+              isUploading = false;
+            });
+
+            if (updatedUrl != null) {
+              setState(() {
+                user?.updatePhotoURL(updatedUrl);
+              });
+              scaffoldMessenger.showSnackBar(
+                const SnackBar(
+                  content: Text('Profile picture updated successfully'),
+                ),
+              );
+            } else {
+              scaffoldMessenger.showSnackBar(
+                const SnackBar(
+                  content: Text('Failed to update profile picture'),
+                ),
+              );
+            }
+          }
+        },
+        icon: Icon(
+          Icons.edit_rounded,
+          color: theme.colorScheme.surface,
+        ),
+        label: Text(
+          'Change',
+          style: theme.textTheme.bodyLarge?.copyWith(
+              color: theme.colorScheme.surface, fontWeight: FontWeight.bold),
+        ),
+      );
+    }
+
+    Widget deletePhoto() {
+      return IconButton(
+        onPressed: () async {
+          Navigator.of(context).pop();
+          Navigator.of(context).pop();
+          await user!.updatePhotoURL('not provided');
+          await user?.reload();
+        },
+        icon: const Icon(
+          Icons.delete_rounded,
+          color: Colors.red,
+          size: 30,
+        ),
+      );
+    }
+
     showDialog(
       context: context,
       builder: (_) {
@@ -67,79 +147,16 @@ class UserProfileState extends State<UserProfile> {
               fit: BoxFit.cover,
             ),
           ),
-          content: ElevatedButton.icon(
-            style: ElevatedButton.styleFrom(
-                backgroundColor: theme.colorScheme.onSurface),
-            onPressed: () async {
-              Navigator.of(context).pop();
-
-              if (mounted) {
-                setState(() {
-                  isUploading = true;
-                });
-              }
-
-              showDialog(
-                context: context,
-                barrierDismissible: false,
-                builder: (BuildContext context) {
-                  return const Center(
-                    child: CircularProgressIndicator(),
-                  );
-                },
-              );
-
-              String? updatedUrl = await firebaseApi.updateProfilePicture(
-                userUid: user!.uid,
-              );
-
-              navigator.pop();
-
-              if (mounted) {
-                setState(() {
-                  isUploading = false;
-                });
-
-                if (updatedUrl != null) {
-                  setState(() {
-                    user?.updatePhotoURL(updatedUrl);
-                  });
-                  scaffoldMessenger.showSnackBar(
-                    const SnackBar(
-                      content: Text('Profile picture updated successfully'),
-                    ),
-                  );
-                } else {
-                  scaffoldMessenger.showSnackBar(
-                    const SnackBar(
-                      content: Text('Failed to update profile picture'),
-                    ),
-                  );
-                }
-              }
-            },
-            icon: Icon(
-              Icons.edit_rounded,
-              color: theme.colorScheme.surface,
-            ),
-            label: Text(
-              'Change Photo',
-              style: theme.textTheme.bodyLarge?.copyWith(
-                  color: theme.colorScheme.surface,
-                  fontWeight: FontWeight.bold),
-            ),
+          content: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              deletePhoto(),
+              changePhoto(),
+            ],
           ),
         );
       },
     );
-  }
-
-  ImageProvider<Object> _getImageProvider() {
-    if (user?.photoURL == null || user!.photoURL!.isEmpty) {
-      return const AssetImage('assets/profile.png');
-    } else {
-      return NetworkImage(user!.photoURL!);
-    }
   }
 
   Future<void> _selectBirthday(BuildContext context) async {
@@ -205,6 +222,20 @@ class UserProfileState extends State<UserProfile> {
       scaffoldMessenger.showSnackBar(
         SnackBar(content: Text('Failed to update profile: $e')),
       );
+    }
+  }
+
+  _getImageProvider() {
+    if (user?.photoURL != null &&
+        user?.photoURL != '' &&
+        user?.photoURL != 'assets/profile.png' &&
+        user?.photoURL != 'not provided' &&
+        user?.photoURL !=
+            'gs://virtual-tourism-7625f.appspot.com/users/.default/profile.png' &&
+        user?.photoURL != 'users/.default/profile.png') {
+      return NetworkImage(user!.photoURL!);
+    } else {
+      return const AssetImage('assets/profile.png');
     }
   }
 
