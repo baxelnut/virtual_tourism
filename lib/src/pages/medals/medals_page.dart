@@ -1,10 +1,10 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:virtual_tourism/src/services/firebase/firebase_api.dart';
 
 import '../../components/cards_header.dart';
 import '../../components/chips_component.dart';
 // import '../../components/user_overview.dart';
+import '../../services/firebase/api/firebase_api.dart';
 import '../../services/firebase/auth/auth_page.dart';
 // import '../../services/firebase/firebase_api.dart';
 import 'image_storage_test.dart';
