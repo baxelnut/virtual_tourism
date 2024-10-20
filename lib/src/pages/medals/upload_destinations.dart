@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -14,7 +15,9 @@ class UploadDestinations extends StatefulWidget {
 
 class _UploadDestinationsState extends State<UploadDestinations> {
   final User? user = FirebaseAuth.instance.currentUser;
-  late Future<void> _fetchImagesFuture;
+  late Future<List<Map<String, dynamic>>>
+      _fetchDestinationsFuture; // Change the type
+
   final TextEditingController _categoryController = TextEditingController();
   final TextEditingController _subCategoryController = TextEditingController();
   final TextEditingController _destinationController = TextEditingController();
@@ -24,55 +27,94 @@ class _UploadDestinationsState extends State<UploadDestinations> {
   @override
   void initState() {
     super.initState();
-    _fetchImagesFuture = fetchImages();
+    _fetchDestinationsFuture = fetchDestinations(); // Initialize the future
   }
 
-  Future<void> fetchImages() async {
-    await Provider.of<StorageService>(context, listen: false)
-        .fetchDestination(category: 'beach', subcategory: 'beach');
+  Future<List<Map<String, dynamic>>> fetchDestinations() async {
+    try {
+      final QuerySnapshot<Map<String, dynamic>> snapshot =
+          await FirebaseFirestore.instance.collection('destinations').get();
+
+      // Map each document to its data map
+      final List<Map<String, dynamic>> destinations = snapshot.docs
+          .map((doc) => {
+                'id': doc.id,
+                ...doc.data(),
+              })
+          .toList();
+
+      return destinations;
+    } catch (e) {
+      print('Error fetching destinations: $e');
+      return [];
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     final ThemeData theme = Theme.of(context);
-    final Size screenSize = MediaQuery.of(context).size;
+    // final Size screenSize = MediaQuery.of(context).size;
 
     return Scaffold(
       appBar: AppBar(
         title: const Text('Destinations'),
       ),
-      body: FutureBuilder<void>(
-        future: _fetchImagesFuture,
+      body: FutureBuilder<List<Map<String, dynamic>>>(
+        future: _fetchDestinationsFuture, // Use the future here
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());
           } else if (snapshot.hasError) {
             return Center(child: Text('Error: ${snapshot.error}'));
+          } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+            return const Center(child: Text('No destinations found.'));
           } else {
-            return Consumer<StorageService>(
-              builder: (context, storageService, child) {
-                final List<String> imageUrls = storageService.imageUrls;
-                return Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20),
-                  child: SizedBox(
-                    width: screenSize.width,
-                    height: screenSize.height,
-                    child: ListView.builder(
-                      itemCount: imageUrls.length,
-                      itemBuilder: (context, index) {
-                        final String imageUrl = imageUrls[index];
-                        // print(imageUrls);
-                        // FirebaseApi().getDestinationData(destinationId)
-                        return Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 10),
-                            child: ListTile(
-                              title: const Text('country'),
-                              subtitle: const Text('destinationName'),
-                              trailing: Image(image: NetworkImage(imageUrl)),
-                            ));
-                      },
-                    ),
-                  ),
+            final destinations = snapshot.data!;
+            return FutureBuilder<List<String>>(
+              future: StorageService()
+                  .fetchDestination(category: 'beach', subcategory: 'beach'),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const Center(
+                      child:
+                          CircularProgressIndicator()); // Show a loading indicator while waiting
+                } else if (snapshot.hasError) {
+                  return const Center(
+                      child:
+                          Text('Error fetching images')); // Handle any errors
+                } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                  return const Center(
+                      child: Text(
+                          'No images found')); // Handle case where no images are returned
+                }
+
+                final imageUrls = snapshot.data!; // Get the list of image URLs
+
+                return ListView.builder(
+                  itemCount: destinations.length,
+                  itemBuilder: (context, index) {
+                    final destination = destinations[index];
+                    final country = destination['country'] ?? 'Unknown Country';
+                    final destinationName =
+                        destination['destinationName'] ?? 'Unknown Destination';
+                    final imageUrl =
+                        imageUrls.isNotEmpty && index < imageUrls.length
+                            ? imageUrls[index]
+                            : '';
+
+                    return ListTile(
+                      title: Text(country),
+                      subtitle: Text(destinationName),
+                      trailing: imageUrl.isNotEmpty
+                          ? Image.network(
+                              imageUrl,
+                              width: 50,
+                              height: 50,
+                              fit: BoxFit.cover,
+                            )
+                          : const Icon(Icons.image, size: 50),
+                    );
+                  },
                 );
               },
             );
@@ -114,14 +156,14 @@ class _UploadDestinationsState extends State<UploadDestinations> {
                           ElevatedButton(
                               onPressed: () {
                                 FirebaseApi().addDestination(
-                                    category: _categoryController.text.trim(),
-                                    subcategory:
-                                        _subCategoryController.text.trim(),
-                                    destinationName:
-                                        _destinationController.text.trim(),
-                                    country: _countryController.text.trim(),
-                                    description: _descriptionController.text,
-                                  );
+                                  category: _categoryController.text.trim(),
+                                  subcategory:
+                                      _subCategoryController.text.trim(),
+                                  destinationName:
+                                      _destinationController.text.trim(),
+                                  country: _countryController.text.trim(),
+                                  description: _descriptionController.text,
+                                );
 
                                 Navigator.of(context).pop();
                               },

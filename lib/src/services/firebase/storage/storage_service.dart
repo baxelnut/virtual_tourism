@@ -125,7 +125,7 @@ class StorageService with ChangeNotifier {
     return null;
   }
 
-  Future<void> fetchDestination({
+  Future<List<String>> fetchDestination({
     required final String category,
     required final String subcategory,
   }) async {
@@ -140,12 +140,14 @@ class StorageService with ChangeNotifier {
     _imageUrls = urls;
     _isLoading = false;
     notifyListeners();
+
+    return urls; // Return the list of URLs
   }
 
   Future<void> addDestination({
     required final String category,
     required final String subcategory,
-    required final String destinationName,
+    required final String imageId,
   }) async {
     _isUploading = true;
     notifyListeners();
@@ -156,10 +158,9 @@ class StorageService with ChangeNotifier {
     if (image == null) return;
 
     try {
-      String originalFilePath =
-          'destinations/$category/$subcategory/$destinationName';
+      String originalFilePath = 'destinations/$category/$subcategory/$imageId';
       String thumbnailFilePath =
-          'destinations/$category/$subcategory/${destinationName}_thumbnail';
+          'destinations/$category/$subcategory/${imageId}_thumbnail';
       File file = File(image.path);
 
       // Upload original image
@@ -167,21 +168,25 @@ class StorageService with ChangeNotifier {
       String originalDownloadUrl =
           await firebaseStorage.ref(originalFilePath).getDownloadURL();
 
-      // Compress image to create thumbnail with a maximum size of 500KB
+      // Compress image to create thumbnail with a smaller resolution and lower quality
       Uint8List imageBytes = await file.readAsBytes();
       img.Image? originalImage = img.decodeImage(imageBytes);
       if (originalImage == null) {
         throw Exception("Failed to decode image.");
       }
 
-      int quality = 100;
+      // Resize image to a smaller resolution, e.g., 300x300
+      img.Image thumbnailImage = img.copyResize(originalImage, width: 300);
+
+      int quality = 80; // Start with a lower quality setting
       int maxSizeInBytes = 500 * 1024; // 500KB in bytes
-      Uint8List thumbnailBytes = img.encodeJpg(originalImage, quality: quality);
+      Uint8List thumbnailBytes =
+          img.encodeJpg(thumbnailImage, quality: quality);
 
       // Compress image until it is below 500KB
       while (thumbnailBytes.length > maxSizeInBytes && quality > 0) {
         quality -= 10;
-        thumbnailBytes = img.encodeJpg(originalImage, quality: quality);
+        thumbnailBytes = img.encodeJpg(thumbnailImage, quality: quality);
       }
 
       // Get the temporary directory

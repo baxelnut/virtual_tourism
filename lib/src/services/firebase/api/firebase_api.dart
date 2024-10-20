@@ -185,33 +185,43 @@ class FirebaseApi with ChangeNotifier {
     _isLoading = true;
     notifyListeners();
 
-    String created = DateTime.now().toString();
-    String destinationId =
-        '$destinationName by ${user!.displayName}-$created-${user!.email}';
+    String docId = _firestore.collection('destinations').doc().id;
+
     try {
-      await _firestore.collection('destinations').doc(destinationId).set({
+      await _firestore.collection('destinations').doc(docId).set({
         'subcategory': subcategory,
         'destinationName': destinationName,
         'country': country,
         'description': description,
-        'created': created,
+        'created': DateTime.now().toString(),
         'submitted by': user!.displayName,
-        'id': user!.uid,
+        'userId': user!.uid,
         'email': user!.email
       });
 
       await _storageService.addDestination(
-          category: category,
-          subcategory: subcategory,
-          destinationName: destinationName);
-
-      getDestinationData(destinationId);
+          category: category, subcategory: subcategory, imageId: docId);
     } catch (e) {
       print('Error adding destination to database: $e');
     } finally {
       _isLoading = false;
       notifyListeners();
     }
+  }
+
+  Future<List<Map<String, dynamic>>> fetchDestinations() async {
+    final List<Map<String, dynamic>> destinations = [];
+    final List<String> destinationIds = ['destinationId1', 'destinationId2'];
+
+    for (final destinationId in destinationIds) {
+      final destinationData =
+          await FirebaseApi().getDestinationData(destinationId);
+      if (destinationData != null) {
+        destinations.add(destinationData);
+      }
+    }
+
+    return destinations;
   }
 
   Future<Map<String, dynamic>?> getDestinationData(String destinationId) async {
