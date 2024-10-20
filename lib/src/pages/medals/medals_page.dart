@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:virtual_tourism/src/pages/medals/upload_destinations.dart';
 
 import '../../components/cards_header.dart';
 import '../../components/chips_component.dart';
@@ -46,24 +47,55 @@ class MedalsPage extends StatelessWidget {
               //   ),
               // ),
 
-              GestureDetector(
-                onTap: () async {
-                  // print('uploading profile picture');
-                  final user = FirebaseAuth.instance.currentUser;
-                  FirebaseApi firebaseApi = FirebaseApi();
-                  await firebaseApi.updateProfilePicture(userUid: user!.uid);
-                  // print('profile picture uploaded');
-                },
-                child: Container(
-                  color: Colors.red,
-                  height: 100,
-                  width: 200,
-                  child: const Text('upload proflie picture'),
-                ),
-              ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                            builder: (context) => const UploadDestinations()),
+                      );
+
+                    },
+                    child: Container(
+                      color: Colors.red,
+                      height: 100,
+                      width: 100,
+                      child: const Center(
+                        child: Text(
+                          'Upload Destinations & Thumb',
+                          textAlign: TextAlign.center,
+                        ),
+                      )
+                    ),
+                  )
+                ],
+              ),
+              const SizedBox(height: 10),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  GestureDetector(
+                    onTap: () async {
+                      // print('uploading profile picture');
+                      final user = FirebaseAuth.instance.currentUser;
+                      FirebaseApi firebaseApi = FirebaseApi();
+                      await firebaseApi.updateProfilePicture(
+                          userUid: user!.uid);
+                      // print('profile picture uploaded');
+                    },
+                    child: Container(
+                        color: Colors.green,
+                        height: 100,
+                        width: 100,
+                        child: const Center(
+                          child: Text(
+                            'Upload Profile Picture',
+                            textAlign: TextAlign.center,
+                          ),
+                        )),
+                  ),
                   GestureDetector(
                     onTap: () {
                       Navigator.of(context).push(
@@ -76,7 +108,10 @@ class MedalsPage extends StatelessWidget {
                       height: 100,
                       color: Colors.green,
                       child: const Center(
-                        child: Text('Login Page'),
+                        child: Text(
+                          'Login Page',
+                          textAlign: TextAlign.center,
+                        ),
                       ),
                     ),
                   ),
@@ -90,7 +125,7 @@ class MedalsPage extends StatelessWidget {
                     child: Container(
                       width: 100,
                       height: 100,
-                      color: Colors.amber,
+                      color: Colors.yellow,
                       child: const Center(
                         child: Text(
                           'Image Storage',

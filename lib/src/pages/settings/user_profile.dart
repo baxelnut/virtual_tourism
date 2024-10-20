@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 
 import '../../services/firebase/api/firebase_api.dart';
 
-
 class UserProfile extends StatefulWidget {
   const UserProfile({super.key});
 

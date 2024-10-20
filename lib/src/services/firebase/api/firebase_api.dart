@@ -174,4 +174,60 @@ class FirebaseApi with ChangeNotifier {
       notifyListeners();
     }
   }
+
+  Future<void> addDestination({
+    required final String category,
+    required final String subcategory,
+    required final String destinationName,
+    required final String country,
+    required final String description,
+  }) async {
+    _isLoading = true;
+    notifyListeners();
+
+    String created = DateTime.now().toString();
+    String destinationId =
+        '$destinationName by ${user!.displayName}-$created-${user!.email}';
+    try {
+      await _firestore.collection('destinations').doc(destinationId).set({
+        'subcategory': subcategory,
+        'destinationName': destinationName,
+        'country': country,
+        'description': description,
+        'created': created,
+        'submitted by': user!.displayName,
+        'id': user!.uid,
+        'email': user!.email
+      });
+
+      await _storageService.addDestination(
+          category: category,
+          subcategory: subcategory,
+          destinationName: destinationName);
+
+      getDestinationData(destinationId);
+    } catch (e) {
+      print('Error adding destination to database: $e');
+    } finally {
+      _isLoading = false;
+      notifyListeners();
+    }
+  }
+
+  Future<Map<String, dynamic>?> getDestinationData(String destinationId) async {
+    _isLoading = true;
+    notifyListeners();
+
+    try {
+      final DocumentSnapshot<Map<String, dynamic>> doc =
+          await _firestore.collection('destinations').doc(destinationId).get();
+      return doc.data();
+    } catch (e) {
+      print('Error fetching user data: $e');
+      return null;
+    } finally {
+      _isLoading = false;
+      notifyListeners();
+    }
+  }
 }
