@@ -90,23 +90,18 @@ class StorageService with ChangeNotifier {
 
         Uint8List imageBytes = await file.readAsBytes();
 
-        // Decode the image to a format for manipulation
         img.Image? originalImage = img.decodeImage(imageBytes);
 
-        // Check if the image needs to be compressed
         int quality = 69;
-        int maxSizeInBytes = 1024 * 1024; // 1MB in bytes
+        int maxSizeInBytes = 1024 * 1024;
 
-        // Compress the image until it is <= 1MB
         while (imageBytes.length > maxSizeInBytes && quality > 0) {
           imageBytes = img.encodeJpg(originalImage!, quality: quality);
-          quality -= 10; // Decrease quality by 10% on each iteration
+          quality -= 10;
         }
 
-        // Write the compressed image back to the same file path
-        await file.writeAsBytes(imageBytes); // Overwrite the original file
+        await file.writeAsBytes(imageBytes);
 
-        // Upload the (possibly compressed) file
         await firebaseStorage.ref(filePath).putFile(file);
 
         String photoURL = await firebaseStorage.ref(filePath).getDownloadURL();
@@ -126,22 +121,31 @@ class StorageService with ChangeNotifier {
   }
 
   Future<List<String>> fetchDestination({
-    required final String category,
-    required final String subcategory,
+    final String? category,
+    final String? subcategory,
+    required final String parentPath,
   }) async {
     _isLoading = true;
+    String path;
 
-    final ListResult result = await firebaseStorage
-        .ref('destinations/$category/$subcategory')
-        .listAll();
+    if (category == null ||
+        subcategory == null ||
+        category == '' ||
+        subcategory == '') {
+      path = parentPath;
+    } else {
+      path = '$parentPath/$category/$subcategory';
+    }
 
+    final ListResult result = await firebaseStorage.ref(path).listAll();
     final urls =
         await Future.wait(result.items.map((ref) => ref.getDownloadURL()));
+
     _imageUrls = urls;
     _isLoading = false;
     notifyListeners();
-
-    return urls; // Return the list of URLs
+    print(urls);
+    return urls;
   }
 
   Future<void> addDestination({
@@ -163,47 +167,39 @@ class StorageService with ChangeNotifier {
           'destinations/$category/$subcategory/${imageId}_thumbnail';
       File file = File(image.path);
 
-      // Upload original image
       await firebaseStorage.ref(originalFilePath).putFile(file);
       String originalDownloadUrl =
           await firebaseStorage.ref(originalFilePath).getDownloadURL();
 
-      // Compress image to create thumbnail with a smaller resolution and lower quality
       Uint8List imageBytes = await file.readAsBytes();
       img.Image? originalImage = img.decodeImage(imageBytes);
       if (originalImage == null) {
         throw Exception("Failed to decode image.");
       }
 
-      // Resize image to a smaller resolution, e.g., 300x300
       img.Image thumbnailImage = img.copyResize(originalImage, width: 300);
 
-      int quality = 80; // Start with a lower quality setting
-      int maxSizeInBytes = 500 * 1024; // 500KB in bytes
+      int quality = 80;
+      int maxSizeInBytes = 500 * 1024;
       Uint8List thumbnailBytes =
           img.encodeJpg(thumbnailImage, quality: quality);
 
-      // Compress image until it is below 500KB
       while (thumbnailBytes.length > maxSizeInBytes && quality > 0) {
         quality -= 10;
         thumbnailBytes = img.encodeJpg(thumbnailImage, quality: quality);
       }
 
-      // Get the temporary directory
       final tempDir = await getTemporaryDirectory();
 
       final thumbnailFile = File(
           '${tempDir.path}/${file.path.split('/').last.split('.').first}_thumbnail.jpg');
 
-      // Save thumbnail to the temporary directory
       await thumbnailFile.writeAsBytes(thumbnailBytes);
 
-      // Upload compressed thumbnail
       await firebaseStorage.ref(thumbnailFilePath).putFile(thumbnailFile);
       String thumbnailDownloadUrl =
           await firebaseStorage.ref(thumbnailFilePath).getDownloadURL();
 
-      // Optionally, store URLs or other data in Firestore
       _imageUrls.add(originalDownloadUrl);
       _imageUrls.add(thumbnailDownloadUrl);
       notifyListeners();

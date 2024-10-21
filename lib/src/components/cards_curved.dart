@@ -37,13 +37,31 @@ class CardsCurved extends StatelessWidget {
               child: InkWell(
                 child: CircleAvatar(
                   radius: screenSize.width / 4,
-                  backgroundImage: AssetImage(thumbnailPath),
+                  backgroundImage: NetworkImage(thumbnailPath),
                 ),
                 onTap: () {
                   Navigator.of(context).push(
                     MaterialPageRoute(
                       builder: (context) => ImageScreen(
-                        image: Image.asset(imagePath),
+                        image: Image.network(
+                          imagePath,
+                          fit: BoxFit.cover,
+                          width: screenSize.width / 3,
+                          height: screenSize.width / 2,
+                          loadingBuilder: (context, child, loadingProgress) {
+                            if (loadingProgress == null) return child;
+                            return Center(
+                              child: CircularProgressIndicator(
+                                value: loadingProgress.expectedTotalBytes !=
+                                        null
+                                    ? loadingProgress.cumulativeBytesLoaded /
+                                        (loadingProgress.expectedTotalBytes ??
+                                            1)
+                                    : null,
+                              ),
+                            );
+                          },
+                        ),
                         appBarTitle: destination,
                       ),
                     ),

@@ -93,12 +93,9 @@ class UserProfileState extends State<UserProfile> {
             if (updatedUrl != null) {
               setState(() {
                 user?.updatePhotoURL(updatedUrl);
+                showAlertDialog(
+                    context, 'Profile picture updated successfully, please refresh');
               });
-              scaffoldMessenger.showSnackBar(
-                const SnackBar(
-                  content: Text('Profile picture updated successfully'),
-                ),
-              );
             } else {
               scaffoldMessenger.showSnackBar(
                 const SnackBar(
@@ -192,13 +189,8 @@ class UserProfileState extends State<UserProfile> {
   }
 
   Future<void> _saveProfile() async {
-    final navigator = Navigator.of(context);
-    final scaffoldMessenger = ScaffoldMessenger.of(context);
-
     if (!_isValidPhoneNumber(_phoneNumberController.text.trim())) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Invalid phone number')),
-      );
+      showAlertDialog(context, 'Invalid phone number');
       return;
     }
 
@@ -211,17 +203,15 @@ class UserProfileState extends State<UserProfile> {
         birthday: _selectedBirthday?.toIso8601String(),
       );
 
-      scaffoldMessenger.showSnackBar(
-        const SnackBar(
-            content:
-                Text('Profile picture updated successfully, please refresh')),
-      );
-
-      navigator.pop();
+      if (mounted) {
+        showAlertDialog(
+            context, 'Profile picture updated successfully, please refresh');
+        Navigator.of(context).pop();
+      }
     } catch (e) {
-      scaffoldMessenger.showSnackBar(
-        SnackBar(content: Text('Failed to update profile: $e')),
-      );
+      if (mounted) {
+        showAlertDialog(context, e.toString());
+      }
     }
   }
 
@@ -237,6 +227,26 @@ class UserProfileState extends State<UserProfile> {
     } else {
       return const AssetImage('assets/profile.png');
     }
+  }
+
+  void showAlertDialog(BuildContext context, String message) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text("Notification"),
+          content: Text(message),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text("OK"),
+            ),
+          ],
+        );
+      },
+    );
   }
 
   @override

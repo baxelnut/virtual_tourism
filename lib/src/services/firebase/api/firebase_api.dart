@@ -209,13 +209,18 @@ class FirebaseApi with ChangeNotifier {
     }
   }
 
-  Future<List<Map<String, dynamic>>> fetchDestinations() async {
+  Future<List<Map<String, dynamic>>> fetchDestinations({
+     final String? destinationId,
+    required final String parentPath,
+  }) async {
     final List<Map<String, dynamic>> destinations = [];
     final List<String> destinationIds = ['destinationId1', 'destinationId2'];
 
     for (final destinationId in destinationIds) {
-      final destinationData =
-          await FirebaseApi().getDestinationData(destinationId);
+      final destinationData = await FirebaseApi().getDestinationData(
+        parentPath: parentPath,
+        destinationId: destinationId,
+      );
       if (destinationData != null) {
         destinations.add(destinationData);
       }
@@ -224,13 +229,18 @@ class FirebaseApi with ChangeNotifier {
     return destinations;
   }
 
-  Future<Map<String, dynamic>?> getDestinationData(String destinationId) async {
+  Future<Map<String, dynamic>?> getDestinationData({
+    final String? destinationId,
+    required final String parentPath,
+  }) async {
     _isLoading = true;
     notifyListeners();
 
     try {
-      final DocumentSnapshot<Map<String, dynamic>> doc =
-          await _firestore.collection('destinations').doc(destinationId).get();
+      final DocumentSnapshot<Map<String, dynamic>> doc = await _firestore
+          .collection(parentPath)
+          .doc(destinationId ?? '')
+          .get();
       return doc.data();
     } catch (e) {
       print('Error fetching user data: $e');

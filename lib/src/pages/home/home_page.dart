@@ -1,13 +1,13 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
-import '../../components/cards_curved.dart';
 import '../../components/cards_emerged.dart';
 import '../../components/cards_header.dart';
 import '../../components/cards_linear.dart';
 import '../../components/chips_component.dart';
 import '../../components/user_overview.dart';
 import '../../services/destination_data.dart';
+import 'top_picks.dart';
 
 class HomePage extends StatefulWidget {
   final Function(int) onPageChange;
@@ -39,7 +39,7 @@ class _HomePageState extends State<HomePage> {
                   style: theme.textTheme.displayLarge,
                 ),
               ),
-              topPicks(context),
+              const TopPicks(),
               topCountries(),
               popularDestionation(context),
               const SizedBox(
@@ -61,32 +61,6 @@ class _HomePageState extends State<HomePage> {
           onPageChange: widget.onPageChange,
         ),
         const ChipsComponent(listOfThangz: ['Places', 'Conservation', 'News']),
-      ],
-    );
-  }
-
-  Widget topPicks(BuildContext context) {
-    return Column(
-      children: [
-        const CardsHeader(cardsTitle: 'Top Picks'),
-        SingleChildScrollView(
-          scrollDirection: Axis.horizontal,
-          child: Row(
-            children: topPickList.map((topPicksData) {
-              return CardsCurved(
-                destination: topPicksData['destination']!
-                    .replaceAll('_', ' ')
-                    .split(' ')
-                    .map((word) =>
-                        '${word[0].toUpperCase()}${word.substring(1)}')
-                    .join(' '),
-                description: topPicksData['description']!,
-                thumbnailPath: topPicksData['thumbnailPath']!,
-                imagePath: topPicksData['imagePath']!,
-              );
-            }).toList(),
-          ),
-        ),
       ],
     );
   }
