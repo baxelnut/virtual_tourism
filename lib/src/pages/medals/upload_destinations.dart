@@ -30,6 +30,7 @@ class _UploadDestinationsState extends State<UploadDestinations> {
         return data;
       }).toList();
     } catch (e) {
+      // ignore: avoid_print
       print('Error fetching destinations: $e');
       return [];
     }
@@ -51,6 +52,7 @@ class _UploadDestinationsState extends State<UploadDestinations> {
         return await FirebaseStorage.instance.ref(path).getDownloadURL();
       } catch (e) {
         if (e.toString().contains('object-not-found')) {
+          // ignore: avoid_print
           print('Error fetching image: $e');
           continue;
         }

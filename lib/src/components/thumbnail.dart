@@ -1,7 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
-import '../pages/home/image_screen.dart';
+import 'image_screen.dart';
 
 class Thumbnail extends StatelessWidget {
   final String imagePath;

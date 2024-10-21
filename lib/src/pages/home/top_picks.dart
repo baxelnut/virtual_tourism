@@ -32,6 +32,7 @@ class _TopPicksState extends State<TopPicks> {
         return data;
       }).toList();
     } catch (e) {
+      // ignore: avoid_print
       print('Error fetching top picks: $e');
       return [];
     }
@@ -125,7 +126,7 @@ class _TopPicksState extends State<TopPicks> {
                         return SizedBox(
                           width: MediaQuery.of(context).size.width / 1.9,
                           height: MediaQuery.of(context).size.height / 2.5,
-                          child: Center(child: CircularProgressIndicator()),
+                          child: const Center(child: CircularProgressIndicator()),
                         );
                       } else if (thumbnailSnapshot.hasError) {
                         return const SizedBox.shrink();
@@ -140,7 +141,7 @@ class _TopPicksState extends State<TopPicks> {
                             return SizedBox(
                               width: MediaQuery.of(context).size.width / 1.9,
                               height: MediaQuery.of(context).size.height / 2.5,
-                              child: Center(child: CircularProgressIndicator()),
+                              child: const Center(child: CircularProgressIndicator()),
                             );
                           } else if (imageSnapshot.hasError) {
                             return const SizedBox.shrink();

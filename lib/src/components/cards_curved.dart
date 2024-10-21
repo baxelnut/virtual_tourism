@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../pages/home/image_screen.dart';
+import 'image_screen.dart';
 
 class CardsCurved extends StatelessWidget {
   final String destination;
