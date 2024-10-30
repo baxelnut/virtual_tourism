@@ -1,16 +1,28 @@
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-class DestinationOverview extends StatelessWidget {
+import 'image_screen.dart';
+
+class DestinationOverview extends StatefulWidget {
   final Map<String, dynamic> destinationData;
 
   const DestinationOverview({
-    super.key,
+    Key? key,
     required this.destinationData,
-  });
+  }) : super(key: key);
+
+  @override
+  _DestinationOverviewState createState() => _DestinationOverviewState();
+}
+
+class _DestinationOverviewState extends State<DestinationOverview> {
+  bool _isLoading = false;
 
   void _launchURL(String url) async {
     final Uri uri = Uri.parse(url);
+    setState(() {
+      _isLoading = true;
+    });
 
     try {
       if (await canLaunchUrl(uri)) {
@@ -20,6 +32,10 @@ class DestinationOverview extends StatelessWidget {
       }
     } catch (e) {
       print('Error launching URL: $e');
+    } finally {
+      setState(() {
+        _isLoading = false;
+      });
     }
   }
 
@@ -38,7 +54,7 @@ class DestinationOverview extends StatelessWidget {
           },
           icon: const Icon(Icons.arrow_back_rounded),
         ),
-        title: Text(destinationData['destinationName'] ?? 'Unknown'),
+        title: Text(widget.destinationData['destinationName'] ?? 'Unknown'),
       ),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 30),
@@ -56,7 +72,7 @@ class DestinationOverview extends StatelessWidget {
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(10),
                     child: Image.network(
-                      destinationData["imagePath"] ?? placeholderPath,
+                      widget.destinationData["imagePath"] ?? placeholderPath,
                       fit: BoxFit.fill,
                     ),
                   ),
@@ -66,7 +82,22 @@ class DestinationOverview extends StatelessWidget {
                 child: Padding(
                   padding: const EdgeInsets.symmetric(vertical: 10),
                   child: ElevatedButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) => ImageScreen(
+                            image: Image(
+                              image: NetworkImage(
+                                  widget.destinationData['imagePath'] ??
+                                      placeholderPath),
+                            ),
+                            appBarTitle:
+                                widget.destinationData['destinationName'] ??
+                                    'No data available',
+                          ),
+                        ),
+                      );
+                    },
                     style: ElevatedButton.styleFrom(
                       padding: EdgeInsets.zero,
                       backgroundColor: theme.colorScheme.onSurface,
@@ -82,7 +113,8 @@ class DestinationOverview extends StatelessWidget {
                 ),
               ),
               Text(
-                destinationData['description'] ?? 'No description available',
+                widget.destinationData['description'] ??
+                    'No description available',
                 textAlign: TextAlign.left,
                 style: theme.textTheme.bodyLarge,
               ),
@@ -100,17 +132,20 @@ class DestinationOverview extends StatelessWidget {
                   rows: [
                     DataRow(
                       cells: <DataCell>[
+                        DataCell(Text(widget.destinationData["releaseDate"] ??
+                            "No data")),
                         DataCell(
-                            Text(destinationData["releaseDate"] ?? "No data")),
-                        DataCell(Text(destinationData["size"] ?? "No data")),
-                        DataCell(
-                            Text(destinationData["fieldOfView"] ?? "No data")),
+                            Text(widget.destinationData["size"] ?? "No data")),
+                        DataCell(Text(widget.destinationData["fieldOfView"] ??
+                            "No data")),
                         DataCell(
                           GestureDetector(
-                            onTap: () =>
-                                _launchURL(destinationData["sourcePath"] ?? ""),
+                            onTap: () {
+                              _launchURL(
+                                  widget.destinationData["sourcePath"] ?? "");
+                            },
                             child: Text(
-                              destinationData["sourcePath"] ?? "No data",
+                              widget.destinationData["sourcePath"] ?? "No data",
                               style: const TextStyle(
                                 color: Colors.blue,
                                 decoration: TextDecoration.underline,
@@ -123,7 +158,11 @@ class DestinationOverview extends StatelessWidget {
                   ],
                 ),
               ),
-              SizedBox(height: screenSize.width / 3)
+              SizedBox(height: screenSize.width / 3),
+              if (_isLoading)
+                Center(
+                  child: CircularProgressIndicator(),
+                ),
             ],
           ),
         ),

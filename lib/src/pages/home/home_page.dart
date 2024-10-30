@@ -39,7 +39,7 @@ class _HomePageState extends State<HomePage> {
                   style: theme.textTheme.displayLarge,
                 ),
               ),
-              const TopPicks(),
+              // const TopPicks(),
               topCountries(),
               popularDestionation(context),
               const SizedBox(

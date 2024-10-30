@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:virtual_tourism/src/components/cards_emerged.dart';
 
+import '../../components/cards_emerged.dart';
 import '../../components/cards_header.dart';
 import '../../services/firebase/api/firebase_api.dart';
 
