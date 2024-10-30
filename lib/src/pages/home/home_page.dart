@@ -105,10 +105,7 @@ class _HomePageState extends State<HomePage> {
                   return RotatedBox(
                     quarterTurns: 1,
                     child: CardsEmerged(
-                      country: popularData['country']!,
-                      destination: popularData['destination']!,
-                      thumbnailPath: popularData['thumbnailPath']!,
-                      imagePath: popularData['imagePath']!,
+                      destinationData: popularData,
                     ),
                   );
                 }).toList(),

@@ -53,15 +53,13 @@ class _ImageStorageTestState extends State<ImageStorageTest> {
                     child: ListView.builder(
                       itemCount: imageUrls.length,
                       itemBuilder: (context, index) {
-                        final String imageUrl = imageUrls[index];
+                        // final String imageUrl = imageUrls[index];
                         // print(imageUrls);
-                        return Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 10),
+                        return const Padding(
+                            padding: EdgeInsets.symmetric(vertical: 10),
                             child: CardsEmerged(
-                                country: 'country',
-                                destination: 'destination',
-                                thumbnailPath: imageUrl,
-                                imagePath: imageUrl));
+                              destinationData: {},
+                            ));
                       },
                     ),
                     // CardsLinear(

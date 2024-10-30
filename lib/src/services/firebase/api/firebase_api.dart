@@ -5,7 +5,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 import '../storage/storage_service.dart';
-
 class FirebaseApi with ChangeNotifier {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final StorageService _storageService = StorageService();
@@ -245,6 +244,26 @@ class FirebaseApi with ChangeNotifier {
     } catch (e) {
       print('Error fetching user data: $e');
       return null;
+    } finally {
+      _isLoading = false;
+      notifyListeners();
+    }
+  }
+
+  Future<List<Map<String, dynamic>>> fetchDocuments() async {
+    _isLoading = true;
+    notifyListeners();
+
+    try {
+      final querySnapshot = await _firestore
+          .collection('case_study_destinations')
+          .get();
+
+      // Map each document to a Map and add it to the list
+      return querySnapshot.docs.map((doc) => doc.data()).toList();
+    } catch (e) {
+      print('Error fetching case studies: $e');
+      return [];
     } finally {
       _isLoading = false;
       notifyListeners();

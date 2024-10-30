@@ -2,14 +2,24 @@ import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class DestinationOverview extends StatelessWidget {
-  const DestinationOverview({super.key});
+  final Map<String, dynamic> destinationData;
+
+  const DestinationOverview({
+    super.key,
+    required this.destinationData,
+  });
 
   void _launchURL(String url) async {
     final Uri uri = Uri.parse(url);
-    if (await canLaunchUrl(uri)) {
-      await launchUrl(uri);
-    } else {
-      throw 'Could not launch $url';
+
+    try {
+      if (await canLaunchUrl(uri)) {
+        await launchUrl(uri);
+      } else {
+        print('Could not launch $url');
+      }
+    } catch (e) {
+      print('Error launching URL: $e');
     }
   }
 
@@ -17,19 +27,8 @@ class DestinationOverview extends StatelessWidget {
   Widget build(BuildContext context) {
     final screenSize = MediaQuery.of(context).size;
     final theme = Theme.of(context);
-
-    final List<Map<String, String>> destinationData = [
-      {
-        "releaseDate": "18 May 2013, 15:21",
-        "size": "33580 x 5502 px",
-        "fieldOfView": "360° x 59°",
-        "sourcePath": "https://www.eso.org/public/images/res-vlt-sunset-pan/",
-        "description":
-            "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
-      },
-    ];
-
-    final description = destinationData.first["description"] ?? "";
+    const placeholderPath =
+        'https://hellenic.org/wp-content/plugins/elementor/assets/images/placeholder.png';
 
     return Scaffold(
       appBar: AppBar(
@@ -39,12 +38,11 @@ class DestinationOverview extends StatelessWidget {
           },
           icon: const Icon(Icons.arrow_back_rounded),
         ),
-        title: const Text('destinationName'),
+        title: Text(destinationData['destinationName'] ?? 'Unknown'),
       ),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 30),
         child: SingleChildScrollView(
-          scrollDirection: Axis.vertical,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -57,11 +55,9 @@ class DestinationOverview extends StatelessWidget {
                   ),
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(10),
-                    child: Image(
+                    child: Image.network(
+                      destinationData["imagePath"] ?? placeholderPath,
                       fit: BoxFit.fill,
-                      image: NetworkImage(
-                        'https://cdn.eso.org/images/wallpaper1/res-vlt-sunset-pan.jpg',
-                      ),
                     ),
                   ),
                 ),
@@ -86,7 +82,7 @@ class DestinationOverview extends StatelessWidget {
                 ),
               ),
               Text(
-                description,
+                destinationData['description'] ?? 'No description available',
                 textAlign: TextAlign.left,
                 style: theme.textTheme.bodyLarge,
               ),
@@ -101,18 +97,20 @@ class DestinationOverview extends StatelessWidget {
                     DataColumn(label: Text("Field of View")),
                     DataColumn(label: Text("Source")),
                   ],
-                  rows: destinationData.map((destination) {
-                    return DataRow(
+                  rows: [
+                    DataRow(
                       cells: <DataCell>[
-                        DataCell(Text(destination["releaseDate"] ?? "")),
-                        DataCell(Text(destination["size"] ?? "")),
-                        DataCell(Text(destination["fieldOfView"] ?? "")),
+                        DataCell(
+                            Text(destinationData["releaseDate"] ?? "No data")),
+                        DataCell(Text(destinationData["size"] ?? "No data")),
+                        DataCell(
+                            Text(destinationData["fieldOfView"] ?? "No data")),
                         DataCell(
                           GestureDetector(
                             onTap: () =>
-                                _launchURL(destination["sourcePath"] ?? ""),
+                                _launchURL(destinationData["sourcePath"] ?? ""),
                             child: Text(
-                              destination["sourcePath"] ?? "",
+                              destinationData["sourcePath"] ?? "No data",
                               style: const TextStyle(
                                 color: Colors.blue,
                                 decoration: TextDecoration.underline,
@@ -121,8 +119,8 @@ class DestinationOverview extends StatelessWidget {
                           ),
                         ),
                       ],
-                    );
-                  }).toList(),
+                    ),
+                  ],
                 ),
               ),
               SizedBox(height: screenSize.width / 3)

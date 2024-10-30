@@ -1,11 +1,19 @@
 import 'package:flutter/material.dart';
-import 'package:virtual_tourism/src/components/destination_overview.dart';
+
+import 'example_page.dart';
 
 class TourPage extends StatelessWidget {
   const TourPage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return DestinationOverview();
+    return Scaffold(
+      appBar: AppBar(
+        title: const Center(
+          child: Text('Example Page'),
+        ),
+      ),
+      body: const ExamplePage(),
+    );
   }
 }

@@ -1,23 +1,24 @@
 import 'package:flutter/material.dart';
 
-import 'image_screen.dart';
+import 'destination_overview.dart';
 
 class CardsEmerged extends StatelessWidget {
-  final String country;
-  final String destination;
-  final String thumbnailPath;
-  final String imagePath;
-  const CardsEmerged(
-      {super.key,
-      required this.country,
-      required this.destination,
-      required this.thumbnailPath,
-      required this.imagePath});
+  final Map<String, dynamic> destinationData;
+
+  const CardsEmerged({
+    super.key,
+    required this.destinationData,
+  });
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final screenSize = MediaQuery.of(context).size;
+    const placeholderPath =
+        'https://hellenic.org/wp-content/plugins/elementor/assets/images/placeholder.png';
+
+    const String caseStudyCountry = 'Chile';
+
     return Padding(
       padding: const EdgeInsets.only(left: 5),
       child: Stack(
@@ -31,21 +32,8 @@ class CardsEmerged extends StatelessWidget {
             child: ClipRRect(
               borderRadius: BorderRadius.circular(16),
               child: Image.network(
-                thumbnailPath,
+                destinationData['thumbnailPath'] ?? placeholderPath,
                 fit: BoxFit.cover,
-                width: screenSize.width / 2,
-                height: screenSize.width / 2,
-                loadingBuilder: (context, child, loadingProgress) {
-                  if (loadingProgress == null) return child;
-                  return Center(
-                    child: CircularProgressIndicator(
-                      value: loadingProgress.expectedTotalBytes != null
-                          ? loadingProgress.cumulativeBytesLoaded /
-                              (loadingProgress.expectedTotalBytes ?? 1)
-                          : null,
-                    ),
-                  );
-                },
               ),
             ),
           ),
@@ -67,85 +55,83 @@ class CardsEmerged extends StatelessWidget {
             ),
           ),
           Positioned(
-              bottom: 0,
-              left: 10,
-              right: 10,
-              child: ListTile(
-                  dense: true,
-                  contentPadding: const EdgeInsets.all(0),
-                  minVerticalPadding: 0,
-                  title: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 12),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.only(right: 5),
-                              child: Icon(
-                                Icons.location_on_rounded,
-                                color: theme.colorScheme.onPrimary,
-                                size: 16,
-                              ),
-                            ),
-                            Text(
-                              country,
-                              overflow: TextOverflow.visible,
-                              maxLines: 2,
-                              style: theme.textTheme.labelMedium
-                                  ?.copyWith(color: theme.colorScheme.onPrimary),
-                            )
-                          ],
+            bottom: 0,
+            left: 10,
+            right: 10,
+            child: ListTile(
+              dense: true,
+              contentPadding: const EdgeInsets.all(0),
+              title: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.only(right: 5),
+                        child: Icon(
+                          Icons.location_on_rounded,
+                          color: theme.colorScheme.onPrimary,
+                          size: 16,
                         ),
-                        Text(
-                          destination,
-                          overflow: TextOverflow.ellipsis,
-                          maxLines: 2,
-                          style: theme.textTheme.bodyLarge?.copyWith(
-                              color: theme.colorScheme.onPrimary,
-                              fontWeight: FontWeight.bold),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 0, vertical: 8),
-                          child: Container(
-                            width: screenSize.width,
-                            height: 30,
-                            decoration: BoxDecoration(
-                              boxShadow: [
-                                BoxShadow(
-                                  color: theme.colorScheme.surface
-                                      .withOpacity(0.5),
-                                  spreadRadius: 2,
-                                  blurRadius: 8,
-                                  offset: const Offset(0, 0),
-                                ),
-                              ],
-                              borderRadius: BorderRadius.circular(360),
-                            ),
-                            child: ElevatedButton(
-                                style: ElevatedButton.styleFrom(
-                                  foregroundColor:
-                                      theme.colorScheme.onSecondary,
-                                  backgroundColor: theme.colorScheme.secondary,
-                                ),
-                                onPressed: () {
-                                  Navigator.of(context).push(
-                                    MaterialPageRoute(
-                                      builder: (context) => ImageScreen(
-                                        image: Image.network(imagePath),
-                                        appBarTitle: destination,
-                                      ),
-                                    ),
-                                  );
-                                },
-                                child: const Text('Visit')),
+                      ),
+                      Text(
+                        destinationData['country'] ?? caseStudyCountry,
+                        // destinationData['country'] ?? 'Unknown Country',
+                        overflow: TextOverflow.visible,
+                        maxLines: 2,
+                        style: theme.textTheme.labelMedium
+                            ?.copyWith(color: theme.colorScheme.onPrimary),
+                      ),
+                    ],
+                  ),
+                  Text(
+                    destinationData['destinationName'] ?? 'Unknown',
+                    overflow: TextOverflow.ellipsis,
+                    maxLines: 2,
+                    style: theme.textTheme.bodyLarge?.copyWith(
+                        color: theme.colorScheme.onPrimary,
+                        fontWeight: FontWeight.bold),
+                  ),
+                  Padding(
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 0, vertical: 8),
+                    child: Container(
+                      width: screenSize.width,
+                      height: 30,
+                      decoration: BoxDecoration(
+                        boxShadow: [
+                          BoxShadow(
+                            color: theme.colorScheme.surface.withOpacity(0.5),
+                            spreadRadius: 2,
+                            blurRadius: 8,
+                            offset: const Offset(0, 0),
                           ),
+                        ],
+                        borderRadius: BorderRadius.circular(360),
+                      ),
+                      child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          foregroundColor: theme.colorScheme.onSecondary,
+                          backgroundColor: theme.colorScheme.secondary,
                         ),
-                      ],
+                        onPressed: () {
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                                builder: (context) => DestinationOverview(
+                                      destinationData: destinationData,
+                                    )
+                                
+                                ),
+                          );
+                        },
+                        child: const Text('Visit'),
+                      ),
                     ),
-                  ))),
+                  ),
+                ],
+              ),
+            ),
+          ),
         ],
       ),
     );
