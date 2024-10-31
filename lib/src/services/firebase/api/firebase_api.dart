@@ -5,6 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 import '../storage/storage_service.dart';
+
 class FirebaseApi with ChangeNotifier {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final StorageService _storageService = StorageService();
@@ -175,6 +176,7 @@ class FirebaseApi with ChangeNotifier {
   }
 
   Future<void> addDestination({
+    required final String collections,
     required final String category,
     required final String subcategory,
     required final String destinationName,
@@ -184,10 +186,10 @@ class FirebaseApi with ChangeNotifier {
     _isLoading = true;
     notifyListeners();
 
-    String docId = _firestore.collection('destinations').doc().id;
+    String docId = _firestore.collection(collections).doc().id;
 
     try {
-      await _firestore.collection('destinations').doc(docId).set({
+      await _firestore.collection(collections).doc(docId).set({
         'subcategory': subcategory,
         'destinationName': destinationName,
         'country': country,
@@ -199,7 +201,11 @@ class FirebaseApi with ChangeNotifier {
       });
 
       await _storageService.addDestination(
-          category: category, subcategory: subcategory, imageId: docId);
+        collections: collections,
+        category: category,
+        subcategory: subcategory,
+        imageId: docId,
+      );
     } catch (e) {
       print('Error adding destination to database: $e');
     } finally {
@@ -209,7 +215,7 @@ class FirebaseApi with ChangeNotifier {
   }
 
   Future<List<Map<String, dynamic>>> fetchDestinations({
-     final String? destinationId,
+    final String? destinationId,
     required final String parentPath,
   }) async {
     final List<Map<String, dynamic>> destinations = [];
@@ -255,9 +261,8 @@ class FirebaseApi with ChangeNotifier {
     notifyListeners();
 
     try {
-      final querySnapshot = await _firestore
-          .collection('case_study_destinations')
-          .get();
+      final querySnapshot =
+          await _firestore.collection('case_study_destinations').get();
 
       // Map each document to a Map and add it to the list
       return querySnapshot.docs.map((doc) => doc.data()).toList();

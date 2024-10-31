@@ -8,6 +8,7 @@ import '../../components/chips_component.dart';
 import '../../services/firebase/api/firebase_api.dart';
 import '../../services/firebase/auth/auth_page.dart';
 // import '../../services/firebase/firebase_api.dart';
+import '../explore/upload_image.dart';
 import 'image_storage_test.dart';
 
 class MedalsPage extends StatelessWidget {
@@ -54,12 +55,12 @@ class MedalsPage extends StatelessWidget {
                     onTap: () {
                       Navigator.of(context).push(
                         MaterialPageRoute(
-                            builder: (context) => const UploadDestinations()),
+                          builder: (context) => const UploadDestinations(),
+                        ),
                       );
-
                     },
                     child: Container(
-                      color: Colors.red,
+                      color: Colors.green,
                       height: 100,
                       width: 100,
                       child: const Center(
@@ -67,9 +68,28 @@ class MedalsPage extends StatelessWidget {
                           'Upload Destinations & Thumb',
                           textAlign: TextAlign.center,
                         ),
-                      )
+                      ),
                     ),
-                  )
+                  ),
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) => const UploadImage(),
+                        ),
+                      );
+                    },
+                    child: Container(
+                        color: Colors.red,
+                        height: 100,
+                        width: 100,
+                        child: const Center(
+                          child: Text(
+                            'Upload Custom Image',
+                            textAlign: TextAlign.center,
+                          ),
+                        )),
+                  ),
                 ],
               ),
               const SizedBox(height: 10),
@@ -86,21 +106,23 @@ class MedalsPage extends StatelessWidget {
                       // print('profile picture uploaded');
                     },
                     child: Container(
-                        color: Colors.green,
-                        height: 100,
-                        width: 100,
-                        child: const Center(
-                          child: Text(
-                            'Upload Profile Picture',
-                            textAlign: TextAlign.center,
-                          ),
-                        )),
+                      color: Colors.green,
+                      height: 100,
+                      width: 100,
+                      child: const Center(
+                        child: Text(
+                          'Upload Profile Picture',
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+                    ),
                   ),
                   GestureDetector(
                     onTap: () {
                       Navigator.of(context).push(
                         MaterialPageRoute(
-                            builder: (context) => const AuthPage()),
+                          builder: (context) => const AuthPage(),
+                        ),
                       );
                     },
                     child: Container(
@@ -119,13 +141,14 @@ class MedalsPage extends StatelessWidget {
                     onTap: () {
                       Navigator.of(context).push(
                         MaterialPageRoute(
-                            builder: (context) => const ImageStorageTest()),
+                          builder: (context) => const ImageStorageTest(),
+                        ),
                       );
                     },
                     child: Container(
                       width: 100,
                       height: 100,
-                      color: Colors.yellow,
+                      color: Colors.amber,
                       child: const Center(
                         child: Text(
                           'Image Storage',
@@ -181,66 +204,72 @@ class MedalsPage extends StatelessWidget {
                 width: MediaQuery.of(context).size.width,
                 color: theme.colorScheme.primary,
                 child: Center(
-                    child: Text(
-                  'Primary (0xff1289B4)',
-                  style: theme.textTheme.bodyLarge
-                      ?.copyWith(color: theme.colorScheme.onPrimary),
-                )),
+                  child: Text(
+                    'Primary (0xff1289B4)',
+                    style: theme.textTheme.bodyLarge
+                        ?.copyWith(color: theme.colorScheme.onPrimary),
+                  ),
+                ),
               ),
               Container(
                 height: 30,
                 width: MediaQuery.of(context).size.width,
                 color: theme.colorScheme.secondary,
                 child: Center(
-                    child: Text(
-                  'Secondary (0xffB43D12)',
-                  style: theme.textTheme.bodyLarge
-                      ?.copyWith(color: theme.colorScheme.onSecondary),
-                )),
+                  child: Text(
+                    'Secondary (0xffB43D12)',
+                    style: theme.textTheme.bodyLarge
+                        ?.copyWith(color: theme.colorScheme.onSecondary),
+                  ),
+                ),
               ),
               Container(
                 height: 30,
                 width: MediaQuery.of(context).size.width,
                 color: theme.colorScheme.onPrimary,
                 child: Center(
-                    child: Text(
-                  'On Primary (0xffEFFFFB)',
-                  style: theme.textTheme.bodyLarge
-                      ?.copyWith(color: theme.colorScheme.primary),
-                )),
+                  child: Text(
+                    'On Primary (0xffEFFFFB)',
+                    style: theme.textTheme.bodyLarge
+                        ?.copyWith(color: theme.colorScheme.primary),
+                  ),
+                ),
               ),
               Container(
                 height: 30,
                 width: MediaQuery.of(context).size.width,
                 color: theme.colorScheme.onSecondary,
                 child: Center(
-                    child: Text(
-                  'On Secondary (0xffEFFFFB)',
-                  style: theme.textTheme.bodyLarge
-                      ?.copyWith(color: theme.colorScheme.secondary),
-                )),
+                  child: Text(
+                    'On Secondary (0xffEFFFFB)',
+                    style: theme.textTheme.bodyLarge
+                        ?.copyWith(color: theme.colorScheme.secondary),
+                  ),
+                ),
               ),
               Container(
                 height: 30,
                 width: MediaQuery.of(context).size.width,
                 color: theme.colorScheme.surface,
                 child: Center(
-                    child: Text(
-                  'Surface (0xffEFFFFB)',
-                  style: theme.textTheme.bodyLarge
-                      ?.copyWith(color: theme.colorScheme.onSurface),
-                )),
+                  child: Text(
+                    'Surface (0xffEFFFFB)',
+                    style: theme.textTheme.bodyLarge
+                        ?.copyWith(color: theme.colorScheme.onSurface),
+                  ),
+                ),
               ),
               Container(
                 height: 30,
                 width: MediaQuery.of(context).size.width,
                 color: theme.colorScheme.onSurface,
                 child: Center(
-                    child: Text(
-                  'On Surface (0xff151515)',
-                  style: theme.textTheme.bodyLarge
-                      ?.copyWith(color: theme.colorScheme.surface),
-                )),
+                  child: Text(
+                    'On Surface (0xff151515)',
+                    style: theme.textTheme.bodyLarge
+                        ?.copyWith(color: theme.colorScheme.surface),
+                  ),
+                ),
               ),
               const Divider(),
               Text(

@@ -18,11 +18,10 @@ class StorageService with ChangeNotifier {
   bool get isLoading => _isLoading;
   bool get isUploading => _isUploading;
 
-  Future<void> fetchImages() async {
+  Future<void> fetchImages({required String ref}) async {
     _isLoading = true;
 
-    final ListResult result =
-        await firebaseStorage.ref('uploaded_images/').listAll();
+    final ListResult result = await firebaseStorage.ref(ref).listAll();
 
     final urls =
         await Future.wait(result.items.map((ref) => ref.getDownloadURL()));
@@ -48,7 +47,10 @@ class StorageService with ChangeNotifier {
     return Uri.decodeComponent(encodedPath);
   }
 
-  Future<void> uploadImage() async {
+  // not so useful
+  Future<void> uploadImage({
+    required final String ref,
+  }) async {
     _isUploading = true;
     notifyListeners();
 
@@ -59,7 +61,8 @@ class StorageService with ChangeNotifier {
 
     try {
       String fileExtension = image.path.split('.').last;
-      String filePath = 'uploaded_images/$fileExtension';
+
+      String filePath = '$ref$fileExtension';
       File file = File(image.path);
 
       await firebaseStorage.ref(filePath).putFile(file);
@@ -149,6 +152,7 @@ class StorageService with ChangeNotifier {
   }
 
   Future<void> addDestination({
+    required final String collections,
     required final String category,
     required final String subcategory,
     required final String imageId,
@@ -162,9 +166,9 @@ class StorageService with ChangeNotifier {
     if (image == null) return;
 
     try {
-      String originalFilePath = 'destinations/$category/$subcategory/$imageId';
+      String originalFilePath = '$collections/$category/$subcategory/$imageId';
       String thumbnailFilePath =
-          'destinations/$category/$subcategory/${imageId}_thumbnail';
+          '$collections/$category/$subcategory/${imageId}_thumbnail';
       File file = File(image.path);
 
       await firebaseStorage.ref(originalFilePath).putFile(file);

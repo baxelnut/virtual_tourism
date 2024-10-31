@@ -2,6 +2,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
+import '../../services/firebase/storage/storage_service.dart';
 
 class UploadDestinations extends StatefulWidget {
   const UploadDestinations({super.key});
@@ -143,6 +146,16 @@ class _UploadDestinationsState extends State<UploadDestinations> {
                 },
               );
             },
+          );
+        },
+      ),
+      floatingActionButton: Consumer<StorageService>(
+        builder: (context, storageService, child) {
+          return FloatingActionButton(
+            onPressed: () {
+              storageService.uploadImage(ref: 'uploaded_images/');
+            },
+            child: const Icon(Icons.add_a_photo_rounded),
           );
         },
       ),

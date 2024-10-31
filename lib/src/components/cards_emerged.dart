@@ -117,9 +117,10 @@ class CardsEmerged extends StatelessWidget {
                         onPressed: () {
                           Navigator.of(context).push(
                             MaterialPageRoute(
-                                builder: (context) => DestinationOverview(
-                                      destinationData: destinationData,
-                                    )),
+                              builder: (context) => DestinationOverview(
+                                destinationData: destinationData,
+                              ),
+                            ),
                           );
                         },
                         child: const Text('Visit'),

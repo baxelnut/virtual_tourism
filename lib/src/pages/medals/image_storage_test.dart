@@ -21,7 +21,8 @@ class _ImageStorageTestState extends State<ImageStorageTest> {
   }
 
   Future<void> fetchImages() async {
-    await Provider.of<StorageService>(context, listen: false).fetchImages();
+    await Provider.of<StorageService>(context, listen: false)
+        .fetchImages(ref: 'uploaded_images/');
   }
 
   @override
@@ -78,7 +79,7 @@ class _ImageStorageTestState extends State<ImageStorageTest> {
         builder: (context, storageService, child) {
           return FloatingActionButton(
             onPressed: () {
-              storageService.uploadImage();
+              storageService.uploadImage(ref: 'uploaded_images/');
             },
             child: const Icon(Icons.add_a_photo_rounded),
           );

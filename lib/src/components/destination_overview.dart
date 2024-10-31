@@ -7,15 +7,15 @@ class DestinationOverview extends StatefulWidget {
   final Map<String, dynamic> destinationData;
 
   const DestinationOverview({
-    Key? key,
+    super.key,
     required this.destinationData,
-  }) : super(key: key);
+  });
 
   @override
-  _DestinationOverviewState createState() => _DestinationOverviewState();
+  DestinationOverviewState createState() => DestinationOverviewState();
 }
 
-class _DestinationOverviewState extends State<DestinationOverview> {
+class DestinationOverviewState extends State<DestinationOverview> {
   bool _isLoading = false;
 
   void _launchURL(String url) async {
@@ -160,7 +160,7 @@ class _DestinationOverviewState extends State<DestinationOverview> {
               ),
               SizedBox(height: screenSize.width / 3),
               if (_isLoading)
-                Center(
+                const Center(
                   child: CircularProgressIndicator(),
                 ),
             ],
