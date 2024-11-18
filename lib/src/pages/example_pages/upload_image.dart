@@ -65,19 +65,20 @@ class _UploadImageState extends State<UploadImage> {
     required final String subcategory,
     required final String destinationId,
   }) async {
-    final List<String> extensions = [
-      'jpg',
-      'jpeg',
-      'png',
-      'gif',
-      'bmp',
-      'webp'
-    ];
+    // final List<String> extensions = [
+    //   'jpg',
+    //   'jpeg',
+    //   'png',
+    //   'gif',
+    //   'bmp',
+    //   'webp'
+    // ];
 
     final path = '$collection/$category/$subcategory/$destinationId';
     try {
       return await FirebaseStorage.instance.ref(path).getDownloadURL();
     } catch (e) {
+      // ignore: avoid_print
       print('Error fetching image from path: $path - $e');
       return '';
     }

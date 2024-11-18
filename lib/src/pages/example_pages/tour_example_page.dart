@@ -5,14 +5,14 @@ import '../../components/cards_emerged.dart';
 import '../../components/cards_header.dart';
 import '../../services/firebase/api/firebase_api.dart';
 
-class ExamplePage extends StatefulWidget {
-  const ExamplePage({super.key});
+class TourExamplePage extends StatefulWidget {
+  const TourExamplePage({super.key});
 
   @override
-  State<ExamplePage> createState() => _ExamplePageState();
+  State<TourExamplePage> createState() => _TourExamplePageState();
 }
 
-class _ExamplePageState extends State<ExamplePage> {
+class _TourExamplePageState extends State<TourExamplePage> {
   List<Map<String, dynamic>> caseStudies = [];
 
   @override

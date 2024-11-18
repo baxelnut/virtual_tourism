@@ -4,8 +4,11 @@ import 'package:panorama_viewer/panorama_viewer.dart';
 class ImageScreen extends StatelessWidget {
   final Image image;
   final String appBarTitle;
-  const ImageScreen(
-      {super.key, required this.image, required this.appBarTitle});
+  const ImageScreen({
+    super.key,
+    required this.image,
+    required this.appBarTitle,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -14,6 +17,7 @@ class ImageScreen extends StatelessWidget {
         title: Text(appBarTitle),
       ),
       body: PanoramaViewer(
+        sensorControl: SensorControl.orientation,
         child: image,
       ),
     );

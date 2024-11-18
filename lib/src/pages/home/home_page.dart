@@ -7,7 +7,7 @@ import '../../components/cards_linear.dart';
 import '../../components/chips_component.dart';
 import '../../components/user_overview.dart';
 import '../../services/destination_data.dart';
-import 'top_picks.dart';
+// import 'top_picks.dart';
 
 class HomePage extends StatefulWidget {
   final Function(int) onPageChange;
