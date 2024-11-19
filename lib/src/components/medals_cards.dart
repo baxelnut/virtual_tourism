@@ -1,32 +1,75 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
-class MedalsCards extends StatelessWidget {
+import '../pages/medals/full_country_list_page.dart';
+import '../services/firebase/api/firebase_api.dart';
+
+class MedalsCards extends StatefulWidget {
   final String title;
-  final String progress;
-  final String medalName;
+  final Map<String, bool> countries;
+
   const MedalsCards({
     super.key,
     required this.title,
-    required this.progress,
-    required this.medalName,
+    required this.countries,
   });
+
+  @override
+  MedalsCardsState createState() => MedalsCardsState();
+}
+
+class MedalsCardsState extends State<MedalsCards> {
+  late Map<String, bool> countries;
+
+  @override
+  void initState() {
+    super.initState();
+    countries = {...widget.countries};
+  }
+
+  int get visitedCount => countries.values.where((visited) => visited).length;
+
+  int get totalCount => countries.length;
+
+  void toggleCountryVisited(String countryName) async {
+    final firebaseApi = Provider.of<FirebaseApi>(context, listen: false);
+    final newVisited = !countries[countryName]!;
+    setState(() {
+      countries[countryName] = newVisited;
+    });
+
+    try {
+      await firebaseApi.updatePassportStatus(countryName, newVisited);
+    } catch (e) {
+      setState(() {
+        countries[countryName] = !newVisited;
+      });
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Error updating state: $e')),
+        );
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     final Size screenSize = MediaQuery.of(context).size;
     final ThemeData theme = Theme.of(context);
+
     return Column(
       children: [
         buildHeader(
-          title: title,
-          progress: progress,
+          title: widget.title,
+          progress: '$visitedCount/$totalCount',
           screenSize: screenSize,
           theme: theme,
+          context: context,
         ),
-        buildCards(
-          medalName: medalName,
+        buildCountryCards(
           screenSize: screenSize,
           theme: theme,
+          context: context,
         ),
       ],
     );
@@ -37,66 +80,89 @@ class MedalsCards extends StatelessWidget {
     required String progress,
     required Size screenSize,
     required ThemeData theme,
+    required BuildContext context,
   }) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
-      width: screenSize.width,
-      child: Row(
-        children: [
-          Expanded(
-            child: Text(
-              title,
-              style: theme.textTheme.titleMedium,
+    return GestureDetector(
+      onTap: () {
+        Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (context) => FullCountryListPage(countries: countries),
+          ),
+        );
+      },
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
+        width: screenSize.width,
+        child: Row(
+          children: [
+            Expanded(
+              child: Text(
+                title,
+                style: theme.textTheme.titleMedium,
+              ),
             ),
-          ),
-          Text(
-            progress,
-            style: theme.textTheme.bodyMedium,
-          ),
-          const Icon(Icons.keyboard_arrow_right_rounded)
-        ],
+            Text(
+              progress,
+              style: theme.textTheme.bodyLarge,
+            ),
+            const Icon(Icons.keyboard_arrow_right_rounded),
+          ],
+        ),
       ),
     );
   }
 
-  Widget buildCards({
-    required String medalName,
+  Widget buildCountryCards({
     required Size screenSize,
     required ThemeData theme,
+    required BuildContext context,
   }) {
+    final visited = countries.entries.where((entry) => entry.value).toList();
+    final notVisited =
+        countries.entries.where((entry) => !entry.value).toList();
+
+    visited.sort((a, b) => a.key.compareTo(b.key));
+    notVisited.sort((a, b) => a.key.compareTo(b.key));
+
+    final topCountries = [
+      ...visited,
+      ...notVisited,
+    ].take(6).toList();
+
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
       width: screenSize.width,
-      child: Row(
-        children: [
-          SizedBox(
-            height: 170,
-            width: 120,
-            child: Column(
-              children: [
-                Container(
-                  height: 100,
-                  width: 100,
-                  decoration: BoxDecoration(
-                    color: Colors.amber,
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  child: const Center(child: Text('insert image here')),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(top: 10),
-                  child: Text(
-                    medalName,
-                    style: theme.textTheme.bodyLarge,
-                    overflow: TextOverflow.ellipsis,
-                    maxLines: 2,
-                    textAlign: TextAlign.center,
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ],
+      child: Center(
+        child: Wrap(
+          spacing: 10,
+          runSpacing: 10,
+          children: topCountries.map((entry) {
+            return GestureDetector(
+              onTap: () => toggleCountryVisited(entry.key),
+              child: buildCountryCard(entry.key, entry.value, theme),
+            );
+          }).toList(),
+        ),
+      ),
+    );
+  }
+
+  Widget buildCountryCard(String countryName, bool visited, ThemeData theme) {
+    return Container(
+      height: 110,
+      width: 110,
+      decoration: BoxDecoration(
+        color: visited ? Colors.green : Colors.amber[900],
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: Center(
+        child: Text(
+          countryName,
+          style: theme.textTheme.bodySmall,
+          textAlign: TextAlign.center,
+          maxLines: 2,
+          overflow: TextOverflow.ellipsis,
+        ),
       ),
     );
   }

@@ -264,7 +264,6 @@ class FirebaseApi with ChangeNotifier {
       final querySnapshot =
           await _firestore.collection('case_study_destinations').get();
 
-      // Map each document to a Map and add it to the list
       return querySnapshot.docs.map((doc) => doc.data()).toList();
     } catch (e) {
       print('Error fetching case studies: $e');
@@ -272,6 +271,49 @@ class FirebaseApi with ChangeNotifier {
     } finally {
       _isLoading = false;
       notifyListeners();
+    }
+  }
+
+  Future<Map<String, bool>> fetchPassport() async {
+    final FirebaseFirestore firestore = FirebaseFirestore.instance;
+    try {
+      final DocumentSnapshot<Map<String, dynamic>> snapshot =
+          await firestore.collection('medals').doc('passport').get();
+
+      if (snapshot.exists && snapshot.data() != null) {
+        return snapshot
+            .data()!
+            .map((key, value) => MapEntry(key, value as bool));
+      } else {
+        return {};
+      }
+    } catch (e) {
+      print('Error fetching countries: $e');
+      return {};
+    }
+  }
+
+  Future<void> updatePassportStatus(String country, bool visited) async {
+    try {
+      await _firestore.collection('medals').doc('passport').update({
+        country: visited,
+      });
+      notifyListeners();
+    } catch (e) {
+      print('Error updating country status: $e');
+    }
+  }
+
+  Future<void> updateVisitedState(String countryName, bool visited) async {
+    try {
+      await _firestore
+          .collection('medals')
+          .doc('passport')
+          .update({countryName: visited});
+      notifyListeners();
+    } catch (e) {
+      print('Error updating visited state: $e');
+      throw e;
     }
   }
 }
