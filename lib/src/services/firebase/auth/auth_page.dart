@@ -132,6 +132,61 @@ class _AuthPageState extends State<AuthPage> {
     }
   }
 
+  void showForgotPasswordDialog(BuildContext context) {
+    final TextEditingController emailController = TextEditingController();
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text("Reset Password"),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const Text(
+                  "Enter your email to receive password reset instructions."),
+              const SizedBox(height: 10),
+              TextField(
+                controller: emailController,
+                decoration: const InputDecoration(
+                  hintText: "Email",
+                  border: OutlineInputBorder(),
+                ),
+              ),
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text("Cancel"),
+            ),
+            TextButton(
+              onPressed: () async {
+                String email = emailController.text.trim();
+                if (email.isNotEmpty) {
+                  try {
+                    await _auth.resetPassword(email);
+                    Navigator.of(context).pop();
+                    showAlertDialog(
+                        context, "Password reset email sent to $email");
+                  } catch (e) {
+                    Navigator.of(context).pop();
+                    showAlertDialog(context, "Error: ${e.toString()}");
+                  }
+                } else {
+                  showAlertDialog(context, "Please enter a valid email.");
+                }
+              },
+              child: const Text("Send"),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -348,12 +403,17 @@ class _AuthPageState extends State<AuthPage> {
                   fontWeight: FontWeight.bold, color: _absoluteBlack),
             ),
           ),
-          Text(
-            isSelected[0] ? 'Forgot Password?' : '',
-            style: theme.textTheme.labelMedium?.copyWith(
-                fontWeight: FontWeight.bold,
-                color: _absoluteBlack,
-                decoration: TextDecoration.underline),
+          GestureDetector(
+            onTap: () {
+              showForgotPasswordDialog(context);
+            },
+            child: Text(
+              isSelected[0] ? 'Forgot Password?' : '',
+              style: theme.textTheme.labelMedium?.copyWith(
+                  fontWeight: FontWeight.bold,
+                  color: _absoluteBlack,
+                  decoration: TextDecoration.underline),
+            ),
           )
         ],
       ),
@@ -424,24 +484,42 @@ class _AuthPageState extends State<AuthPage> {
               color: _absoluteBlack.withOpacity(0.5),
             )),
         onPressed: () async {
-          if (methodName == 'Google') {
-            try {
-              User? user = await _auth.signInWithGoogle();
-              if (user != null && context.mounted) {
-                if (mounted) {
+          switch (methodName) {
+            case 'Google':
+              try {
+                User? user = await _auth.signInWithGoogle();
+                if (user != null && context.mounted) {
                   showAlertDialog(
                       context, 'Successfully signed in with Google');
                   Navigator.of(context).pushReplacement(
                     MaterialPageRoute(builder: (context) => const MyApp()),
                   );
                 }
+              } catch (e) {
+                if (mounted) {
+                  showAlertDialog(
+                      context, 'Google Sign-In failed: ${e.toString()}');
+                }
               }
-            } catch (e) {
+              break;
+
+            case 'Facebook':
               if (mounted) {
-                showAlertDialog(
-                    context, 'Google Sign-In failed: ${e.toString()}');
+                showAlertDialog(context, 'Facebook Sign-In is Coming Soon');
               }
-            }
+              break;
+
+            case 'Apple':
+              if (mounted) {
+                showAlertDialog(context, 'Apple Sign-In is Coming Soon');
+              }
+              break;
+
+            default:
+              if (mounted) {
+                showAlertDialog(context, 'Unknown Sign-In method');
+              }
+              break;
           }
         },
         icon: CircleAvatar(

@@ -11,6 +11,14 @@ class Auth {
   User? get currentUser => _firebaseAuth.currentUser;
   Stream<User?> get authStateChanges => _firebaseAuth.authStateChanges();
 
+  Future<void> resetPassword(String email) async {
+    try {
+      await _firebaseAuth.sendPasswordResetEmail(email: email);
+    } on FirebaseAuthException catch (e) {
+      throw Exception(e.message);
+    }
+  }
+
   Future<void> logout() async {
     await _googleSignIn.signOut();
     await _firebaseAuth.signOut();

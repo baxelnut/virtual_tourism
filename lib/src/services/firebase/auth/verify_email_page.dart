@@ -40,7 +40,7 @@ class _VerifyEmailPageState extends State<VerifyEmailPage> {
     if (user != null && !user.emailVerified) {
       await user.sendEmailVerification();
       setState(() => canResend = false);
-      await Future.delayed(const Duration(seconds: 5));
+      await Future.delayed(const Duration(minutes: 5));
       setState(() => canResend = true);
     }
   }

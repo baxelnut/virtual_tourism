@@ -22,6 +22,7 @@ class UserProfileState extends State<UserProfile> {
 
   bool isUploading = false;
   String _selectedGender = 'Prefer not to say';
+
   DateTime? _selectedBirthday;
 
   @override
@@ -94,7 +95,7 @@ class UserProfileState extends State<UserProfile> {
               setState(() {
                 user?.updatePhotoURL(updatedUrl);
                 showAlertDialog(
-                    context, 'Profile picture updated successfully, please refresh');
+                    context, 'Profile updated successfully, please refresh');
               });
             } else {
               scaffoldMessenger.showSnackBar(
@@ -189,7 +190,9 @@ class UserProfileState extends State<UserProfile> {
   }
 
   Future<void> _saveProfile() async {
-    if (!_isValidPhoneNumber(_phoneNumberController.text.trim())) {
+    final phoneNumber = _phoneNumberController.text.trim();
+
+    if (phoneNumber.isNotEmpty && !_isValidPhoneNumber(phoneNumber)) {
       showAlertDialog(context, 'Invalid phone number');
       return;
     }
@@ -205,7 +208,7 @@ class UserProfileState extends State<UserProfile> {
 
       if (mounted) {
         showAlertDialog(
-            context, 'Profile picture updated successfully, please refresh');
+            context, 'Profile updated successfully, please refresh');
         Navigator.of(context).pop();
       }
     } catch (e) {
@@ -332,7 +335,11 @@ class UserProfileState extends State<UserProfile> {
     return Padding(
       padding: const EdgeInsets.all(8),
       child: DropdownButtonFormField<String>(
-        value: _selectedGender,
+        value: _selectedGender.isNotEmpty &&
+                ['Male', 'Female', 'Prefer not to say']
+                    .contains(_selectedGender)
+            ? _selectedGender
+            : 'Prefer not to say',
         decoration: InputDecoration(
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(10),
