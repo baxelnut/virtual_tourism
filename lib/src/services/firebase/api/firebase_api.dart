@@ -313,7 +313,7 @@ class FirebaseApi with ChangeNotifier {
       notifyListeners();
     } catch (e) {
       print('Error updating visited state: $e');
-      throw e;
+      rethrow;
     }
   }
 }
