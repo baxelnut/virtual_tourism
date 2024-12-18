@@ -60,7 +60,11 @@ class _HomePageState extends State<HomePage> {
           isFull: false,
           onPageChange: widget.onPageChange,
         ),
-        const ChipsComponent(listOfThangz: ['Places', 'Conservation', 'News']),
+        const ChipsComponent(listOfThangz: [
+          'Places',
+          'Community',
+          'News',
+        ]),
       ],
     );
   }

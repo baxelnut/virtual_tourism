@@ -4,9 +4,9 @@ buildscript {
         mavenCentral()
     }
     dependencies {
+        classpath 'com.google.gms:google-services:4.4.2'
         classpath "com.android.tools.build:gradle:7.4.2"
-        // If you're using Kotlin, you might need this too
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:1.8.0" // Adjust the version as needed
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:1.8.0" 
     }
 }
 
@@ -16,6 +16,8 @@ allprojects {
         mavenCentral()
     }
 }
+
+ext.kotlin_version = '1.8.0'
 
 rootProject.buildDir = '../build'
 subprojects {
@@ -28,3 +30,5 @@ subprojects {
 tasks.register("clean", Delete) {
     delete rootProject.buildDir
 }
+
+apply plugin: 'com.google.gms.google-services'

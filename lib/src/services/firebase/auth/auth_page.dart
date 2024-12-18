@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:virtual_tourism/src/app.dart';
@@ -422,7 +423,27 @@ class _AuthPageState extends State<AuthPage> {
               width: 1,
               color: _absoluteBlack.withOpacity(0.5),
             )),
-        onPressed: () {},
+        onPressed: () async {
+          if (methodName == 'Google') {
+            try {
+              User? user = await _auth.signInWithGoogle();
+              if (user != null && context.mounted) {
+                if (mounted) {
+                  showAlertDialog(
+                      context, 'Successfully signed in with Google');
+                  Navigator.of(context).pushReplacement(
+                    MaterialPageRoute(builder: (context) => const MyApp()),
+                  );
+                }
+              }
+            } catch (e) {
+              if (mounted) {
+                showAlertDialog(
+                    context, 'Google Sign-In failed: ${e.toString()}');
+              }
+            }
+          }
+        },
         icon: CircleAvatar(
           backgroundColor: Colors.transparent,
           child: SvgPicture.asset(

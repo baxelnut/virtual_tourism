@@ -23,6 +23,7 @@ class _UserOverviewState extends State<UserOverview> {
   final User? user = FirebaseAuth.instance.currentUser;
 
   handleShowPict() {
+    final theme = Theme.of(context);
     return showDialog(
       context: context,
       builder: (_) {
@@ -34,8 +35,11 @@ class _UserOverviewState extends State<UserOverview> {
               fit: BoxFit.cover,
             ),
           ),
-          content: const Text('This is your profile picture',
-              textAlign: TextAlign.center),
+          content: Text(
+            'This is your profile picture',
+            style: theme.textTheme.bodyLarge,
+            textAlign: TextAlign.center,
+          ),
         );
       },
     );
