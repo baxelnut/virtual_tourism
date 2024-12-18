@@ -85,7 +85,24 @@ class Auth {
 
       UserCredential userCredential =
           await _firebaseAuth.signInWithCredential(credential);
-      return userCredential.user;
+
+      final User? user = userCredential.user;
+
+      final userData = await _firebaseApi.getUserData(user!.uid);
+
+      if (userData == null) {
+        await _firebaseApi.createUserData(
+          userUid: user.uid,
+          isVerified: user.emailVerified,
+          email: user.email,
+          password: '',
+          phoneNumber: user.phoneNumber,
+          username: user.displayName,
+          imageUrl: user.photoURL,
+        );
+      }
+
+      return user;
     } catch (e) {
       throw Exception('Failed to sign in with Google: ${e.toString()}');
     }

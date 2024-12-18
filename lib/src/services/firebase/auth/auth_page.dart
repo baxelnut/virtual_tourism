@@ -137,7 +137,7 @@ class _AuthPageState extends State<AuthPage> {
 
     showDialog(
       context: context,
-      builder: (BuildContext context) {
+      builder: (BuildContext dialogContext) {
         return AlertDialog(
           title: const Text("Reset Password"),
           content: Column(
@@ -158,25 +158,32 @@ class _AuthPageState extends State<AuthPage> {
           actions: [
             TextButton(
               onPressed: () {
-                Navigator.of(context).pop();
+                Navigator.of(dialogContext).pop();
               },
               child: const Text("Cancel"),
             ),
             TextButton(
               onPressed: () async {
                 String email = emailController.text.trim();
+
+                Navigator.of(dialogContext).pop();
+
                 if (email.isNotEmpty) {
                   try {
                     await _auth.resetPassword(email);
-                    Navigator.of(context).pop();
-                    showAlertDialog(
-                        context, "Password reset email sent to $email");
+                    if (context.mounted) {
+                      showAlertDialog(
+                          context, "Password reset email sent to $email");
+                    }
                   } catch (e) {
-                    Navigator.of(context).pop();
-                    showAlertDialog(context, "Error: ${e.toString()}");
+                    if (context.mounted) {
+                      showAlertDialog(context, "Error: ${e.toString()}");
+                    }
                   }
                 } else {
-                  showAlertDialog(context, "Please enter a valid email.");
+                  if (context.mounted) {
+                    showAlertDialog(context, "Please enter a valid email.");
+                  }
                 }
               },
               child: const Text("Send"),
@@ -477,63 +484,68 @@ class _AuthPageState extends State<AuthPage> {
     final ThemeData theme = Theme.of(context);
 
     return ElevatedButton.icon(
-        style: ElevatedButton.styleFrom(
-            backgroundColor: _absoluteWhite,
-            side: BorderSide(
-              width: 1,
-              color: _absoluteBlack.withOpacity(0.5),
-            )),
-        onPressed: () async {
-          switch (methodName) {
-            case 'Google':
-              try {
-                User? user = await _auth.signInWithGoogle();
-                if (user != null && context.mounted) {
-                  showAlertDialog(
-                      context, 'Successfully signed in with Google');
-                  Navigator.of(context).pushReplacement(
-                    MaterialPageRoute(builder: (context) => const MyApp()),
-                  );
-                }
-              } catch (e) {
-                if (mounted) {
-                  showAlertDialog(
-                      context, 'Google Sign-In failed: ${e.toString()}');
-                }
-              }
-              break;
-
-            case 'Facebook':
-              if (mounted) {
-                showAlertDialog(context, 'Facebook Sign-In is Coming Soon');
-              }
-              break;
-
-            case 'Apple':
-              if (mounted) {
-                showAlertDialog(context, 'Apple Sign-In is Coming Soon');
-              }
-              break;
-
-            default:
-              if (mounted) {
-                showAlertDialog(context, 'Unknown Sign-In method');
-              }
-              break;
-          }
-        },
-        icon: CircleAvatar(
-          backgroundColor: Colors.transparent,
-          child: SvgPicture.asset(
-            'assets/icons/${methodName.toLowerCase()}.svg',
-            width: 25,
-            height: 25,
-          ),
+      style: ElevatedButton.styleFrom(
+        backgroundColor: _absoluteWhite,
+        side: BorderSide(
+          width: 1,
+          color: _absoluteBlack.withOpacity(0.5),
         ),
-        label: Text(
-          methodName,
-          style: theme.textTheme.bodyLarge
-              ?.copyWith(color: _absoluteBlack, fontWeight: FontWeight.bold),
-        ));
+      ),
+      onPressed: () async {
+        final BuildContext currentContext = context;
+
+        switch (methodName) {
+          case 'Google':
+            try {
+              User? user = await _auth.signInWithGoogle();
+              if (user != null && currentContext.mounted) {
+                showAlertDialog(
+                    currentContext, 'Successfully signed in with Google');
+                Navigator.of(currentContext).pushReplacement(
+                  MaterialPageRoute(builder: (context) => const MyApp()),
+                );
+              }
+            } catch (e) {
+              if (currentContext.mounted) {
+                showAlertDialog(
+                    currentContext, 'Google Sign-In failed: ${e.toString()}');
+              }
+            }
+            break;
+
+          case 'Facebook':
+            if (currentContext.mounted) {
+              showAlertDialog(
+                  currentContext, 'Facebook Sign-In is Coming Soon');
+            }
+            break;
+
+          case 'Apple':
+            if (currentContext.mounted) {
+              showAlertDialog(currentContext, 'Apple Sign-In is Coming Soon');
+            }
+            break;
+
+          default:
+            if (currentContext.mounted) {
+              showAlertDialog(currentContext, 'Unknown Sign-In method');
+            }
+            break;
+        }
+      },
+      icon: CircleAvatar(
+        backgroundColor: Colors.transparent,
+        child: SvgPicture.asset(
+          'assets/icons/${methodName.toLowerCase()}.svg',
+          width: 25,
+          height: 25,
+        ),
+      ),
+      label: Text(
+        methodName,
+        style: theme.textTheme.bodyLarge
+            ?.copyWith(color: _absoluteBlack, fontWeight: FontWeight.bold),
+      ),
+    );
   }
 }

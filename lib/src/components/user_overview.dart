@@ -56,13 +56,14 @@ class _UserOverviewState extends State<UserOverview> {
   }
 
   _getImageProvider() {
-    if (user?.photoURL != null &&
-        user?.photoURL != '' &&
-        user?.photoURL != 'assets/profile.png' &&
-        user?.photoURL != 'not provided' &&
-        user?.photoURL !=
-            'gs://virtual-tourism-7625f.appspot.com/users/.default/profile.png' &&
-        user?.photoURL != 'users/.default/profile.png') {
+    const invalidPhotoURLs = {
+      'assets/profile.png',
+      'not provided',
+      'gs://virtual-tourism-7625f.appspot.com/users/.default/profile.png',
+      'users/.default/profile.png',
+    };
+
+    if (user?.photoURL != null && !invalidPhotoURLs.contains(user?.photoURL)) {
       return NetworkImage(user!.photoURL!);
     } else {
       return const AssetImage('assets/profile.png');
@@ -94,11 +95,15 @@ class _UserOverviewState extends State<UserOverview> {
             ),
             Text(
               user?.displayName ?? 'username',
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
               style: theme.textTheme.headlineSmall
                   ?.copyWith(fontWeight: FontWeight.bold),
             ),
             Text(
               user?.email ?? 'user@email.com',
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
               style: theme.textTheme.labelMedium,
             ),
             Padding(
@@ -129,6 +134,8 @@ class _UserOverviewState extends State<UserOverview> {
               child: GestureDetector(
                 onTap: () => widget.onPageChange!(4),
                 child: Text.rich(
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
                   TextSpan(
                     text: 'Hi, ',
                     style: theme.textTheme.bodyLarge,

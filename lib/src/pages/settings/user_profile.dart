@@ -96,6 +96,8 @@ class UserProfileState extends State<UserProfile> {
                 user?.updatePhotoURL(updatedUrl);
                 showAlertDialog(
                     context, 'Profile updated successfully, please refresh');
+                Navigator.of(context).pop();
+                Navigator.of(context).pop();
               });
             } else {
               scaffoldMessenger.showSnackBar(
@@ -219,13 +221,14 @@ class UserProfileState extends State<UserProfile> {
   }
 
   _getImageProvider() {
-    if (user?.photoURL != null &&
-        user?.photoURL != '' &&
-        user?.photoURL != 'assets/profile.png' &&
-        user?.photoURL != 'not provided' &&
-        user?.photoURL !=
-            'gs://virtual-tourism-7625f.appspot.com/users/.default/profile.png' &&
-        user?.photoURL != 'users/.default/profile.png') {
+    const invalidPhotoURLs = {
+      'assets/profile.png',
+      'not provided',
+      'gs://virtual-tourism-7625f.appspot.com/users/.default/profile.png',
+      'users/.default/profile.png',
+    };
+
+    if (user?.photoURL != null && !invalidPhotoURLs.contains(user?.photoURL)) {
       return NetworkImage(user!.photoURL!);
     } else {
       return const AssetImage('assets/profile.png');
