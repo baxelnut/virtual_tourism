@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:virtual_tourism/src/pages/shop/shop_page.dart';
 
 import '../../components/cards_header.dart';
 import '../../components/chips_component.dart';
@@ -188,6 +189,26 @@ class TestExamplePages extends StatelessWidget {
               const SizedBox(
                 height: 50,
               ),
+              GestureDetector(
+                onTap: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) =>  const ShopPage(),
+                    ),
+                  );
+                },
+                child: Container(
+                  width: 100,
+                  height: 100,
+                  color: Colors.blue,
+                  child: const Center(
+                    child: Text(
+                      'shop_page test',
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                ),
+              ),
               const Text('CardsHeader()'),
               const Divider(),
               const CardsHeader(
@@ -337,6 +358,5 @@ class TestExamplePages extends StatelessWidget {
         ),
       ),
     );
-  
   }
 }
