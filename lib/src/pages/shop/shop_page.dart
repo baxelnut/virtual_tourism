@@ -14,19 +14,34 @@ class _ShopPageState extends State<ShopPage> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final screenSize = MediaQuery.of(context).size;
+    const Color colorLight = Color(0xffEFFFFB);
+    const Color colorDark = Color(0xff121212);
 
     return Scaffold(
-      backgroundColor: theme.colorScheme.onSurface,
+      backgroundColor: colorLight,
       body: CustomScrollView(
         slivers: [
           SliverAppBar(
+            leading: GestureDetector(
+              onTap: () => Navigator.pop(context),
+              child: const Icon(
+                Icons.arrow_back,
+                color: colorLight,
+              ),
+            ),
+            backgroundColor: colorDark,
             shape: const RoundedRectangleBorder(
               borderRadius: BorderRadius.only(
                 bottomLeft: Radius.circular(45),
                 bottomRight: Radius.circular(45),
               ),
             ),
-            title: const Text("Shop"),
+            title: const Text(
+              "Shop",
+              style: TextStyle(
+                color: colorLight,
+              ),
+            ),
             floating: true,
             snap: true,
             actions: [
@@ -37,6 +52,7 @@ class _ShopPageState extends State<ShopPage> {
                 child: const Icon(
                   Icons.shopping_bag_outlined,
                   size: 30,
+                  color: colorLight,
                 ),
               ),
               const SizedBox(width: 30),
@@ -66,7 +82,7 @@ class _ShopPageState extends State<ShopPage> {
                     child: Text(
                       "Bro's products",
                       style: theme.textTheme.titleMedium?.copyWith(
-                        color: theme.colorScheme.surface,
+                        color: colorDark,
                         fontWeight: FontWeight.w900,
                       ),
                     ),
@@ -83,6 +99,8 @@ class _ShopPageState extends State<ShopPage> {
                           productName: 'Nike Jordan "Why Not?" Zer0.3 PF',
                           productPrice: '180.000',
                           screenSize: screenSize,
+                          colorDark: colorDark,
+                          colorLight: colorLight,
                           theme: theme,
                         ),
                         buildShopCard(
@@ -91,6 +109,8 @@ class _ShopPageState extends State<ShopPage> {
                           productName: 'Nike Joyride CC3 Setter',
                           productPrice: '175.000',
                           screenSize: screenSize,
+                          colorDark: colorDark,
+                          colorLight: colorLight,
                           theme: theme,
                         ),
                         buildShopCard(
@@ -99,6 +119,8 @@ class _ShopPageState extends State<ShopPage> {
                           productName: 'Nike Joyride CC3 Setter',
                           productPrice: '175.000',
                           screenSize: screenSize,
+                          colorDark: colorDark,
+                          colorLight: colorLight,
                           theme: theme,
                         ),
                         buildShopCard(
@@ -107,6 +129,8 @@ class _ShopPageState extends State<ShopPage> {
                           productName: 'Nike Joyride CC3 Setter',
                           productPrice: '175.000',
                           screenSize: screenSize,
+                          colorDark: colorDark,
+                          colorLight: colorLight,
                           theme: theme,
                         ),
                         Container(
@@ -126,19 +150,21 @@ class _ShopPageState extends State<ShopPage> {
     );
   }
 
-  Widget searchBar({required ThemeData theme}) {
+  Widget searchBar({
+    required ThemeData theme,
+  }) {
     return ListTile(
-      leading: Icon(
+      leading: const Icon(
         Icons.search_rounded,
-        color: theme.colorScheme.surface,
+        color: Color(0xff121212),
       ),
       title: Text(
         'Search...',
         style: theme.textTheme.bodyLarge?.copyWith(
-          color: theme.colorScheme.surface,
+          color: const Color(0xff121212),
         ),
       ),
-      tileColor: theme.colorScheme.onSurface,
+      tileColor: const Color(0xffEFFFFB),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(12),
       ),
@@ -153,6 +179,8 @@ class _ShopPageState extends State<ShopPage> {
     required String productName,
     required String productPrice,
     required Size screenSize,
+    required Color colorLight,
+    required Color colorDark,
     required ThemeData theme,
   }) {
     return GestureDetector(
@@ -167,11 +195,11 @@ class _ShopPageState extends State<ShopPage> {
         height: screenSize.width / 2,
         width: screenSize.width / 2.5,
         decoration: BoxDecoration(
-          color: theme.colorScheme.onSurface,
+          color: colorLight,
           borderRadius: BorderRadius.circular(12),
           boxShadow: [
             BoxShadow(
-              color: theme.colorScheme.surface.withOpacity(0.3),
+              color: colorDark.withOpacity(0.3),
               spreadRadius: 2,
               blurRadius: 10,
               offset: const Offset(2, 2),
@@ -199,7 +227,7 @@ class _ShopPageState extends State<ShopPage> {
                 Text(
                   productName,
                   style: theme.textTheme.bodyLarge?.copyWith(
-                    color: theme.colorScheme.surface,
+                    color: colorDark,
                     fontWeight: FontWeight.w100,
                   ),
                   textAlign: TextAlign.start,
@@ -210,7 +238,7 @@ class _ShopPageState extends State<ShopPage> {
                 Text(
                   'Rp$productPrice',
                   style: theme.textTheme.bodyLarge?.copyWith(
-                    color: theme.colorScheme.surface,
+                    color: colorDark,
                     fontWeight: FontWeight.w900,
                   ),
                   textAlign: TextAlign.start,
