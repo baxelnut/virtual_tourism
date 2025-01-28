@@ -2,7 +2,10 @@ import 'package:flutter/material.dart';
 
 class CardsHeader extends StatelessWidget {
   final String cardsTitle;
-  const CardsHeader({super.key, required this.cardsTitle});
+  const CardsHeader({
+    super.key,
+    required this.cardsTitle,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -12,7 +15,9 @@ class CardsHeader extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Container(
+          Visibility(
+            visible: cardsTitle != '',
+            child: Container(
               decoration: BoxDecoration(
                   color: theme.colorScheme.onSurface,
                   borderRadius: BorderRadius.circular(60)),
@@ -23,22 +28,26 @@ class CardsHeader extends StatelessWidget {
                   style: theme.textTheme.titleMedium
                       ?.copyWith(color: theme.colorScheme.surface),
                 ),
-              )),
+              ),
+            ),
+          ),
           GestureDetector(
-              onTap: () {
-                showDialog(
-                    context: context,
-                    builder: (_) {
-                      return AlertDialog(
-                        title: Text(cardsTitle),
-                      );
-                    });
-              },
-              child: Text(
-                'See All',
-                style: theme.textTheme.labelSmall
-                    ?.copyWith(decoration: TextDecoration.underline),
-              ))
+            onTap: () {
+              showDialog(
+                  context: context,
+                  builder: (_) {
+                    return AlertDialog(
+                      title: Text(
+                          cardsTitle), // revision: navigate to full item list
+                    );
+                  });
+            },
+            child: Text(
+              'See All',
+              style: theme.textTheme.labelSmall
+                  ?.copyWith(decoration: TextDecoration.underline),
+            ),
+          )
         ],
       ),
     );

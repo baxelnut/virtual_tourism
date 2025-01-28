@@ -2,12 +2,14 @@ import 'package:flutter/material.dart';
 
 class ChipsComponent extends StatefulWidget {
   final List<String> listOfThangz;
-  final Function(int) onTabChange; 
+  final Function(int) onTabChange;
+  final int selectedIndex;
 
   const ChipsComponent({
     super.key,
     required this.listOfThangz,
     required this.onTabChange,
+    required this.selectedIndex,
   });
 
   @override
@@ -15,7 +17,23 @@ class ChipsComponent extends StatefulWidget {
 }
 
 class _ChipsComponentState extends State<ChipsComponent> {
-  int? _value = 0;
+  int? _value;
+
+  @override
+  void initState() {
+    super.initState();
+    _value = widget.selectedIndex;
+  }
+
+  @override
+  void didUpdateWidget(covariant ChipsComponent oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.selectedIndex != widget.selectedIndex) {
+      setState(() {
+        _value = widget.selectedIndex;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -33,7 +51,7 @@ class _ChipsComponentState extends State<ChipsComponent> {
               padding: const EdgeInsets.symmetric(vertical: 0),
               selectedColor: theme.colorScheme.secondary,
               labelStyle: theme.textTheme.bodyLarge?.copyWith(
-                fontWeight: FontWeight.bold,
+                fontWeight: FontWeight.w900,
                 color: isSelected
                     ? theme.colorScheme.onSecondary
                     : theme.colorScheme.onSurface,
@@ -44,10 +62,12 @@ class _ChipsComponentState extends State<ChipsComponent> {
               label: Text(widget.listOfThangz[index]),
               selected: isSelected,
               onSelected: (bool selected) {
-                setState(() {
-                  _value = selected ? index : null;
+                if (selected) {
+                  setState(() {
+                    _value = index;
+                  });
                   widget.onTabChange(index);
-                });
+                }
               },
             );
           },
