@@ -14,8 +14,13 @@ class _ShopPageState extends State<ShopPage> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final screenSize = MediaQuery.of(context).size;
+
     const Color colorLight = Color(0xffEFFFFB);
     const Color colorDark = Color(0xff121212);
+
+    // temporary
+    const String loremIpsum =
+        'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem. Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi consequatur? Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil molestiae consequatur, vel illum qui dolorem eum fugiat quo voluptas nulla pariatur?';
 
     return Scaffold(
       backgroundColor: colorLight,
@@ -81,9 +86,8 @@ class _ShopPageState extends State<ShopPage> {
                   Center(
                     child: Text(
                       "Bro's products",
-                      style: theme.textTheme.titleMedium?.copyWith(
+                      style: theme.textTheme.headlineSmall?.copyWith(
                         color: colorDark,
-                        fontWeight: FontWeight.w900,
                       ),
                     ),
                   ),
@@ -98,6 +102,18 @@ class _ShopPageState extends State<ShopPage> {
                               'https://cdns.klimg.com/mav-prod-resized/0x0/ori/newsOg/2024/6/7/1717747914308-0snos.jpeg',
                           productName: 'Nike Jordan "Why Not?" Zer0.3 PF',
                           productPrice: '180.000',
+                          productDescription: loremIpsum,
+                          screenSize: screenSize,
+                          colorDark: colorDark,
+                          colorLight: colorLight,
+                          theme: theme,
+                        ),
+                        buildShopCard(
+                          productImage:
+                              'https://apollo.olx.co.id/v1/files/678ce09890ad9-ID/image;s=780x0;q=60',
+                          productName: 'Mercedes-Benz C250 (2015)',
+                          productPrice: '425.000.000',
+                          productDescription: loremIpsum,
                           screenSize: screenSize,
                           colorDark: colorDark,
                           colorLight: colorLight,
@@ -108,6 +124,7 @@ class _ShopPageState extends State<ShopPage> {
                               'https://cdns.klimg.com/mav-prod-resized/0x0/ori/newsOg/2024/6/7/1717747914308-0snos.jpeg',
                           productName: 'Nike Joyride CC3 Setter',
                           productPrice: '175.000',
+                          productDescription: loremIpsum,
                           screenSize: screenSize,
                           colorDark: colorDark,
                           colorLight: colorLight,
@@ -118,16 +135,7 @@ class _ShopPageState extends State<ShopPage> {
                               'https://cdns.klimg.com/mav-prod-resized/0x0/ori/newsOg/2024/6/7/1717747914308-0snos.jpeg',
                           productName: 'Nike Joyride CC3 Setter',
                           productPrice: '175.000',
-                          screenSize: screenSize,
-                          colorDark: colorDark,
-                          colorLight: colorLight,
-                          theme: theme,
-                        ),
-                        buildShopCard(
-                          productImage:
-                              'https://cdns.klimg.com/mav-prod-resized/0x0/ori/newsOg/2024/6/7/1717747914308-0snos.jpeg',
-                          productName: 'Nike Joyride CC3 Setter',
-                          productPrice: '175.000',
+                          productDescription: loremIpsum,
                           screenSize: screenSize,
                           colorDark: colorDark,
                           colorLight: colorLight,
@@ -137,7 +145,7 @@ class _ShopPageState extends State<ShopPage> {
                           color: Colors.amber,
                           height: 500,
                           child: const Placeholder(),
-                        )
+                        ),
                       ],
                     ),
                   ),
@@ -178,6 +186,7 @@ class _ShopPageState extends State<ShopPage> {
     required String productImage,
     required String productName,
     required String productPrice,
+    String? productDescription,
     required Size screenSize,
     required Color colorLight,
     required Color colorDark,
@@ -187,7 +196,12 @@ class _ShopPageState extends State<ShopPage> {
       onTap: () {
         Navigator.of(context).push(
           MaterialPageRoute(
-            builder: (context) => const ProductDetails(),
+            builder: (context) => ProductDetails(
+              productImage: productImage,
+              productName: productName,
+              productPrice: productPrice,
+              productDescription: productDescription,
+            ),
           ),
         );
       },
