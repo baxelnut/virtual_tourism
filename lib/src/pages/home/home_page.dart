@@ -19,10 +19,11 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   final user = FirebaseAuth.instance.currentUser;
+  // 0: Places, 1: Community, 2: News
+  int _selectedTab = 0;
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
     return Scaffold(
       body: SingleChildScrollView(
         child: Padding(
@@ -31,20 +32,8 @@ class _HomePageState extends State<HomePage> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               homeHeader(),
-              Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
-                child: Text(
-                  'Where do we go now?',
-                  style: theme.textTheme.displayLarge,
-                ),
-              ),
-              // const TopPicks(),
-              topCountries(),
-              popularDestionation(context),
-              const SizedBox(
-                height: 200,
-              ),
+              _buildTabContent(),
+              const SizedBox(height: 200),
             ],
           ),
         ),
@@ -55,35 +44,106 @@ class _HomePageState extends State<HomePage> {
   Widget homeHeader() {
     return Column(
       children: [
-        const SizedBox(height: 50),
+        const SizedBox(height: 20),
         UserOverview(
           isFull: false,
           onPageChange: widget.onPageChange,
         ),
-        const ChipsComponent(listOfThangz: [
-          'Places',
-          'Community',
-          'News',
-        ]),
+        const SizedBox(height: 20),
+        ChipsComponent(
+          listOfThangz: const ['Places', 'Community', 'News'],
+          onTabChange: (index) {
+            setState(() {
+              _selectedTab = index;
+            });
+          },
+        ),
+        const SizedBox(height: 20),
       ],
+    );
+  }
+
+  Widget _buildTabContent() {
+    switch (_selectedTab) {
+      case 1: // Community
+        return _buildCommunityContent();
+      case 2: // News
+        return _buildNewsContent();
+      default: // Places (default tab)
+        return _buildPlacesContent();
+    }
+  }
+
+  Widget _buildPlacesContent() {
+    final theme = Theme.of(context);
+
+    return Column(
+      children: [
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
+          child: Text(
+            'Where do we go now?',
+            style: theme.textTheme.displayMedium,
+          ),
+        ),
+        topCountries(),
+        popularDestionation(context),
+      ],
+    );
+  }
+
+  Widget _buildCommunityContent() {
+    final theme = Theme.of(context);
+
+    return Column(
+      children: [
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
+          child: Text(
+            'Welcome to the Community!',
+            style: theme.textTheme.displayMedium,
+          ),
+        ),
+        Container(
+          width: 100,
+          height: 100,
+          color: Colors.amber, 
+        ),
+      ],
+    );
+  }
+
+  Widget _buildNewsContent() {
+    final theme = Theme.of(context);
+
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20),
+      child: Text(
+        'Latest News',
+        style: theme.textTheme.displayMedium,
+      ),
     );
   }
 
   Widget topCountries() {
     return Column(
       children: [
+        const SizedBox(height: 20),
         const CardsHeader(cardsTitle: 'Top Countries'),
+        const SizedBox(height: 10),
         SingleChildScrollView(
           scrollDirection: Axis.horizontal,
           child: Row(
-            children: countriesList.map((countryData) {
-              return CardsLinear(
-                flag: countryData['flag']!,
-                country: countryData['country']!,
-                thumbnailPath: countryData['thumbnailPath']!,
-                imagePath: countryData['imagePath']!,
-              );
-            }).toList(),
+            children: countriesList.map(
+              (countryData) {
+                return CardsLinear(
+                  flag: countryData['flag']!,
+                  country: countryData['country']!,
+                  thumbnailPath: countryData['thumbnailPath']!,
+                  imagePath: countryData['imagePath']!,
+                );
+              },
+            ).toList(),
           ),
         ),
       ],
@@ -96,7 +156,9 @@ class _HomePageState extends State<HomePage> {
       padding: const EdgeInsets.symmetric(vertical: 25),
       child: Column(
         children: [
+          const SizedBox(height: 20),
           const CardsHeader(cardsTitle: 'Popular'),
+          const SizedBox(height: 10),
           SizedBox(
             height: cardSize,
             child: RotatedBox(
@@ -105,14 +167,16 @@ class _HomePageState extends State<HomePage> {
                 itemExtent: cardSize,
                 squeeze: 1.05,
                 physics: const FixedExtentScrollPhysics(),
-                children: popularList.map((popularData) {
-                  return RotatedBox(
-                    quarterTurns: 1,
-                    child: CardsEmerged(
-                      destinationData: popularData,
-                    ),
-                  );
-                }).toList(),
+                children: popularList.map(
+                  (popularData) {
+                    return RotatedBox(
+                      quarterTurns: 1,
+                      child: CardsEmerged(
+                        destinationData: popularData,
+                      ),
+                    );
+                  },
+                ).toList(),
               ),
             ),
           ),

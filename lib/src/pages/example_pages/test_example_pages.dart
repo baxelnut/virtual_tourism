@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:virtual_tourism/src/pages/shop/shop_page.dart';
 
 import '../../components/cards_header.dart';
-import '../../components/chips_component.dart';
+// import '../../components/chips_component.dart';
 // import '../../components/user_overview.dart';
 import '../../services/firebase/api/firebase_api.dart';
 import '../../services/firebase/auth/auth_page.dart';
@@ -183,9 +183,9 @@ class TestExamplePages extends StatelessWidget {
               // ),
               const Text('ChipsComponent()'),
               const Divider(),
-              const ChipsComponent(
-                listOfThangz: ['Places', 'Conservation', 'News'],
-              ),
+              // const ChipsComponent(
+              //   listOfThangz: ['Places', 'Conservation', 'News'],
+              // ),
               const SizedBox(
                 height: 50,
               ),

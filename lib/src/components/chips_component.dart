@@ -2,7 +2,13 @@ import 'package:flutter/material.dart';
 
 class ChipsComponent extends StatefulWidget {
   final List<String> listOfThangz;
-  const ChipsComponent({super.key, required this.listOfThangz});
+  final Function(int) onTabChange; 
+
+  const ChipsComponent({
+    super.key,
+    required this.listOfThangz,
+    required this.onTabChange,
+  });
 
   @override
   State<ChipsComponent> createState() => _ChipsComponentState();
@@ -14,6 +20,7 @@ class _ChipsComponentState extends State<ChipsComponent> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 20),
       child: Row(
@@ -39,6 +46,7 @@ class _ChipsComponentState extends State<ChipsComponent> {
               onSelected: (bool selected) {
                 setState(() {
                   _value = selected ? index : null;
+                  widget.onTabChange(index);
                 });
               },
             );
