@@ -35,8 +35,7 @@ class _HomePageState extends State<HomePage> {
   Future<void> _loadSelectedTab() async {
     final prefs = await SharedPreferences.getInstance();
     setState(() {
-      _selectedTab =
-          prefs.getInt('selectedTab') ?? 0; // Default to 0 if no value exists.
+      _selectedTab = prefs.getInt('selectedTab') ?? 0;
     });
   }
 
@@ -56,7 +55,6 @@ class _HomePageState extends State<HomePage> {
             children: [
               homeHeader(),
               _buildTabContent(),
-              const SizedBox(height: 200),
             ],
           ),
         ),
@@ -89,11 +87,11 @@ class _HomePageState extends State<HomePage> {
 
   Widget _buildTabContent() {
     switch (_selectedTab) {
-      case 1: // Community
+      case 1:
         return _buildCommunityContent();
-      case 2: // News
+      case 2:
         return _buildNewsContent();
-      default: // Places (default tab)
+      default:
         return _buildPlacesContent();
     }
   }
@@ -108,10 +106,12 @@ class _HomePageState extends State<HomePage> {
           child: Text(
             'Where do we go now?',
             style: theme.textTheme.displayMedium,
+            textAlign: TextAlign.start,
           ),
         ),
         topCountries(),
         popularDestionation(context),
+        const SizedBox(height: 100),
       ],
     );
   }
@@ -125,15 +125,16 @@ class _HomePageState extends State<HomePage> {
           padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
           child: Text(
             'Welcome to the Community!',
-            style: theme.textTheme.displaySmall,
-            textAlign: TextAlign.center,
+            style: theme.textTheme.displayMedium,
+            textAlign: TextAlign.start,
           ),
         ),
-        CommCardsMedium(),
         topChicken(),
-        yourFavChicken(),
-        const CommCardsLarge(), // community cards large component. bruh.
-        
+        const SizedBox(height: 20),
+        topCommunity(),
+        const SizedBox(height: 20),
+        yourFavourite(),
+        const SizedBox(height: 80),
       ],
     );
   }
@@ -143,9 +144,15 @@ class _HomePageState extends State<HomePage> {
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20),
-      child: Text(
-        'Latest News',
-        style: theme.textTheme.displayMedium,
+      child: Column(
+        children: [
+          Text(
+            'Breaking News',
+            style: theme.textTheme.displayMedium,
+            textAlign: TextAlign.start,
+          ),
+          const SizedBox(height: 100),
+        ],
       ),
     );
   }
@@ -186,9 +193,85 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Widget yourFavChicken() {
+  Widget topCommunity() {
     return const Column(
       children: [
+        SizedBox(height: 20),
+        CardsHeader(cardsTitle: 'Top Communities'),
+        SizedBox(height: 10),
+        SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          child: Row(
+            children: [
+              CommCardsMedium(
+                imagePath:
+                    'https://upload.wikimedia.org/wikipedia/commons/thumb/5/50/Badaling_China_Great-Wall-of-China-01.jpg/360px-Badaling_China_Great-Wall-of-China-01.jpg',
+                title: 'Lorem ipsum dolor sit amet',
+                subtitle:
+                    'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt.',
+              ),
+              CommCardsMedium(
+                imagePath:
+                    'https://upload.wikimedia.org/wikipedia/commons/thumb/5/50/Badaling_China_Great-Wall-of-China-01.jpg/360px-Badaling_China_Great-Wall-of-China-01.jpg',
+                title: 'LOREM IPSUM',
+                subtitle:
+                    'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt.',
+              ),
+              CommCardsMedium(
+                imagePath:
+                    'https://upload.wikimedia.org/wikipedia/commons/thumb/5/50/Badaling_China_Great-Wall-of-China-01.jpg/360px-Badaling_China_Great-Wall-of-China-01.jpg',
+                title: 'LOREM IPSUM',
+                subtitle:
+                    'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt.',
+              ),
+            ],
+          ),
+        ),
+        SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          child: Row(
+            children: [
+              CommCardsLarge(
+                imagePath:
+                    'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f8/View_of_Mount_Fuji_from_%C5%8Cwakudani_20211202.jpg/1200px-View_of_Mount_Fuji_from_%C5%8Cwakudani_20211202.jpg',
+                title: 'Lorem Ipsum',
+                subtitle:
+                    'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
+              ),
+              CommCardsLarge(
+                imagePath:
+                    'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f8/View_of_Mount_Fuji_from_%C5%8Cwakudani_20211202.jpg/1200px-View_of_Mount_Fuji_from_%C5%8Cwakudani_20211202.jpg',
+                title: 'Lorem Ipsum',
+                subtitle:
+                    'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
+              ),
+              CommCardsLarge(
+                imagePath:
+                    'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f8/View_of_Mount_Fuji_from_%C5%8Cwakudani_20211202.jpg/1200px-View_of_Mount_Fuji_from_%C5%8Cwakudani_20211202.jpg',
+                title: 'Lorem Ipsum',
+                subtitle:
+                    'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
+              ),
+              CommCardsLarge(
+                imagePath:
+                    'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f8/View_of_Mount_Fuji_from_%C5%8Cwakudani_20211202.jpg/1200px-View_of_Mount_Fuji_from_%C5%8Cwakudani_20211202.jpg',
+                title: 'Lorem Ipsum',
+                subtitle:
+                    'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget yourFavourite() {
+    return const Column(
+      children: [
+        SizedBox(height: 20),
+        CardsHeader(cardsTitle: 'Your Favourite'),
+        SizedBox(height: 10),
         SingleChildScrollView(
           scrollDirection: Axis.horizontal,
           child: Row(

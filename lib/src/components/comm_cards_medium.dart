@@ -1,7 +1,15 @@
 import 'package:flutter/material.dart';
 
 class CommCardsMedium extends StatelessWidget {
-  const CommCardsMedium({super.key});
+  final String imagePath;
+  final String title;
+  final String subtitle;
+  const CommCardsMedium({
+    super.key,
+    required this.imagePath,
+    required this.title,
+    required this.subtitle,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -9,49 +17,58 @@ class CommCardsMedium extends StatelessWidget {
     final Size screenSize = MediaQuery.of(context).size;
 
     return Padding(
-      padding: const EdgeInsets.only(left: 6),
-      child: SizedBox(
-        width: screenSize.width / 1.5,
-        height: screenSize.width / 3.5,
-        child: ListTile(
-          tileColor: Colors.amber,
-          contentPadding: const EdgeInsets.all(4),
-          leading: Container(
-            width: 100,
-            height: 100,
-            color: Colors.blueAccent,
-          ),
-          title: Text(
-            'LOREM IPSUM',
-            style: theme.textTheme.headlineMedium?.copyWith(
-              color: const Color(0xffEFFFFB),
-              shadows: [
-                Shadow(
-                  offset: const Offset(2.0, 2.0),
-                  blurRadius: 5.0,
-                  color: const Color(0xff151515).withOpacity(0.69),
+      padding: const EdgeInsets.only(left: 6, bottom: 6),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(18),
+        child: Container(
+          width: screenSize.width / 1.5,
+          height: screenSize.width / 3,
+          color: theme.colorScheme.secondary,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Container(
+                width: screenSize.width / 3 - 20,
+                height: screenSize.width / 3,
+                decoration: BoxDecoration(
+                  image: DecorationImage(
+                    image: NetworkImage(
+                      imagePath,
+                    ),
+                    fit: BoxFit.cover,
+                  ),
                 ),
-              ],
-            ),
-            textAlign: TextAlign.start,
-            maxLines: 2,
-            overflow: TextOverflow.ellipsis,
-          ),
-          subtitle: Text(
-            'texttexetx',
-            style: theme.textTheme.bodyMedium?.copyWith(
-              color: const Color(0xffEFFFFB),
-              shadows: [
-                Shadow(
-                  offset: const Offset(2.0, 2.0),
-                  blurRadius: 5.0,
-                  color: const Color(0xff151515).withOpacity(0.69),
+              ),
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.all(12),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        title,
+                        style: theme.textTheme.titleLarge?.copyWith(
+                          color: theme.colorScheme.onPrimary,
+                        ),
+                        textAlign: TextAlign.start,
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                      Text(
+                        subtitle,
+                        style: theme.textTheme.labelMedium?.copyWith(
+                          color: theme.colorScheme.onPrimary,
+                        ),
+                        textAlign: TextAlign.start,
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ],
+                  ),
                 ),
-              ],
-            ),
-            textAlign: TextAlign.start,
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
+              )
+            ],
           ),
         ),
       ),

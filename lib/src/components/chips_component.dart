@@ -59,7 +59,10 @@ class _ChipsComponentState extends State<ChipsComponent> {
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(60),
               ),
-              label: Text(widget.listOfThangz[index]),
+              label: Padding(
+                padding: const EdgeInsets.all(6),
+                child: Text(widget.listOfThangz[index]),
+              ),
               selected: isSelected,
               onSelected: (bool selected) {
                 if (selected) {

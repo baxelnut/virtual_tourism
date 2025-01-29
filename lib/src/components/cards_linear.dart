@@ -77,7 +77,7 @@ class CardsLinear extends StatelessWidget {
               decoration: BoxDecoration(
                 gradient: const LinearGradient(
                   colors: [
-                    Colors.black,
+                    Color(0xff151515),
                     Colors.transparent,
                   ],
                   begin: Alignment.bottomCenter,
