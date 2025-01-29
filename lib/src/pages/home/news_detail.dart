@@ -36,7 +36,7 @@ class NewsDetail extends StatelessWidget {
             ),
           ),
           title: Text(
-            'News',
+            'Article by $publisher',
             style: theme.textTheme.titleLarge?.copyWith(
               color: theme.colorScheme.onPrimary,
             ),
@@ -110,18 +110,18 @@ class NewsDetail extends StatelessWidget {
               ),
               Padding(
                 padding:
-                    const EdgeInsets.symmetric(vertical: 30, horizontal: 20),
+                    const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     CircleAvatar(
-                      radius: 22,
+                      radius: 16,
                       backgroundImage: NetworkImage(publisherPath),
                     ),
                     const SizedBox(width: 10),
                     Text(
                       publisher,
-                      style: theme.textTheme.headlineSmall?.copyWith(
+                      style: theme.textTheme.titleMedium?.copyWith(
                         color: theme.colorScheme.onSurface,
                       ),
                       textAlign: TextAlign.start,
@@ -141,7 +141,7 @@ class NewsDetail extends StatelessWidget {
                 padding: const EdgeInsets.symmetric(horizontal: 20),
                 child: Text(
                   newsContent,
-                  style: theme.textTheme.bodyLarge,
+                  style: theme.textTheme.bodyMedium,
                 ),
               ),
               const SizedBox(height: 50),

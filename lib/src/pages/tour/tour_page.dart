@@ -2,12 +2,13 @@ import 'package:flutter/material.dart';
 
 import '../example_pages/tour_example_page.dart';
 
-
 class TourPage extends StatelessWidget {
   const TourPage({super.key});
 
   @override
   Widget build(BuildContext context) {
+    // final theme = Theme.of(context);
+
     return Scaffold(
       appBar: AppBar(
         title: const Center(

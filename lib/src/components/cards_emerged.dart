@@ -123,7 +123,10 @@ class CardsEmerged extends StatelessWidget {
                             ),
                           );
                         },
-                        child: const Text('Visit'),
+                        child: Text(
+                          'Visit',
+                          style: theme.textTheme.titleSmall,
+                        ),
                       ),
                     ),
                   ),
