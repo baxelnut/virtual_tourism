@@ -23,11 +23,21 @@ class CommunityContent extends StatelessWidget {
             textAlign: TextAlign.start,
           ),
         ),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+          child: Text(
+            "Join fellow explorers, share your adventures, and engage with like-minded travelers from around the world. Start connecting today!",
+            style: theme.textTheme.bodyMedium,
+            textAlign: TextAlign.left,
+            maxLines: 10,
+            overflow: TextOverflow.ellipsis,
+          ),
+        ),
         topChicken(),
         const SizedBox(height: 20),
         topCommunity(),
         const SizedBox(height: 20),
-        yourFavourite(),
+        yourFavourite(theme: theme),
         const SizedBox(height: 80),
       ],
     );
@@ -142,13 +152,15 @@ class CommunityContent extends StatelessWidget {
     );
   }
 
-  Widget yourFavourite() {
-    return const Column(
+  Widget yourFavourite({
+    required ThemeData theme,
+  }) {
+    return Column(
       children: [
-        SizedBox(height: 20),
-        CardsHeader(cardsTitle: 'Your Favourite'),
-        SizedBox(height: 10),
-        SingleChildScrollView(
+        const SizedBox(height: 20),
+        const CardsHeader(cardsTitle: 'Your Favourite'),
+        const SizedBox(height: 10),
+        const SingleChildScrollView(
           scrollDirection: Axis.horizontal,
           child: Row(
             children: [
@@ -181,6 +193,16 @@ class CommunityContent extends StatelessWidget {
                     'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQpz1c5CLJ-G6nnvOVH3UOe8iEewpPB11lgww&s',
               ),
             ],
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+          child: Text(
+            "Stay connected with your favorite travelers and personalities. Follow their journeys and be inspired 🌟",
+            style: theme.textTheme.bodyMedium,
+            textAlign: TextAlign.center,
+            maxLines: 4,
+            overflow: TextOverflow.ellipsis,
           ),
         ),
       ],

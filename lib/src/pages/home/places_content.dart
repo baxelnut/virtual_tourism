@@ -22,14 +22,26 @@ class PlacesContent extends StatelessWidget {
             textAlign: TextAlign.start,
           ),
         ),
-        topCountries(),
-        popularDestionation(context),
-        const SizedBox(height: 100),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+          child: Text(
+            "Where will your next adventure take you? Discover the world’s most breathtaking destinations from the comfort of your home. Whether you're dreaming of a tropical getaway, a historic city tour, or a nature retreat, we bring the world to your fingertips.",
+            style: theme.textTheme.bodyMedium,
+            textAlign: TextAlign.left,
+            maxLines: 10,
+            overflow: TextOverflow.ellipsis,
+          ),
+        ),
+        topCountries(theme: theme),
+        popularDestionation(theme: theme, context: context),
+        const SizedBox(height: 50),
       ],
     );
   }
 
-  Widget topCountries() {
+  Widget topCountries({
+    required ThemeData theme,
+  }) {
     return Column(
       children: [
         const SizedBox(height: 20),
@@ -50,12 +62,26 @@ class PlacesContent extends StatelessWidget {
             ).toList(),
           ),
         ),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+          child: Text(
+            'Experience the most sought-after travel destinations with immersive virtual tours 🌍',
+            style: theme.textTheme.bodyMedium,
+            textAlign: TextAlign.center,
+            maxLines: 4,
+            overflow: TextOverflow.ellipsis,
+          ),
+        ),
       ],
     );
   }
 
-  Widget popularDestionation(BuildContext context) {
+  Widget popularDestionation({
+    required ThemeData theme,
+    required context,
+  }) {
     final double cardSize = MediaQuery.of(context).size.width / 2;
+
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 25),
       child: Column(
@@ -82,6 +108,16 @@ class PlacesContent extends StatelessWidget {
                   },
                 ).toList(),
               ),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+            child: Text(
+              'Explore trending spots that travelers love right now. Start your journey today and let your curiosity guide you! 🔥',
+              style: theme.textTheme.bodyMedium,
+              textAlign: TextAlign.center,
+              maxLines: 4,
+              overflow: TextOverflow.ellipsis,
             ),
           ),
         ],
