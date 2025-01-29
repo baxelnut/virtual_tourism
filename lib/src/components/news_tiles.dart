@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../pages/home/news_detail.dart';
+
 class NewsTiles extends StatelessWidget {
   final String imagePath;
   final String publisher;
@@ -7,7 +9,7 @@ class NewsTiles extends StatelessWidget {
   final String topic;
   final String headline;
   final String datePublished;
-
+  final String newsContent;
   const NewsTiles({
     super.key,
     required this.imagePath,
@@ -16,6 +18,7 @@ class NewsTiles extends StatelessWidget {
     required this.datePublished,
     required this.topic,
     required this.publisherPath,
+    required this.newsContent,
   });
 
   @override
@@ -23,67 +26,83 @@ class NewsTiles extends StatelessWidget {
     final ThemeData theme = Theme.of(context);
 
     return Padding(
-      padding: const EdgeInsets.only(left: 30, right: 30, bottom: 20),
-      child: SizedBox(
-        height: 120,
-        child: Row(
-          children: [
-            ClipRRect(
-              borderRadius: BorderRadius.circular(12),
-              child: Container(
-                width: 120,
-                height: 120,
-                decoration: BoxDecoration(
-                  color: Colors.blue,
-                  image: DecorationImage(
-                    image: NetworkImage(imagePath),
-                    fit: BoxFit.cover,
+      padding: const EdgeInsets.symmetric(horizontal: 30),
+      child: GestureDetector(
+        onTap: () {
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (context) => NewsDetail(
+                imagePath: imagePath,
+                publisher: publisher,
+                headline: headline,
+                datePublished: datePublished,
+                publisherPath: publisherPath,
+                newsContent: newsContent,
+              ),
+            ),
+          );
+        },
+        child: SizedBox(
+          height: 140,
+          child: Row(
+            children: [
+              ClipRRect(
+                borderRadius: BorderRadius.circular(12),
+                child: Container(
+                  width: 120,
+                  height: 120,
+                  decoration: BoxDecoration(
+                    color: Colors.blue,
+                    image: DecorationImage(
+                      image: NetworkImage(imagePath),
+                      fit: BoxFit.cover,
+                    ),
                   ),
                 ),
               ),
-            ),
-            const SizedBox(width: 10),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    topic,
-                    style: theme.textTheme.labelMedium,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(bottom: 5),
-                    child: Text(
-                      headline,
-                      style: theme.textTheme.headlineSmall,
-                      maxLines: 2,
+              const SizedBox(width: 14),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      topic,
+                      style: theme.textTheme.labelMedium,
+                      maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                     ),
-                  ),
-                  Row(
-                    children: [
-                      CircleAvatar(
-                        radius: 14,
-                        backgroundImage: NetworkImage(publisherPath),
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: 5),
+                      child: Text(
+                        headline,
+                        style: theme.textTheme.headlineSmall,
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
                       ),
-                      const SizedBox(width: 10),
-                      Expanded(
-                        child: Text(
-                          "$publisher • $datePublished",
-                          style: theme.textTheme.labelMedium,
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
+                    ),
+                    Row(
+                      children: [
+                        CircleAvatar(
+                          radius: 14,
+                          backgroundImage: NetworkImage(publisherPath),
                         ),
-                      ),
-                    ],
-                  ),
-                ],
+                        const SizedBox(width: 10),
+                        Expanded(
+                          child: Text(
+                            "$publisher • $datePublished",
+                            style: theme.textTheme.labelMedium,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

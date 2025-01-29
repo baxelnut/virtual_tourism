@@ -27,17 +27,20 @@ class ProductDetails extends StatelessWidget {
             snap: true,
             leading: GestureDetector(
               onTap: () => Navigator.pop(context),
-              child: const Icon(
+              child: Icon(
                 Icons.arrow_back,
+                color: theme.colorScheme.onPrimary,
               ),
             ),
             title: Text(
               productName,
-              style: theme.textTheme.bodyLarge,
+              style: theme.textTheme.titleLarge?.copyWith(
+                color: theme.colorScheme.onPrimary,
+              ),
               maxLines: 1,
               overflow: TextOverflow.fade,
             ),
-            backgroundColor: Colors.transparent,
+            backgroundColor: theme.colorScheme.primary,
           ),
           SliverToBoxAdapter(
             child: Column(
