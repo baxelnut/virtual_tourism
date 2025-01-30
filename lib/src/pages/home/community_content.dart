@@ -91,21 +91,21 @@ class CommunityContent extends StatelessWidget {
             children: [
               CommCardsMedium(
                 imagePath:
-                    'https://upload.wikimedia.org/wikipedia/commons/thumb/5/50/Badaling_China_Great-Wall-of-China-01.jpg/360px-Badaling_China_Great-Wall-of-China-01.jpg',
+                    'https://i.scdn.co/image/ab6761610000e5eb7da39dea0a72f581535fb11f',
                 title: 'Lorem ipsum dolor sit amet',
                 subtitle:
                     'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt.',
               ),
               CommCardsMedium(
                 imagePath:
-                    'https://upload.wikimedia.org/wikipedia/commons/thumb/5/50/Badaling_China_Great-Wall-of-China-01.jpg/360px-Badaling_China_Great-Wall-of-China-01.jpg',
+                    'https://i.scdn.co/image/ab6761610000e5eb7da39dea0a72f581535fb11f',
                 title: 'LOREM IPSUM',
                 subtitle:
                     'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt.',
               ),
               CommCardsMedium(
                 imagePath:
-                    'https://upload.wikimedia.org/wikipedia/commons/thumb/5/50/Badaling_China_Great-Wall-of-China-01.jpg/360px-Badaling_China_Great-Wall-of-China-01.jpg',
+                    'https://i.scdn.co/image/ab6761610000e5eb7da39dea0a72f581535fb11f',
                 title: 'LOREM IPSUM',
                 subtitle:
                     'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt.',
@@ -119,28 +119,28 @@ class CommunityContent extends StatelessWidget {
             children: [
               CommCardsLarge(
                 imagePath:
-                    'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f8/View_of_Mount_Fuji_from_%C5%8Cwakudani_20211202.jpg/1200px-View_of_Mount_Fuji_from_%C5%8Cwakudani_20211202.jpg',
+                    'https://i.scdn.co/image/ab6761610000e5eb7da39dea0a72f581535fb11f',
                 title: 'Lorem Ipsum',
                 subtitle:
                     'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
               ),
               CommCardsLarge(
                 imagePath:
-                    'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f8/View_of_Mount_Fuji_from_%C5%8Cwakudani_20211202.jpg/1200px-View_of_Mount_Fuji_from_%C5%8Cwakudani_20211202.jpg',
+                    'https://i.scdn.co/image/ab6761610000e5eb7da39dea0a72f581535fb11f',
                 title: 'Lorem Ipsum',
                 subtitle:
                     'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
               ),
               CommCardsLarge(
                 imagePath:
-                    'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f8/View_of_Mount_Fuji_from_%C5%8Cwakudani_20211202.jpg/1200px-View_of_Mount_Fuji_from_%C5%8Cwakudani_20211202.jpg',
+                    'https://i.scdn.co/image/ab6761610000e5eb7da39dea0a72f581535fb11f',
                 title: 'Lorem Ipsum',
                 subtitle:
                     'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
               ),
               CommCardsLarge(
                 imagePath:
-                    'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f8/View_of_Mount_Fuji_from_%C5%8Cwakudani_20211202.jpg/1200px-View_of_Mount_Fuji_from_%C5%8Cwakudani_20211202.jpg',
+                    'https://i.scdn.co/image/ab6761610000e5eb7da39dea0a72f581535fb11f',
                 title: 'Lorem Ipsum',
                 subtitle:
                     'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',

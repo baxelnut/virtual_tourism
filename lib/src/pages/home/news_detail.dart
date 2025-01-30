@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../components/load_image.dart';
+
 class NewsDetail extends StatelessWidget {
   final String imagePath;
   final String publisher;
@@ -46,19 +48,16 @@ class NewsDetail extends StatelessWidget {
         SliverToBoxAdapter(
           child: Column(
             children: [
-              Container(
+              SizedBox(
                 width: screenSize.width,
                 height: screenSize.width,
-                decoration: BoxDecoration(
-                  image: DecorationImage(
-                    image: NetworkImage(
-                      imagePath,
-                    ),
-                    fit: BoxFit.cover,
-                  ),
-                ),
                 child: Stack(
                   children: [
+                    LoadImage(
+                      imagePath: imagePath,
+                      width: screenSize.width,
+                      height: screenSize.width,
+                    ),
                     Container(
                       width: screenSize.width,
                       height: screenSize.width,

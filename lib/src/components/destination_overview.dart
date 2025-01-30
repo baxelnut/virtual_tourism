@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import 'image_screen.dart';
+import 'load_image.dart';
 import 'review_section.dart';
 
 class DestinationOverview extends StatefulWidget {
@@ -110,19 +111,16 @@ class DestinationOverviewState extends State<DestinationOverview> {
     required String placeholderPath,
     required ThemeData theme,
   }) {
-    return Container(
+    return SizedBox(
       width: screenSize.width,
       height: screenSize.width / 1.5,
-      decoration: BoxDecoration(
-        image: DecorationImage(
-          image: NetworkImage(
-            widget.destinationData["imagePath"] ?? placeholderPath,
-          ),
-          fit: BoxFit.cover,
-        ),
-      ),
       child: Stack(
         children: [
+          LoadImage(
+            imagePath: widget.destinationData["imagePath"] ?? placeholderPath,
+            width: screenSize.width,
+            height: screenSize.width / 1.5,
+          ),
           Container(
             width: screenSize.width,
             height: screenSize.width / 1.5,
@@ -179,7 +177,7 @@ class DestinationOverviewState extends State<DestinationOverview> {
     required Size screenSize,
   }) {
     return Padding(
-      padding: const EdgeInsets.only(bottom: 40, right: 20, left: 20),
+      padding: const EdgeInsets.only(bottom: 30, right: 20, left: 20, top: 10),
       child: SizedBox(
         width: screenSize.width,
         child: ElevatedButton(

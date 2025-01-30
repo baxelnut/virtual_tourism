@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../pages/home/news_detail.dart';
+import 'load_image.dart';
 
 class NewsCardsLarge extends StatelessWidget {
   final String imagePath;
@@ -44,19 +45,16 @@ class NewsCardsLarge extends StatelessWidget {
               ),
             );
           },
-          child: Container(
+          child: SizedBox(
             width: screenSize.width - 100,
             height: screenSize.width / 2,
-            decoration: BoxDecoration(
-              image: DecorationImage(
-                image: NetworkImage(
-                  imagePath,
-                ),
-                fit: BoxFit.cover,
-              ),
-            ),
             child: Stack(
               children: [
+                LoadImage(
+                  imagePath: imagePath,
+                  width: screenSize.width - 100,
+                  height: screenSize.width / 2,
+                ),
                 Container(
                   width: screenSize.width - 100,
                   height: screenSize.width / 2,

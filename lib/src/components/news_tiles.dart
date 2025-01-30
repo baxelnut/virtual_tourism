@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:virtual_tourism/src/components/load_image.dart';
 
 import '../pages/home/news_detail.dart';
 
@@ -47,19 +48,12 @@ class NewsTiles extends StatelessWidget {
           child: Row(
             children: [
               ClipRRect(
-                borderRadius: BorderRadius.circular(12),
-                child: Container(
-                  width: 120,
-                  height: 120,
-                  decoration: BoxDecoration(
-                    color: Colors.blue,
-                    image: DecorationImage(
-                      image: NetworkImage(imagePath),
-                      fit: BoxFit.cover,
-                    ),
-                  ),
-                ),
-              ),
+                  borderRadius: BorderRadius.circular(12),
+                  child: LoadImage(
+                    imagePath: imagePath,
+                    width: 120,
+                    height: 120,
+                  )),
               const SizedBox(width: 14),
               Expanded(
                 child: Column(

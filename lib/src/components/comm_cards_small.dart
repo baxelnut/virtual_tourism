@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'load_image.dart';
+
 class CommCardsSmall extends StatelessWidget {
   final String title;
   final String imagePath;
@@ -25,27 +27,32 @@ class CommCardsSmall extends StatelessWidget {
           borderRadius: BorderRadius.circular(16),
           child: Stack(
             children: [
-              SizedBox(
+              LoadImage(
+                imagePath: imagePath,
                 width: screenSize.width / 3.5,
                 height: screenSize.width / 3,
-                child: Image.network(
-                  imagePath,
-                  fit: BoxFit.cover,
-                  width: screenSize.width / 3.5,
-                  height: screenSize.width / 3,
-                  loadingBuilder: (context, child, loadingProgress) {
-                    if (loadingProgress == null) return child;
-                    return Center(
-                      child: CircularProgressIndicator(
-                        value: loadingProgress.expectedTotalBytes != null
-                            ? loadingProgress.cumulativeBytesLoaded /
-                                (loadingProgress.expectedTotalBytes ?? 1)
-                            : null,
-                      ),
-                    );
-                  },
-                ),
               ),
+              // SizedBox(
+              //   width: screenSize.width / 3.5,
+              //   height: screenSize.width / 3,
+              //   child: Image.network(
+              //     imagePath,
+              //     fit: BoxFit.cover,
+              //     width: screenSize.width / 3.5,
+              //     height: screenSize.width / 3,
+              //     loadingBuilder: (context, child, loadingProgress) {
+              //       if (loadingProgress == null) return child;
+              //       return Center(
+              //         child: CircularProgressIndicator(
+              //           value: loadingProgress.expectedTotalBytes != null
+              //               ? loadingProgress.cumulativeBytesLoaded /
+              //                   (loadingProgress.expectedTotalBytes ?? 1)
+              //               : null,
+              //         ),
+              //       );
+              //     },
+              //   ),
+              // ),
               Container(
                 width: screenSize.width / 3.5,
                 height: screenSize.width / 3,

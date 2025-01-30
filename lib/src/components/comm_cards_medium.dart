@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'load_image.dart';
+
 class CommCardsMedium extends StatelessWidget {
   final String imagePath;
   final String title;
@@ -27,17 +29,10 @@ class CommCardsMedium extends StatelessWidget {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Container(
+              LoadImage(
+                imagePath: imagePath,
                 width: screenSize.width / 3 - 20,
                 height: screenSize.width / 3,
-                decoration: BoxDecoration(
-                  image: DecorationImage(
-                    image: NetworkImage(
-                      imagePath,
-                    ),
-                    fit: BoxFit.cover,
-                  ),
-                ),
               ),
               Expanded(
                 child: Padding(

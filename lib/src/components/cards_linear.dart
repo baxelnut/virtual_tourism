@@ -1,18 +1,19 @@
 import 'package:flutter/material.dart';
 
-// import '../pages/home/image_screen.dart';
+import 'load_image.dart';
 
 class CardsLinear extends StatelessWidget {
   final String flag;
   final String country;
   final String thumbnailPath;
   final String imagePath;
-  const CardsLinear(
-      {super.key,
-      required this.country,
-      required this.flag,
-      required this.thumbnailPath,
-      required this.imagePath});
+  const CardsLinear({
+    super.key,
+    required this.country,
+    required this.flag,
+    required this.thumbnailPath,
+    required this.imagePath,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -22,25 +23,7 @@ class CardsLinear extends StatelessWidget {
       padding: const EdgeInsets.only(left: 5),
       child: InkWell(
         onTap: () {
-          // Navigator.of(context).push(
-          //   MaterialPageRoute(
-          //     builder: (context) => ImageScreen(
-          //         image: Image.network(imagePath),
-          //         appBarTitle: imagePath
-          //             .split('/')
-          //             .last
-          //             .split('.')
-          //             .first
-          //             .toUpperCase()
-          //             .replaceAll('_', ' ')),
-          //   ),
-          // );
-          // appBarTitle: imagePath
-          //     .split('/')
-          //     .last
-          //     .split('.')
-          //     .first
-          //     .replaceAll('_', ' ')
+          // enter code here
         },
         child: Stack(
           children: [
@@ -52,22 +35,10 @@ class CardsLinear extends StatelessWidget {
               ),
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(20),
-                child: Image.network(
-                  thumbnailPath,
-                  fit: BoxFit.cover,
+                child: LoadImage(
+                  imagePath: thumbnailPath,
                   width: screenSize.width / 3,
                   height: screenSize.width / 2,
-                  loadingBuilder: (context, child, loadingProgress) {
-                    if (loadingProgress == null) return child;
-                    return Center(
-                      child: CircularProgressIndicator(
-                        value: loadingProgress.expectedTotalBytes != null
-                            ? loadingProgress.cumulativeBytesLoaded /
-                                (loadingProgress.expectedTotalBytes ?? 1)
-                            : null,
-                      ),
-                    );
-                  },
                 ),
               ),
             ),

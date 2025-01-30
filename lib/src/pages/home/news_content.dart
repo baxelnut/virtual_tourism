@@ -46,46 +46,46 @@ class NewsContent extends StatelessWidget {
         children: [
           NewsCardsLarge(
             imagePath:
-                'https://img.bleacherreport.net/img/images/photos/003/633/033/hi-res-adb5ec5ce649bedb7a531cf819e7803d_crop_north.jpg?1476736156&w=3072&h=2048',
+                'https://i.scdn.co/image/ab6761610000e5eb7da39dea0a72f581535fb11f',
             publisher: 'McLovin News',
             headline:
                 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
             datePublished: '6 hours ago',
             publisherPath:
-                'https://i.pinimg.com/736x/a2/6d/5d/a26d5da94d71c2c7e56b0b7cf3955ad3.jpg',
+                'https://cdn-2.tstatic.net/style/foto/bank/images/potret-alex-turner-vokalis-dan-gitaris-band-arctic-monkeys.jpg',
             newsContent: newsContent,
           ),
           NewsCardsLarge(
             imagePath:
-                'https://img.bleacherreport.net/img/images/photos/003/633/033/hi-res-adb5ec5ce649bedb7a531cf819e7803d_crop_north.jpg?1476736156&w=3072&h=2048',
+                'https://i.scdn.co/image/ab6761610000e5eb7da39dea0a72f581535fb11f',
             publisher: 'McLovin News',
             headline:
                 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
             datePublished: '6 hours ago',
             publisherPath:
-                'https://i.pinimg.com/736x/a2/6d/5d/a26d5da94d71c2c7e56b0b7cf3955ad3.jpg',
+                'https://cdn-2.tstatic.net/style/foto/bank/images/potret-alex-turner-vokalis-dan-gitaris-band-arctic-monkeys.jpg',
             newsContent: newsContent,
           ),
           NewsCardsLarge(
             imagePath:
-                'https://img.bleacherreport.net/img/images/photos/003/633/033/hi-res-adb5ec5ce649bedb7a531cf819e7803d_crop_north.jpg?1476736156&w=3072&h=2048',
+                'https://i.scdn.co/image/ab6761610000e5eb7da39dea0a72f581535fb11f',
             publisher: 'McLovin News',
             headline:
                 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
             publisherPath:
-                'https://i.pinimg.com/736x/a2/6d/5d/a26d5da94d71c2c7e56b0b7cf3955ad3.jpg',
+                'https://cdn-2.tstatic.net/style/foto/bank/images/potret-alex-turner-vokalis-dan-gitaris-band-arctic-monkeys.jpg',
             datePublished: '6 hours ago',
             newsContent: newsContent,
           ),
           NewsCardsLarge(
             imagePath:
-                'https://img.bleacherreport.net/img/images/photos/003/633/033/hi-res-adb5ec5ce649bedb7a531cf819e7803d_crop_north.jpg?1476736156&w=3072&h=2048',
+                'https://i.scdn.co/image/ab6761610000e5eb7da39dea0a72f581535fb11f',
             publisher: 'McLovin News',
             headline:
                 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
             datePublished: '6 hours ago',
             publisherPath:
-                'https://i.pinimg.com/736x/a2/6d/5d/a26d5da94d71c2c7e56b0b7cf3955ad3.jpg',
+                'https://cdn-2.tstatic.net/style/foto/bank/images/potret-alex-turner-vokalis-dan-gitaris-band-arctic-monkeys.jpg',
             newsContent: newsContent,
           ),
         ],
@@ -108,7 +108,7 @@ class NewsContent extends StatelessWidget {
           headline: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
           datePublished: '29 Jan 2025',
           publisherPath:
-              'https://i.pinimg.com/736x/a2/6d/5d/a26d5da94d71c2c7e56b0b7cf3955ad3.jpg',
+              'https://cdn-2.tstatic.net/style/foto/bank/images/potret-alex-turner-vokalis-dan-gitaris-band-arctic-monkeys.jpg',
           newsContent: newsContent,
         ),
         NewsTiles(
@@ -119,7 +119,7 @@ class NewsContent extends StatelessWidget {
           headline: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
           datePublished: '29 Jan 2025',
           publisherPath:
-              'https://i.pinimg.com/736x/a2/6d/5d/a26d5da94d71c2c7e56b0b7cf3955ad3.jpg',
+              'https://cdn-2.tstatic.net/style/foto/bank/images/potret-alex-turner-vokalis-dan-gitaris-band-arctic-monkeys.jpg',
           newsContent: newsContent,
         ),
         NewsTiles(
@@ -130,7 +130,7 @@ class NewsContent extends StatelessWidget {
           headline: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
           datePublished: '29 Jan 2025',
           publisherPath:
-              'https://i.pinimg.com/736x/a2/6d/5d/a26d5da94d71c2c7e56b0b7cf3955ad3.jpg',
+              'https://cdn-2.tstatic.net/style/foto/bank/images/potret-alex-turner-vokalis-dan-gitaris-band-arctic-monkeys.jpg',
           newsContent: newsContent,
         ),
         NewsTiles(
@@ -141,7 +141,7 @@ class NewsContent extends StatelessWidget {
           headline: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
           datePublished: '29 Jan 2025',
           publisherPath:
-              'https://i.pinimg.com/736x/a2/6d/5d/a26d5da94d71c2c7e56b0b7cf3955ad3.jpg',
+              'https://cdn-2.tstatic.net/style/foto/bank/images/potret-alex-turner-vokalis-dan-gitaris-band-arctic-monkeys.jpg',
           newsContent: newsContent,
         ),
       ],
