@@ -32,10 +32,15 @@ class _TourExamplePageState extends State<TourExamplePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Column(
-        children: [
-          caseStudyDestinations(context),
-        ],
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            caseStudyDestinations(context),
+            caseStudyDestinations(context),
+            caseStudyDestinations(context),
+            const SizedBox(height: 100),
+          ],
+        ),
       ),
     );
   }

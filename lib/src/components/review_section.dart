@@ -16,9 +16,26 @@ class ReviewSection extends StatelessWidget {
         children: [
           Padding(
             padding: const EdgeInsets.only(bottom: 20, top: 50),
-            child: Text(
-              'Rating & Reviews',
-              style: theme.textTheme.headlineSmall,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Text(
+                  'Rating & Reviews',
+                  style: theme.textTheme.headlineSmall,
+                ),
+                ElevatedButton(
+                  onPressed: () {},
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: theme.colorScheme.primary,
+                  ),
+                  child: Icon(
+                    Icons.comment,
+                    size: 22,
+                    color: theme.colorScheme.onPrimary,
+                  ),
+                ),
+              ],
             ),
           ),
           _buildRatingStat(
@@ -29,17 +46,6 @@ class ReviewSection extends StatelessWidget {
           _buildReviewWidget(
             screenSize,
             theme,
-          ),
-          ElevatedButton(
-            onPressed: () {},
-            style: ElevatedButton.styleFrom(
-              backgroundColor: theme.colorScheme.primary,
-            ),
-            child: Icon(
-              Icons.comment,
-              size: 22,
-              color: theme.colorScheme.onPrimary,
-            ),
           ),
         ],
       ),
@@ -52,60 +58,58 @@ class ReviewSection extends StatelessWidget {
   ) {
     return Column(
       children: [
-        Text(
-          'X reviews',
-          style: theme.textTheme.titleSmall,
-        ),
-        ListTile(
-          trailing: const CircleAvatar(
-            radius: 24,
-          ),
-          title: Text(
-            '50 Cent',
+        Padding(
+          padding: const EdgeInsets.only(top: 50, bottom: 10),
+          child: Text(
+            'X reviews',
             style: theme.textTheme.titleMedium,
-            textAlign: TextAlign.end,
-          ),
-          subtitle: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                'this app is so good! will definitely recommend to my homies and ops❤️',
-                style: theme.textTheme.labelMedium,
-                textAlign: TextAlign.end,
-              ),
-              const SizedBox(height: 5),
-              Text(
-                '30 Jan 2025',
-                style: theme.textTheme.labelMedium,
-              ),
-            ],
           ),
         ),
-        ListTile(
-          trailing: const CircleAvatar(
-            radius: 24,
-          ),
-          title: Text(
-            '50 Cent',
-            style: theme.textTheme.titleMedium,
-            textAlign: TextAlign.end,
-          ),
-          subtitle: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                'this app is so good! will definitely recommend to my homies and ops❤️',
-                style: theme.textTheme.labelMedium,
-                textAlign: TextAlign.end,
-              ),
-              const SizedBox(height: 5),
-              Text(
-                '30 Jan 2025',
-                style: theme.textTheme.labelMedium,
-              ),
-            ],
-          ),
-        )
+        const Divider(),
+        _buildComment(
+          userProfile:
+              'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSC_vMfeGWA4KtFPNYeTBc26CCwScfuU2Ouxw&s',
+          userName: '50 Cent',
+          userRating: 5,
+          userComment:
+              'Yo, this app is fire! 💯 Definitely puttin’ my homies on this one. No cap. ❤️',
+          datePosted: '30 Jan 2025',
+          isLiked: true,
+          theme: theme,
+        ),
+        _buildComment(
+          userProfile:
+              'https://upload.wikimedia.org/wikipedia/commons/thumb/1/17/Snoop_Dogg_2019_by_Glenn_Francis.jpg/330px-Snoop_Dogg_2019_by_Glenn_Francis.jpg',
+          userName: 'Snoopy Doggy',
+          userRating: 3,
+          userComment:
+              'Man, this app straight doo-doo. 😂 I’ma pass this to my ops, let them struggle while I stay chillin’. 🔫 (On baked AF tho… 🌿🔥)',
+          datePosted: '30 Jan 2025',
+          isLiked: false,
+          theme: theme,
+        ),
+        _buildComment(
+          userProfile:
+              'https://upload.wikimedia.org/wikipedia/commons/thumb/c/cb/Elon_Musk_Royal_Society_crop.jpg/330px-Elon_Musk_Royal_Society_crop.jpg',
+          userName: 'Elon Musk',
+          userRating: 5,
+          userComment:
+              'This app is quite literally revolutionary. Highly recommend for optimal efficiency. Also, Dogecoin integration when? 🚀🐶',
+          datePosted: '30 Jan 2025',
+          isLiked: false,
+          theme: theme,
+        ),
+        _buildComment(
+          userProfile:
+              'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSeGVUGslmHUWyeqopY1PThHAnuQ8XL0E2RYw&s',
+          userName: 'Batman',
+          userRating: 5,
+          userComment:
+              'This app… is what this city needs. But I must test it… in the shadows. 🦇',
+          datePosted: '30 Jan 2025',
+          isLiked: true,
+          theme: theme,
+        ),
       ],
     );
   }
@@ -225,6 +229,72 @@ class ReviewSection extends StatelessWidget {
           ),
         );
       }),
+    );
+  }
+
+  Widget _buildComment({
+    required String userProfile,
+    required String userName,
+    required int userRating,
+    required String userComment,
+    required String datePosted,
+    required bool isLiked,
+    required ThemeData theme,
+  }) {
+    return Column(
+      children: [
+        ListTile(
+          dense: true,
+          leading: Icon(
+            isLiked ? Icons.favorite_rounded : Icons.favorite_outline_rounded,
+            size: 12,
+            color: isLiked ? Colors.red : theme.colorScheme.onSurface,
+          ),
+          title: Column(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              Text(
+                userName,
+                style: theme.textTheme.titleMedium,
+                textAlign: TextAlign.end,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: List.generate(
+                  userRating,
+                  (index) => const Icon(
+                    Icons.star_rate,
+                    size: 18,
+                    color: Colors.amber,
+                  ),
+                ),
+              )
+            ],
+          ),
+          subtitle: Column(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              Text(
+                userComment,
+                style: theme.textTheme.labelMedium,
+                textAlign: TextAlign.end,
+              ),
+              const SizedBox(height: 8),
+              Text(
+                datePosted,
+                style: theme.textTheme.labelSmall?.copyWith(
+                  color: theme.colorScheme.onSurface.withOpacity(0.6),
+                ),
+              ),
+            ],
+          ),
+          trailing: CircleAvatar(
+            radius: 20,
+            backgroundImage: NetworkImage(userProfile),
+          ),
+        ),
+        const Divider(),
+      ],
     );
   }
 }
