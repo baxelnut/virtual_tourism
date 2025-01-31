@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:virtual_tourism/src/components/content/example_jump.dart';
 
 import '../content/image_screen.dart';
 import '../content/load_image.dart';
@@ -190,10 +191,9 @@ class DestinationOverviewState extends State<DestinationOverview> {
                       widget.destinationData['imagePath'] ?? placeholderPath,
                     ),
                   ),
-                  // appBarTitle: widget.destinationData['destinationName'] ??
-                  //     'No data available',
                 ),
               ),
+              // MaterialPageRoute(builder: (context) => const ExampleJump()),
             );
           },
           style: ElevatedButton.styleFrom(
