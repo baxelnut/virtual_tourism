@@ -3,8 +3,8 @@
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-import 'image_screen.dart';
-import 'load_image.dart';
+import '../content/image_screen.dart';
+import '../content/load_image.dart';
 import 'review_section.dart';
 
 class DestinationOverview extends StatefulWidget {
@@ -187,7 +187,8 @@ class DestinationOverviewState extends State<DestinationOverview> {
                 builder: (context) => ImageScreen(
                   image: Image(
                     image: NetworkImage(
-                        widget.destinationData['imagePath'] ?? placeholderPath),
+                      widget.destinationData['imagePath'] ?? placeholderPath,
+                    ),
                   ),
                   appBarTitle: widget.destinationData['destinationName'] ??
                       'No data available',
@@ -233,34 +234,50 @@ class DestinationOverviewState extends State<DestinationOverview> {
           columnSpacing: 16.0,
           columns: const <DataColumn>[
             DataColumn(
-              label: Text("Release Date"),
+              label: Text(
+                "Release Date",
+              ),
             ),
             DataColumn(
-              label: Text("Size"),
+              label: Text(
+                "Size",
+              ),
             ),
             DataColumn(
-              label: Text("Field of View"),
+              label: Text(
+                "Field of View",
+              ),
             ),
             DataColumn(
-              label: Text("Source"),
+              label: Text(
+                "Source",
+              ),
             ),
           ],
           rows: [
             DataRow(
               cells: <DataCell>[
                 DataCell(
-                  Text(widget.destinationData["releaseDate"] ?? "No data"),
+                  Text(
+                    widget.destinationData["releaseDate"] ?? "No data",
+                  ),
                 ),
                 DataCell(
-                  Text(widget.destinationData["size"] ?? "No data"),
+                  Text(
+                    widget.destinationData["size"] ?? "No data",
+                  ),
                 ),
                 DataCell(
-                  Text(widget.destinationData["fieldOfView"] ?? "No data"),
+                  Text(
+                    widget.destinationData["fieldOfView"] ?? "No data",
+                  ),
                 ),
                 DataCell(
                   GestureDetector(
                     onTap: () {
-                      _launchURL(widget.destinationData["sourcePath"] ?? "");
+                      _launchURL(
+                        widget.destinationData["sourcePath"] ?? "",
+                      );
                     },
                     child: Text(
                       widget.destinationData["sourcePath"] ?? "No data",

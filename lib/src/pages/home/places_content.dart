@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
-import '../../components/cards_emerged.dart';
-import '../../components/cards_header.dart';
-import '../../components/cards_linear.dart';
+import '../../components/cards/cards_emerged.dart';
+import '../../components/cards/cards_header.dart';
+import '../../components/cards/cards_linear.dart';
 import '../../services/destination_data.dart';
 
 class PlacesContent extends StatelessWidget {
@@ -32,8 +32,13 @@ class PlacesContent extends StatelessWidget {
             overflow: TextOverflow.ellipsis,
           ),
         ),
-        topCountries(theme: theme),
-        popularDestionation(theme: theme, context: context),
+        topCountries(
+          theme: theme,
+        ),
+        popularDestionation(
+          theme: theme,
+          context: context,
+        ),
         const SizedBox(height: 50),
       ],
     );

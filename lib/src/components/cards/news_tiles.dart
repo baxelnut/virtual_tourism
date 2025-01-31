@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:virtual_tourism/src/components/load_image.dart';
 
-import '../pages/home/news_detail.dart';
+import '../../pages/home/news_detail.dart';
+import '../content/load_image.dart';
 
 class NewsTiles extends StatelessWidget {
   final String imagePath;
@@ -48,12 +48,13 @@ class NewsTiles extends StatelessWidget {
           child: Row(
             children: [
               ClipRRect(
-                  borderRadius: BorderRadius.circular(12),
-                  child: LoadImage(
-                    imagePath: imagePath,
-                    width: 120,
-                    height: 120,
-                  )),
+                borderRadius: BorderRadius.circular(12),
+                child: LoadImage(
+                  imagePath: imagePath,
+                  width: 120,
+                  height: 120,
+                ),
+              ),
               const SizedBox(width: 14),
               Expanded(
                 child: Column(
@@ -79,7 +80,9 @@ class NewsTiles extends StatelessWidget {
                       children: [
                         CircleAvatar(
                           radius: 14,
-                          backgroundImage: NetworkImage(publisherPath),
+                          backgroundImage: NetworkImage(
+                            publisherPath,
+                          ),
                         ),
                         const SizedBox(width: 10),
                         Expanded(

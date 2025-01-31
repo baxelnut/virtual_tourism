@@ -3,9 +3,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:virtual_tourism/src/services/firebase/api/firebase_api.dart';
 
-import '../../components/image_screen.dart';
+import '../../components/content/image_screen.dart';
+import '../../services/firebase/api/firebase_api.dart';
 import '../../services/firebase/storage/storage_service.dart';
 
 class UploadImage extends StatefulWidget {
@@ -210,7 +210,10 @@ class _UploadImageState extends State<UploadImage> {
                       leading: Text(country),
                       title: Text(destinationName),
                       subtitle: Text('Country: $country'),
-                      trailing: const Icon(Icons.broken_image, size: 50),
+                      trailing: const Icon(
+                        Icons.broken_image,
+                        size: 50,
+                      ),
                     );
                   }
 
@@ -236,10 +239,11 @@ class _UploadImageState extends State<UploadImage> {
                               Navigator.of(context).push(
                                 MaterialPageRoute(
                                   builder: (context) => ImageScreen(
-                                      image: Image(
-                                        image: NetworkImage(imageUrl),
-                                      ),
-                                      appBarTitle: destinationName),
+                                    image: Image(
+                                      image: NetworkImage(imageUrl),
+                                    ),
+                                    appBarTitle: destinationName,
+                                  ),
                                 ),
                               );
                             },
@@ -252,11 +256,16 @@ class _UploadImageState extends State<UploadImage> {
                                 placeholder: (context, url) =>
                                     const CircularProgressIndicator(),
                                 errorWidget: (context, url, error) =>
-                                    const Icon(Icons.broken_image),
+                                    const Icon(
+                                  Icons.broken_image,
+                                ),
                               ),
                             ),
                           )
-                        : const Icon(Icons.image, size: 50),
+                        : const Icon(
+                            Icons.image,
+                            size: 50,
+                          ),
                   );
                 },
               );
@@ -270,7 +279,9 @@ class _UploadImageState extends State<UploadImage> {
             onPressed: () {
               uploadDestinationInfo(storageService);
             },
-            child: const Icon(Icons.add_a_photo_rounded),
+            child: const Icon(
+              Icons.add_a_photo_rounded,
+            ),
           );
         },
       ),

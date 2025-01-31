@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../../components/cards_emerged.dart';
-import '../../components/cards_header.dart';
+import '../../components/cards/cards_emerged.dart';
+import '../../components/cards/cards_header.dart';
 import '../../services/firebase/api/firebase_api.dart';
 
 class TourExamplePage extends StatefulWidget {
@@ -51,7 +51,9 @@ class _TourExamplePageState extends State<TourExamplePage> {
       padding: const EdgeInsets.symmetric(vertical: 25),
       child: Column(
         children: [
-          const CardsHeader(cardsTitle: 'La Silla'),
+          const CardsHeader(
+            cardsTitle: 'La Silla',
+          ),
           SizedBox(
             height: cardSize,
             child: RotatedBox(

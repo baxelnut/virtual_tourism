@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-import 'destination_overview.dart';
-import 'load_image.dart';
+import '../content/load_image.dart';
+import '../destinations/destination_overview.dart';
 
 class CardsEmerged extends StatelessWidget {
   final Map<String, dynamic> destinationData;
@@ -31,13 +31,13 @@ class CardsEmerged extends StatelessWidget {
               borderRadius: BorderRadius.circular(16),
             ),
             child: ClipRRect(
-                borderRadius: BorderRadius.circular(16),
-                child: LoadImage(
-                  imagePath:
-                      destinationData['thumbnailPath'] ?? placeholderPath,
-                  width: screenSize.width / 2,
-                  height: screenSize.width / 2,
-                )),
+              borderRadius: BorderRadius.circular(16),
+              child: LoadImage(
+                imagePath: destinationData['thumbnailPath'] ?? placeholderPath,
+                width: screenSize.width / 2,
+                height: screenSize.width / 2,
+              ),
+            ),
           ),
           Container(
             width: screenSize.width / 2,

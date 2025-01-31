@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-import '../pages/home/news_detail.dart';
-import 'load_image.dart';
+import '../../pages/home/news_detail.dart';
+import '../content/load_image.dart';
 
 class NewsCardsLarge extends StatelessWidget {
   final String imagePath;

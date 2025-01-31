@@ -1,13 +1,10 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:virtual_tourism/src/pages/shop/shop_page.dart';
 
-import '../../components/cards_header.dart';
-// import '../../components/chips_component.dart';
-// import '../../components/user_overview.dart';
+import '../../components/cards/cards_header.dart';
 import '../../services/firebase/api/firebase_api.dart';
 import '../../services/firebase/auth/auth_page.dart';
-// import '../../services/firebase/firebase_api.dart';
+import '../shop/shop_page.dart';
 import 'image_storage_test.dart';
 import 'upload_destinations.dart';
 import 'upload_image.dart';
@@ -193,7 +190,7 @@ class TestExamplePages extends StatelessWidget {
                 onTap: () {
                   Navigator.of(context).push(
                     MaterialPageRoute(
-                      builder: (context) =>  const ShopPage(),
+                      builder: (context) => const ShopPage(),
                     ),
                   );
                 },

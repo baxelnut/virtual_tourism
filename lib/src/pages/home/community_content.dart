@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
-import '../../components/cards_header.dart';
-import '../../components/comm_cards_large.dart';
-import '../../components/comm_cards_medium.dart';
-import '../../components/comm_cards_small.dart';
-import '../../components/comm_circle_avatar.dart';
+import '../../components/cards/cards_header.dart';
+import '../../components/cards/comm_cards_large.dart';
+import '../../components/cards/comm_cards_medium.dart';
+import '../../components/cards/comm_cards_small.dart';
+import '../../components/cards/comm_circle_avatar.dart';
 
 class CommunityContent extends StatelessWidget {
   const CommunityContent({super.key});

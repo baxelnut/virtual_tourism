@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../../components/medals_cards.dart';
+import '../../components/cards/medals_cards.dart';
 import '../../services/firebase/api/firebase_api.dart';
 
 class MedalsPage extends StatefulWidget {
@@ -43,7 +43,9 @@ class _MedalsPageState extends State<MedalsPage> {
           future: countriesFuture,
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
-              return const Center(child: CircularProgressIndicator());
+              return const Center(
+                child: CircularProgressIndicator(),
+              );
             } else if (snapshot.hasError) {
               return Center(
                 child: Text('Error: ${snapshot.error}'),

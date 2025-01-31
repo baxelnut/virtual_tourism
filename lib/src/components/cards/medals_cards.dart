@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../pages/medals/full_country_list_page.dart';
-import '../services/firebase/api/firebase_api.dart';
+import '../../pages/medals/full_country_list_page.dart';
+import '../../services/firebase/api/firebase_api.dart';
 
 class MedalsCards extends StatefulWidget {
   final String title;

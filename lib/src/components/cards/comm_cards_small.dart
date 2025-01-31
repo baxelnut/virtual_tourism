@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'load_image.dart';
+import '../content/load_image.dart';
 
 class CommCardsSmall extends StatelessWidget {
   final String title;

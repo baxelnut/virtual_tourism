@@ -2,8 +2,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 
-import '../../components/cards_curved.dart';
-import '../../components/cards_header.dart';
+import '../../components/cards/cards_curved.dart';
+import '../../components/cards/cards_header.dart';
 
 class TopPicks extends StatefulWidget {
   const TopPicks({super.key});
@@ -126,7 +126,8 @@ class _TopPicksState extends State<TopPicks> {
                         return SizedBox(
                           width: MediaQuery.of(context).size.width / 1.9,
                           height: MediaQuery.of(context).size.height / 2.5,
-                          child: const Center(child: CircularProgressIndicator()),
+                          child:
+                              const Center(child: CircularProgressIndicator()),
                         );
                       } else if (thumbnailSnapshot.hasError) {
                         return const SizedBox.shrink();
@@ -141,7 +142,8 @@ class _TopPicksState extends State<TopPicks> {
                             return SizedBox(
                               width: MediaQuery.of(context).size.width / 1.9,
                               height: MediaQuery.of(context).size.height / 2.5,
-                              child: const Center(child: CircularProgressIndicator()),
+                              child: const Center(
+                                  child: CircularProgressIndicator()),
                             );
                           } else if (imageSnapshot.hasError) {
                             return const SizedBox.shrink();
