@@ -143,13 +143,6 @@ class _AuthPageState extends State<AuthPage> {
 
     return Scaffold(
       resizeToAvoidBottomInset: true,
-      appBar: AppBar(
-        surfaceTintColor: theme.colorScheme.tertiary,
-        shadowColor: theme.colorScheme.tertiary,
-        backgroundColor: theme.colorScheme.tertiary,
-        foregroundColor: theme.colorScheme.onPrimary,
-      ),
-      backgroundColor: theme.colorScheme.onPrimary,
       body: Stack(
         children: [
           SafeArea(

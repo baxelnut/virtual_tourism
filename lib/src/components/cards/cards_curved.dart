@@ -62,7 +62,6 @@ class CardsCurved extends StatelessWidget {
                             );
                           },
                         ),
-                        appBarTitle: destination,
                       ),
                     ),
                   );

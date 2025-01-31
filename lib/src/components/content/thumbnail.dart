@@ -28,14 +28,15 @@ class Thumbnail extends StatelessWidget {
           Navigator.of(context).push(
             MaterialPageRoute(
               builder: (context) => ImageScreen(
-                  image: Image.asset(imagePath),
-                  appBarTitle: imagePath
-                      .split('/')
-                      .last
-                      .split('.')
-                      .first
-                      .toUpperCase()
-                      .replaceAll('_', ' ')),
+                image: Image.asset(imagePath),
+                // appBarTitle: imagePath
+                //     .split('/')
+                //     .last
+                //     .split('.')
+                //     .first
+                //     .toUpperCase()
+                //     .replaceAll('_', ' '),
+              ),
             ),
           );
         },

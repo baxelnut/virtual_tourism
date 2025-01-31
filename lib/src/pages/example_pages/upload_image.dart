@@ -242,7 +242,6 @@ class _UploadImageState extends State<UploadImage> {
                                     image: Image(
                                       image: NetworkImage(imageUrl),
                                     ),
-                                    appBarTitle: destinationName,
                                   ),
                                 ),
                               );

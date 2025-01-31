@@ -22,9 +22,8 @@ class HeaderSection extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          const SizedBox(height: 20),
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20),
+            padding: const EdgeInsets.only(left: 20, right: 20, top: 60),
             child: Text(
               'Go ahead and set up your account',
               style: theme.textTheme.headlineMedium?.copyWith(
@@ -32,9 +31,8 @@ class HeaderSection extends StatelessWidget {
               ),
             ),
           ),
-          const SizedBox(height: 10),
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20),
+            padding: const EdgeInsets.only(left: 20, right: 20, top: 20),
             child: Text(
               'Sign in-up to experience your epic odyssey!',
               style: theme.textTheme.bodyMedium?.copyWith(

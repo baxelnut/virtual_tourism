@@ -644,10 +644,10 @@ packages:
     dependency: "direct main"
     description:
       name: panorama_viewer
-      sha256: "43f3682e4b5ac10a589f0020d43d5a877d3f57a16d579b8f1a4aef73e41b3f2f"
+      sha256: af5106df6abdfe21a2d4b5c5435614de9ba5124e110f852e9f46ee9556d9a78b
       url: "https://pub.dev"
     source: hosted
-    version: "2.0.0"
+    version: "2.0.2"
   path:
     dependency: transitive
     description:

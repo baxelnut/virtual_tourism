@@ -190,8 +190,8 @@ class DestinationOverviewState extends State<DestinationOverview> {
                       widget.destinationData['imagePath'] ?? placeholderPath,
                     ),
                   ),
-                  appBarTitle: widget.destinationData['destinationName'] ??
-                      'No data available',
+                  // appBarTitle: widget.destinationData['destinationName'] ??
+                  //     'No data available',
                 ),
               ),
             );
