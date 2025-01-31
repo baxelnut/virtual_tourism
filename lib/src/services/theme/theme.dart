@@ -7,6 +7,7 @@ ThemeData lightMode = ThemeData(
   colorScheme: const ColorScheme.light(
     primary: Color(0xff1178A1),
     secondary: Color(0xffB43D12),
+    tertiary: Color(0xff151515),
     onPrimary: Color(0xffEFFFFB),
     onSecondary: Color(0xffEFFFFB),
     surface: Color(0xffEFFFFB),
@@ -70,6 +71,7 @@ ThemeData darkMode = ThemeData(
   colorScheme: const ColorScheme.dark(
     primary: Color(0xff1289B4),
     secondary: Color(0xffCE4919),
+    tertiary: Color(0xff151515),
     onPrimary: Color(0xffEFFFFB),
     onSecondary: Color(0xffEFFFFB),
     surface: Color(0xff121212),

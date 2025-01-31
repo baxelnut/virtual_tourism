@@ -1,9 +1,12 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
-import 'package:virtual_tourism/src/app.dart';
 
+import '../../../app.dart';
 import 'auth.dart';
+import 'components/additional_action.dart';
+import 'components/alternative_methods.dart';
+import 'components/auth_button.dart';
+import 'components/header_section.dart';
+import 'components/input_section.dart';
 
 class AuthPage extends StatefulWidget {
   const AuthPage({super.key});
@@ -15,17 +18,14 @@ class AuthPage extends StatefulWidget {
 class _AuthPageState extends State<AuthPage> {
   List<bool> isSelected = [true, false];
   List<String> selectionOps = ['Login', 'Register'];
-  bool obscurial = true;
 
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _confirmPasswordController =
       TextEditingController();
 
-  final Color _absoluteBlack = const Color(0xff121212);
-  final Color _absoluteWhite = const Color(0xffEFFFFB);
-
   final Auth _auth = Auth();
+  bool _isLoading = false;
 
   @override
   void initState() {
@@ -48,6 +48,8 @@ class _AuthPageState extends State<AuthPage> {
   }
 
   void showAlertDialog(BuildContext context, String message) {
+    final theme = Theme.of(context);
+
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -59,7 +61,10 @@ class _AuthPageState extends State<AuthPage> {
               onPressed: () {
                 Navigator.of(context).pop();
               },
-              child: const Text("OK"),
+              child: Text(
+                "OK",
+                style: theme.textTheme.titleMedium,
+              ),
             ),
           ],
         );
@@ -132,419 +137,92 @@ class _AuthPageState extends State<AuthPage> {
     }
   }
 
-  void showForgotPasswordDialog(BuildContext context) {
-    final TextEditingController emailController = TextEditingController();
-
-    showDialog(
-      context: context,
-      builder: (BuildContext dialogContext) {
-        return AlertDialog(
-          title: const Text("Reset Password"),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              const Text(
-                  "Enter your email to receive password reset instructions."),
-              const SizedBox(height: 10),
-              TextField(
-                controller: emailController,
-                decoration: const InputDecoration(
-                  hintText: "Email",
-                  border: OutlineInputBorder(),
-                ),
-              ),
-            ],
-          ),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.of(dialogContext).pop();
-              },
-              child: const Text("Cancel"),
-            ),
-            TextButton(
-              onPressed: () async {
-                String email = emailController.text.trim();
-
-                Navigator.of(dialogContext).pop();
-
-                if (email.isNotEmpty) {
-                  try {
-                    await _auth.resetPassword(email);
-                    if (context.mounted) {
-                      showAlertDialog(
-                          context, "Password reset email sent to $email");
-                    }
-                  } catch (e) {
-                    if (context.mounted) {
-                      showAlertDialog(context, "Error: ${e.toString()}");
-                    }
-                  }
-                } else {
-                  if (context.mounted) {
-                    showAlertDialog(context, "Please enter a valid email.");
-                  }
-                }
-              },
-              child: const Text("Send"),
-            ),
-          ],
-        );
-      },
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
     return Scaffold(
       resizeToAvoidBottomInset: true,
       appBar: AppBar(
-        surfaceTintColor: _absoluteBlack,
-        shadowColor: _absoluteBlack,
-        backgroundColor: _absoluteBlack,
-        foregroundColor: _absoluteWhite,
+        surfaceTintColor: theme.colorScheme.tertiary,
+        shadowColor: theme.colorScheme.tertiary,
+        backgroundColor: theme.colorScheme.tertiary,
+        foregroundColor: theme.colorScheme.onPrimary,
       ),
-      backgroundColor: _absoluteWhite,
-      body: SafeArea(
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-              _headerSection(),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20),
-                child: Column(
-                  children: [
-                    _inputSection(
-                        controller: _emailController,
-                        hintText: 'Email',
-                        icon: Icons.email_rounded),
-                    _inputSection(
-                        controller: _passwordController,
-                        hintText: 'Password',
-                        icon: Icons.lock_rounded),
-                    Visibility(
-                      visible: isSelected[1],
-                      child: _inputSection(
-                          controller: _confirmPasswordController,
-                          hintText: 'Confirm password',
-                          icon: Icons.lock_rounded),
+      backgroundColor: theme.colorScheme.onPrimary,
+      body: Stack(
+        children: [
+          SafeArea(
+            child: SingleChildScrollView(
+              child: Column(
+                children: [
+                  HeaderSection(
+                      isSelected: isSelected,
+                      selectionOps: selectionOps,
+                      switchSelected: switchSelected),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 20),
+                    child: Column(
+                      children: [
+                        InputSection(
+                          controller: _emailController,
+                          hintText: 'Email',
+                          icon: Icons.email_rounded,
+                        ),
+                        InputSection(
+                          controller: _passwordController,
+                          hintText: 'Password',
+                          icon: Icons.lock_rounded,
+                        ),
+                        Visibility(
+                          visible: isSelected[1],
+                          child: InputSection(
+                            controller: _confirmPasswordController,
+                            hintText: 'Confirm password',
+                            icon: Icons.lock_rounded,
+                          ),
+                        ),
+                        AdditionalAction(
+                          isSelected: isSelected,
+                          switchSelected: switchSelected,
+                        ),
+                        const SizedBox(height: 20),
+                        AuthButton(
+                          isSelected: isSelected,
+                          selectionOps: selectionOps,
+                          handleAuthentication: handleAuthentication,
+                        ),
+                        const SizedBox(height: 20),
+                        AlternativeMethods(
+                          isLoading: _isLoading,
+                          setLoading: (bool value) {
+                            setState(() {
+                              _isLoading = value;
+                            });
+                          },
+                        ),
+                      ],
                     ),
-                    _additionalAction(),
-                    const SizedBox(height: 20),
-                    _authButton(),
-                    const SizedBox(height: 20),
-                    _alternativeMethods(),
-                  ],
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _headerSection() {
-    final ThemeData theme = Theme.of(context);
-    final Size screenSize = MediaQuery.of(context).size;
-
-    return Container(
-      color: _absoluteBlack,
-      width: screenSize.width,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          const SizedBox(height: 20),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20),
-            child: Text(
-              'Go ahead and set up your account',
-              style: theme.textTheme.headlineMedium
-                  ?.copyWith(color: _absoluteWhite),
-            ),
-          ),
-          const SizedBox(height: 10),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20),
-            child: Text(
-              'Sign in-up to experience your epic odyssey!',
-              style:
-                  theme.textTheme.bodyMedium?.copyWith(color: _absoluteWhite),
-            ),
-          ),
-          const SizedBox(height: 20),
-          Container(
-            width: screenSize.width,
-            height: 100,
-            decoration: BoxDecoration(
-                color: _absoluteWhite,
-                borderRadius: const BorderRadius.only(
-                    topLeft: Radius.circular(40),
-                    topRight: Radius.circular(40))),
-            child: Center(child: _toggleButton(isSelected: isSelected)),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _toggleButton({required List<bool> isSelected}) {
-    final ThemeData theme = Theme.of(context);
-    final Size screenSize = MediaQuery.of(context).size;
-
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 16),
-      child: ToggleButtons(
-        isSelected: isSelected,
-        borderWidth: 0,
-        borderColor: Colors.transparent,
-        selectedBorderColor: Colors.transparent,
-        disabledBorderColor: Colors.transparent,
-        color: Colors.transparent,
-        fillColor: Colors.transparent,
-        borderRadius: BorderRadius.circular(30),
-        onPressed: (int index) => switchSelected(index),
-        children: [
-          for (int i = 0; i < selectionOps.length; i++)
-            Container(
-              color: _absoluteBlack.withOpacity(0.3),
-              child: Padding(
-                padding: const EdgeInsets.all(5),
-                child: Container(
-                  width: screenSize.width / 2.5,
-                  alignment: Alignment.center,
-                  decoration: BoxDecoration(
-                    color: isSelected[i] ? _absoluteWhite : Colors.transparent,
-                    borderRadius: BorderRadius.circular(30),
                   ),
-                  child: Padding(
-                    padding: const EdgeInsets.all(10),
-                    child: Text(
-                      selectionOps[i],
-                      style: theme.textTheme.bodyLarge?.copyWith(
-                        color: _absoluteBlack,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
+                ],
+              ),
+            ),
+          ),
+          if (_isLoading)
+            Container(
+              color: theme.colorScheme.onPrimary.withOpacity(0.5),
+              child: Center(
+                child: SizedBox(
+                  width: 50,
+                  height: 50,
+                  child: CircularProgressIndicator(
+                    strokeWidth: 5,
+                    color: theme.colorScheme.primary,
                   ),
                 ),
               ),
             ),
         ],
-      ),
-    );
-  }
-
-  Widget _inputSection({
-    required TextEditingController controller,
-    required String hintText,
-    required IconData icon,
-  }) {
-    final ThemeData theme = Theme.of(context);
-
-    return Padding(
-      padding: const EdgeInsets.only(top: 20),
-      child: ListTile(
-        dense: true,
-        shape: RoundedRectangleBorder(
-            side: BorderSide(color: _absoluteBlack.withOpacity(0.5), width: 1),
-            borderRadius: BorderRadius.circular(15)),
-        leading: Icon(
-          icon,
-          color: _absoluteBlack,
-          size: 20,
-        ),
-        title: TextField(
-          controller: controller,
-          obscureText:
-              hintText.toLowerCase().contains('password') ? obscurial : false,
-          style: theme.textTheme.bodyLarge
-              ?.copyWith(color: _absoluteBlack, fontWeight: FontWeight.bold),
-          decoration: InputDecoration(
-            border: InputBorder.none,
-            hintText: hintText,
-            hintStyle: theme.textTheme.bodyLarge?.copyWith(
-              color: _absoluteBlack,
-            ),
-          ),
-        ),
-        trailing: Visibility(
-          visible: hintText.toLowerCase().contains('password'),
-          child: GestureDetector(
-            onTap: () {
-              setState(() {
-                obscurial = !obscurial;
-              });
-            },
-            child: Icon(
-              obscurial
-                  ? Icons.visibility_off_rounded
-                  : Icons.visibility_rounded,
-              color: _absoluteBlack,
-              size: 20,
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _additionalAction() {
-    final ThemeData theme = Theme.of(context);
-
-    return Padding(
-      padding: const EdgeInsets.only(top: 20),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          GestureDetector(
-            onTap: () {
-              int index = isSelected[0] ? 1 : 0;
-              switchSelected(index);
-            },
-            child: Text(
-              isSelected[0]
-                  ? "Don't have an account?"
-                  : "Already have an account?",
-              style: theme.textTheme.labelMedium?.copyWith(
-                  fontWeight: FontWeight.bold, color: _absoluteBlack),
-            ),
-          ),
-          GestureDetector(
-            onTap: () {
-              showForgotPasswordDialog(context);
-            },
-            child: Text(
-              isSelected[0] ? 'Forgot Password?' : '',
-              style: theme.textTheme.labelMedium?.copyWith(
-                  fontWeight: FontWeight.bold,
-                  color: _absoluteBlack,
-                  decoration: TextDecoration.underline),
-            ),
-          )
-        ],
-      ),
-    );
-  }
-
-  Widget _authButton() {
-    final ThemeData theme = Theme.of(context);
-    final Size screenSize = MediaQuery.of(context).size;
-    return ElevatedButton(
-        style: ElevatedButton.styleFrom(
-            fixedSize: Size(screenSize.width, 50),
-            backgroundColor: theme.colorScheme.primary),
-        onPressed: () => handleAuthentication(context),
-        child: Text(
-          isSelected[0] ? selectionOps[0] : selectionOps[1],
-          style: theme.textTheme.bodyLarge
-              ?.copyWith(fontWeight: FontWeight.bold, color: _absoluteWhite),
-        ));
-  }
-
-  Widget _alternativeMethods() {
-    final ThemeData theme = Theme.of(context);
-    final Size screenSize = MediaQuery.of(context).size;
-
-    return Column(
-      children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            Container(
-                height: 1, width: screenSize.width / 5, color: _absoluteBlack),
-            Text(
-              'OR',
-              style:
-                  theme.textTheme.bodyMedium?.copyWith(color: _absoluteBlack),
-            ),
-            Container(
-                height: 1, width: screenSize.width / 5, color: _absoluteBlack),
-          ],
-        ),
-        const SizedBox(height: 10),
-        Wrap(
-          spacing: 20,
-          runSpacing: 5,
-          alignment: WrapAlignment.spaceEvenly,
-          children: [
-            _methodButton(methodName: 'Google'),
-            _methodButton(methodName: 'Facebook'),
-            _methodButton(methodName: 'Apple'),
-          ],
-        ),
-        const SizedBox(height: 20),
-      ],
-    );
-  }
-
-  Widget _methodButton({
-    required String methodName,
-  }) {
-    final ThemeData theme = Theme.of(context);
-
-    return ElevatedButton.icon(
-      style: ElevatedButton.styleFrom(
-        backgroundColor: _absoluteWhite,
-        side: BorderSide(
-          width: 1,
-          color: _absoluteBlack.withOpacity(0.5),
-        ),
-      ),
-      onPressed: () async {
-        final BuildContext currentContext = context;
-
-        switch (methodName) {
-          case 'Google':
-            try {
-              User? user = await _auth.signInWithGoogle();
-              if (user != null && currentContext.mounted) {
-                showAlertDialog(
-                    currentContext, 'Successfully signed in with Google');
-                Navigator.of(currentContext).pushReplacement(
-                  MaterialPageRoute(builder: (context) => const MyApp()),
-                );
-              }
-            } catch (e) {
-              if (currentContext.mounted) {
-                showAlertDialog(
-                    currentContext, 'Google Sign-In failed: ${e.toString()}');
-              }
-            }
-            break;
-
-          case 'Facebook':
-            if (currentContext.mounted) {
-              showAlertDialog(
-                  currentContext, 'Facebook Sign-In is Coming Soon');
-            }
-            break;
-
-          case 'Apple':
-            if (currentContext.mounted) {
-              showAlertDialog(currentContext, 'Apple Sign-In is Coming Soon');
-            }
-            break;
-
-          default:
-            if (currentContext.mounted) {
-              showAlertDialog(currentContext, 'Unknown Sign-In method');
-            }
-            break;
-        }
-      },
-      icon: CircleAvatar(
-        backgroundColor: Colors.transparent,
-        child: SvgPicture.asset(
-          'assets/icons/${methodName.toLowerCase()}.svg',
-          width: 25,
-          height: 25,
-        ),
-      ),
-      label: Text(
-        methodName,
-        style: theme.textTheme.bodyLarge
-            ?.copyWith(color: _absoluteBlack, fontWeight: FontWeight.bold),
       ),
     );
   }
