@@ -2,7 +2,6 @@
 
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:virtual_tourism/src/components/content/example_jump.dart';
 
 import '../content/image_screen.dart';
 import '../content/load_image.dart';
@@ -46,9 +45,9 @@ class DestinationOverviewState extends State<DestinationOverview> {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final screenSize = MediaQuery.of(context).size;
-    const placeholderPath =
+    final ThemeData theme = Theme.of(context);
+    final Size screenSize = MediaQuery.of(context).size;
+    const String placeholderPath =
         'https://hellenic.org/wp-content/plugins/elementor/assets/images/placeholder.png';
 
     return Scaffold(
