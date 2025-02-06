@@ -127,7 +127,9 @@ class CardsEmerged extends StatelessWidget {
                         },
                         child: Text(
                           'Visit',
-                          style: theme.textTheme.titleSmall,
+                          style: theme.textTheme.titleSmall?.copyWith(
+                            color: theme.colorScheme.onPrimary,
+                          ),
                         ),
                       ),
                     ),

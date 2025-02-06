@@ -91,7 +91,9 @@ class DestinationOverviewState extends State<DestinationOverview> {
                   ),
                   descriptionView(theme: theme),
                   buildTheTable(),
-                  const ReviewSection(),
+                  ReviewSection(
+                    destinationData: widget.destinationData,
+                  ),
                   SizedBox(height: screenSize.width / 3),
                   if (_isLoading)
                     const Center(
