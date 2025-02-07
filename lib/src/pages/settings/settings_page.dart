@@ -7,7 +7,6 @@ import '../../services/firebase/auth/auth.dart';
 import '../../services/theme/theme.dart';
 import '../../services/theme/theme_provider.dart';
 import 'settings_tiles.dart';
-import 'user_profile.dart';
 
 class SettingsPage extends StatefulWidget {
   const SettingsPage({super.key});
@@ -25,12 +24,6 @@ class _SettingsPageState extends State<SettingsPage> {
 
   void handleOnTap() {
     print('fuck');
-  }
-
-  handleEditProfile() {
-    Navigator.of(context).push(
-      MaterialPageRoute(builder: (context) => const UserProfile()),
-    );
   }
 
   @override

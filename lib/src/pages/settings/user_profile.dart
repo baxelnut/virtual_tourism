@@ -5,7 +5,11 @@ import 'package:flutter/material.dart';
 import '../../services/firebase/api/firebase_api.dart';
 
 class UserProfile extends StatefulWidget {
-  const UserProfile({super.key});
+  final bool isAdmin;
+  const UserProfile({
+    super.key,
+    required this.isAdmin,
+  });
 
   @override
   UserProfileState createState() => UserProfileState();
@@ -51,7 +55,10 @@ class UserProfileState extends State<UserProfile> {
     }
   }
 
-  Future<void> handleProfileClick(BuildContext context, ThemeData theme) async {
+  Future<void> handleProfileClick(
+    BuildContext context,
+    ThemeData theme,
+  ) async {
     if (!mounted) return;
 
     final navigator = Navigator.of(context);
@@ -60,7 +67,8 @@ class UserProfileState extends State<UserProfile> {
     Widget changePhoto() {
       return ElevatedButton.icon(
         style: ElevatedButton.styleFrom(
-            backgroundColor: theme.colorScheme.onSurface),
+          backgroundColor: theme.colorScheme.onSurface,
+        ),
         onPressed: () async {
           Navigator.of(context).pop();
 
@@ -164,7 +172,6 @@ class UserProfileState extends State<UserProfile> {
     final DateTime lastDate = now.subtract(const Duration(days: 365 * 9));
     final DateTime firstDate = now.subtract(const Duration(days: 365 * 100));
 
-    // Ensure initialDate is within the range
     final DateTime initialDate = _selectedBirthday != null &&
             (_selectedBirthday!.isBefore(lastDate) &&
                 _selectedBirthday!.isAfter(firstDate))
@@ -285,9 +292,23 @@ class UserProfileState extends State<UserProfile> {
                       padding: const EdgeInsets.all(12),
                       child: GestureDetector(
                         onTap: () => handleProfileClick(context, theme),
-                        child: CircleAvatar(
-                          radius: 69,
-                          backgroundImage: _getImageProvider(),
+                        child: Stack(
+                          children: [
+                            CircleAvatar(
+                              radius: 69,
+                              backgroundImage: _getImageProvider(),
+                            ),
+                            if (widget.isAdmin)
+                              const Positioned(
+                                bottom: 0,
+                                right: 15,
+                                child: Icon(
+                                  Icons.verified_rounded,
+                                  size: 26,
+                                  color: Colors.blue,
+                                ),
+                              ),
+                          ],
                         ),
                       ),
                     ),

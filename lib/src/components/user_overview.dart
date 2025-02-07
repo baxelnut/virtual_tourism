@@ -1,6 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import '../services/firebase/api/firebase_api.dart';
 import '../services/theme/theme.dart';
 import '../services/theme/theme_provider.dart';
 import '../pages/settings/user_profile.dart';
@@ -21,6 +23,7 @@ class UserOverview extends StatefulWidget {
 
 class _UserOverviewState extends State<UserOverview> {
   final User? user = FirebaseAuth.instance.currentUser;
+  bool isAdmin = false;
 
   handleShowPict() {
     final theme = Theme.of(context);
@@ -47,7 +50,11 @@ class _UserOverviewState extends State<UserOverview> {
 
   handleEditProfile() {
     Navigator.of(context).push(
-      MaterialPageRoute(builder: (context) => const UserProfile()),
+      MaterialPageRoute(
+        builder: (context) => UserProfile(
+          isAdmin: isAdmin,
+        ),
+      ),
     );
   }
 
@@ -67,6 +74,31 @@ class _UserOverviewState extends State<UserOverview> {
       return NetworkImage(user!.photoURL!);
     } else {
       return const AssetImage('assets/profile.png');
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _loadAdminStatus();
+  }
+
+  Future<void> _loadAdminStatus() async {
+    final prefs = await SharedPreferences.getInstance();
+
+    bool cachedAdmin = prefs.getBool('admin_status') ?? false;
+    setState(() {
+      isAdmin = cachedAdmin;
+    });
+
+    final userData = await FirebaseApi().getUserData(user!.uid);
+    bool adminFromFirestore = userData?['admin'] ?? false;
+
+    if (adminFromFirestore != cachedAdmin) {
+      setState(() {
+        isAdmin = adminFromFirestore;
+      });
+      await prefs.setBool('admin_status', adminFromFirestore);
     }
   }
 
@@ -93,12 +125,30 @@ class _UserOverviewState extends State<UserOverview> {
                 ),
               ),
             ),
-            Text(
-              user?.displayName ?? 'username',
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-              style: theme.textTheme.headlineSmall
-                  ?.copyWith(fontWeight: FontWeight.bold),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Text(
+                  user?.displayName ?? 'username',
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: theme.textTheme.headlineSmall
+                      ?.copyWith(fontWeight: FontWeight.bold),
+                ),
+                Visibility(
+                  visible: isAdmin,
+                  child: const SizedBox(width: 8),
+                ),
+                Visibility(
+                  visible: isAdmin,
+                  child: const Icon(
+                    Icons.verified_rounded,
+                    size: 20,
+                    color: Colors.blue,
+                  ),
+                ),
+              ],
             ),
             Text(
               user?.email ?? 'user@email.com',
@@ -167,10 +217,24 @@ class _UserOverviewState extends State<UserOverview> {
               onTap: () {
                 handleShowPict();
               },
-              child: CircleAvatar(
-                backgroundImage: _getImageProvider(),
+              child: Stack(
+                children: [
+                  CircleAvatar(
+                    backgroundImage: _getImageProvider(),
+                  ),
+                  if (isAdmin)
+                    const Positioned(
+                      bottom: 0,
+                      right: 0,
+                      child: Icon(
+                        Icons.verified_rounded,
+                        size: 16,
+                        color: Colors.blue,
+                      ),
+                    ),
+                ],
               ),
-            ),
+            )
           ],
         ),
       );
