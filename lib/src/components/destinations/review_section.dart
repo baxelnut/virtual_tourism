@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'button_donate.dart';
 import 'button_share.dart';
+import 'button_shop.dart';
 import 'button_write_review.dart';
 import 'rating_average.dart';
 import 'rating_indicator_bar.dart';
@@ -23,34 +24,36 @@ class ReviewSection extends StatelessWidget {
 
     final List<int> ratings = [23, 5, 4, 2, 0];
 
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 20),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Padding(
-            padding: const EdgeInsets.only(bottom: 20, top: 50),
-            child: Text(
-              'Rating & Reviews',
-              style: theme.textTheme.headlineSmall,
-            ),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Padding(
+          padding: const EdgeInsets.only(
+            bottom: 20,
+            top: 50,
+            left: 20,
+            right: 20,
           ),
-          _ratingStat(
-            screenSize: screenSize,
-            theme: theme,
-            ratings: ratings,
+          child: Text(
+            'Rating & Reviews',
+            style: theme.textTheme.headlineSmall,
           ),
-          _actionButtons(
-            theme: theme,
-          ),
-          _reviewWidget(
-            numOfComment: '208',
-            screenSize: screenSize,
-            theme: theme,
-            context: context,
-          ),
-        ],
-      ),
+        ),
+        _ratingStat(
+          screenSize: screenSize,
+          theme: theme,
+          ratings: ratings,
+        ),
+        _actionButtons(
+          theme: theme,
+        ),
+        _reviewWidget(
+          numOfComment: '208',
+          screenSize: screenSize,
+          theme: theme,
+          context: context,
+        ),
+      ],
     );
   }
 
@@ -59,28 +62,31 @@ class ReviewSection extends StatelessWidget {
     required ThemeData theme,
     required List<int> ratings,
   }) {
-    return SizedBox(
-      width: screenSize.width,
-      height: 130,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          RatingAverage(
-            ratings: ratings,
-          ),
-          Row(
-            children: [
-              const RatingStars(),
-              const SizedBox(width: 8),
-              RatingIndicatorBar(
-                ratings: ratings,
-              ),
-            ],
-          ),
-          RatingReviewerQty(
-            ratings: ratings,
-          ),
-        ],
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 30),
+      child: SizedBox(
+        width: screenSize.width,
+        height: 130,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            RatingAverage(
+              ratings: ratings,
+            ),
+            Row(
+              children: [
+                const RatingStars(),
+                const SizedBox(width: 8),
+                RatingIndicatorBar(
+                  ratings: ratings,
+                ),
+              ],
+            ),
+            RatingReviewerQty(
+              ratings: ratings,
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -88,12 +94,13 @@ class ReviewSection extends StatelessWidget {
   Widget _actionButtons({
     required ThemeData theme,
   }) {
-    return Padding(
-      padding: const EdgeInsets.only(top: 8, bottom: 12),
+    return SingleChildScrollView(
+      scrollDirection: Axis.horizontal,
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
+          const SizedBox(width: 30),
           const ButtonWriteReview(),
           ButtonShare(
             destinationData: destinationData,
@@ -101,6 +108,10 @@ class ReviewSection extends StatelessWidget {
           ButtonDonate(
             destinationData: destinationData,
           ),
+          ButtonShop(
+            destinationData: destinationData,
+          ),
+          const SizedBox(width: 30),
         ],
       ),
     );
@@ -112,66 +123,69 @@ class ReviewSection extends StatelessWidget {
     required ThemeData theme,
     required BuildContext context,
   }) {
-    return Column(
-      children: [
-        ListTile(
-          title: Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Text(
-                'Reviews',
-                style: theme.textTheme.titleMedium,
-              ),
-              const SizedBox(width: 10),
-              Text(
-                numOfComment,
-                style: theme.textTheme.labelLarge,
-              ),
-            ],
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 30),
+      child: Column(
+        children: [
+          ListTile(
+            title: Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Text(
+                  'Reviews',
+                  style: theme.textTheme.titleMedium,
+                ),
+                const SizedBox(width: 10),
+                Text(
+                  numOfComment,
+                  style: theme.textTheme.labelLarge,
+                ),
+              ],
+            ),
+            subtitle: Text(
+              'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
+              style: theme.textTheme.bodyMedium,
+              maxLines: 3,
+              overflow: TextOverflow.ellipsis,
+            ),
+            trailing: Icon(
+              Icons.more_horiz,
+              color: theme.colorScheme.onSurface,
+              size: 22,
+            ),
+            tileColor: theme.colorScheme.onSurface.withOpacity(0.2),
+            textColor: theme.colorScheme.onSurface,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(16),
+            ),
+            minTileHeight: 100,
+            contentPadding: const EdgeInsets.symmetric(horizontal: 16),
+            onTap: () {
+              showModalBottomSheet(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return SingleChildScrollView(
+                      child: Column(
+                        children: [
+                          const SizedBox(height: 20),
+                          Text(
+                            'Reviews',
+                            style: theme.textTheme.titleLarge,
+                          ),
+                          const SizedBox(height: 12),
+                          Divider(
+                            color: theme.colorScheme.onSurface.withOpacity(0.5),
+                          ),
+                          _commentSection(theme),
+                          const SizedBox(height: 20),
+                        ],
+                      ),
+                    );
+                  });
+            },
           ),
-          subtitle: Text(
-            'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
-            style: theme.textTheme.bodyMedium,
-            maxLines: 3,
-            overflow: TextOverflow.ellipsis,
-          ),
-          trailing: Icon(
-            Icons.more_horiz,
-            color: theme.colorScheme.onSurface,
-            size: 22,
-          ),
-          tileColor: theme.colorScheme.onSurface.withOpacity(0.2),
-          textColor: theme.colorScheme.onSurface,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(16),
-          ),
-          minTileHeight: 100,
-          contentPadding: const EdgeInsets.symmetric(horizontal: 16),
-          onTap: () {
-            showModalBottomSheet(
-                context: context,
-                builder: (BuildContext context) {
-                  return SingleChildScrollView(
-                    child: Column(
-                      children: [
-                        const SizedBox(height: 20),
-                        Text(
-                          'Reviews',
-                          style: theme.textTheme.titleLarge,
-                        ),
-                        const SizedBox(height: 12),
-                        Divider(
-                          color: theme.colorScheme.onSurface.withOpacity(0.5),
-                        ),
-                        _commentSection(theme),
-                        const SizedBox(height: 20),
-                      ],
-                    ),
-                  );
-                });
-          },
-        ),
-      ],
+        ],
+      ),
     );
   }
 

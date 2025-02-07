@@ -1,7 +1,13 @@
 import 'package:flutter/material.dart';
 
-class ButtonWriteReview extends StatelessWidget {
-  const ButtonWriteReview({super.key});
+import '../../pages/shop/shop_page.dart';
+
+class ButtonShop extends StatelessWidget {
+  final Map<String, dynamic> destinationData;
+  const ButtonShop({
+    super.key,
+    required this.destinationData,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -11,7 +17,13 @@ class ButtonWriteReview extends StatelessWidget {
       padding: const EdgeInsets.only(right: 20, top: 8, bottom: 12),
       child: ElevatedButton(
         onPressed: () {
-          print('Write review clicked');
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (context) => ShopPage(
+                destinationData: destinationData,
+              ),
+            ),
+          );
         },
         style: ElevatedButton.styleFrom(
           backgroundColor: theme.colorScheme.primary,
@@ -22,13 +34,13 @@ class ButtonWriteReview extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.end,
           children: [
             Icon(
-              Icons.rate_review_rounded,
+              Icons.shopping_bag_outlined,
               size: 20,
               color: theme.colorScheme.onPrimary,
             ),
             const SizedBox(width: 5),
             Text(
-              'Review',
+              'Shop',
               style: theme.textTheme.bodyMedium?.copyWith(
                 color: theme.colorScheme.onPrimary,
                 fontWeight: FontWeight.bold,

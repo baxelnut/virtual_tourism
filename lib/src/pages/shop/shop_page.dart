@@ -3,7 +3,11 @@ import 'package:flutter/material.dart';
 import 'product_details.dart';
 
 class ShopPage extends StatefulWidget {
-  const ShopPage({super.key});
+  final Map<String, dynamic> destinationData;
+  const ShopPage({
+    super.key,
+    required this.destinationData,
+  });
 
   @override
   State<ShopPage> createState() => _ShopPageState();
@@ -82,10 +86,13 @@ class _ShopPageState extends State<ShopPage> {
                 children: [
                   Center(
                     child: Text(
-                      "Bro's products",
+                      "${widget.destinationData['destinationName'] ?? 'Unknown'}'s\nProducts",
                       style: theme.textTheme.headlineSmall?.copyWith(
                         color: theme.colorScheme.onSurface,
                       ),
+                      textAlign: TextAlign.center,
+                      maxLines: 3,
+                      overflow: TextOverflow.ellipsis,
                     ),
                   ),
                   const SizedBox(height: 20),

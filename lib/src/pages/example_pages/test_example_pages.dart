@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import '../../components/cards/cards_header.dart';
 import '../../services/firebase/api/firebase_api.dart';
 import '../../services/firebase/auth/auth_page.dart';
-import '../shop/shop_page.dart';
 import 'image_storage_test.dart';
 import 'upload_destinations.dart';
 import 'upload_image.dart';
@@ -18,7 +17,6 @@ class TestExamplePages extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Component & Theme Testing'),
-        // backgroundColor: theme.colorScheme.primary,
       ),
       body: SingleChildScrollView(
         child: Padding(
@@ -26,26 +24,6 @@ class TestExamplePages extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // page test
-              // GestureDetector(
-              //   onTap: () async {
-              //     print('Adding user data');
-              //     final user = FirebaseAuth.instance.currentUser;
-              //     await FirebaseApi().addUserData(
-              //       userUid: user!.uid,
-              //       isVerified: user.emailVerified,
-              //       email: user.email!,
-              //     );
-              //     print('User data added');
-              //   },
-              //   child: Container(
-              //     color: Colors.red,
-              //     height: 100,
-              //     width: 200,
-              //     child: Text('add user data'),
-              //   ),
-              // ),
-
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
@@ -156,55 +134,6 @@ class TestExamplePages extends StatelessWidget {
                     ),
                   ),
                 ],
-              ),
-              // component
-              // const Text('UserOverview()'),
-              // const Divider(),
-              // const UserOverview(
-              //   username: '_username_',
-              //   imagePath: '',
-              //   isFull: false,
-              //   email: '',
-              // ),
-              // const UserOverview(
-              //   username: 'bazelnut',
-              //   imagePath: '',
-              //   isFull: false,
-              //   email: '',
-              // ),
-              // const UserOverview(
-              //   username: 'Jeremiah',
-              //   imagePath: '',
-              //   isFull: true,
-              //   email: 'jeremiah_jemeriah@gmail.com',
-              // ),
-              const Text('ChipsComponent()'),
-              const Divider(),
-              // const ChipsComponent(
-              //   listOfThangz: ['Places', 'Conservation', 'News'],
-              // ),
-              const SizedBox(
-                height: 50,
-              ),
-              GestureDetector(
-                onTap: () {
-                  Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (context) => const ShopPage(),
-                    ),
-                  );
-                },
-                child: Container(
-                  width: 100,
-                  height: 100,
-                  color: Colors.blue,
-                  child: const Center(
-                    child: Text(
-                      'shop_page test',
-                      textAlign: TextAlign.center,
-                    ),
-                  ),
-                ),
               ),
               const Text('CardsHeader()'),
               const Divider(),

@@ -164,9 +164,16 @@ class ExampleScreen2State extends State<ExampleJump> {
             ? Container(
                 padding: const EdgeInsets.all(4.0),
                 decoration: const BoxDecoration(
-                    color: Colors.black38,
-                    borderRadius: BorderRadius.all(Radius.circular(4))),
-                child: Center(child: Text(text)),
+                  color: Colors.black38,
+                  borderRadius: BorderRadius.all(
+                    Radius.circular(4),
+                  ),
+                ),
+                child: Center(
+                  child: Text(
+                    text,
+                  ),
+                ),
               )
             : Container(),
       ],
