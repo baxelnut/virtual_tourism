@@ -29,8 +29,33 @@ class Auth {
     required String password,
   }) async {
     try {
-      await _firebaseAuth.signInWithEmailAndPassword(
-          email: email, password: password);
+      UserCredential userCredential =
+          await _firebaseAuth.signInWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
+
+      final User? user = userCredential.user;
+      if (user == null) {
+        throw Exception('User not found after login.');
+      }
+
+      final userData = await _firebaseApi.getUserData(user.uid);
+
+      if (userData == null) {
+        await _firebaseApi.createUserData(
+          userUid: user.uid,
+          isVerified: user.emailVerified,
+          email: user.email,
+          password: password,
+          phoneNumber: user.phoneNumber,
+          username: user.displayName,
+          imageUrl: user.photoURL,
+          admin: false,
+        );
+      } else if (userData['admin'] == null) {
+        await _firebaseApi.updateUserAdminStatus(user.uid, false);
+      }
     } on FirebaseAuthException catch (e) {
       throw Exception(e.message);
     }
@@ -46,6 +71,7 @@ class Auth {
     final String? gender,
     final String? birthday,
     final String? imageUrl,
+    final bool admin = false,
   }) async {
     try {
       UserCredential userCredential = await _firebaseAuth
@@ -62,6 +88,7 @@ class Auth {
         phoneNumber: user.phoneNumber,
         username: user.displayName,
         imageUrl: user.photoURL,
+        admin: false,
       );
     } on FirebaseAuthException catch (e) {
       throw Exception(e.message);
@@ -88,7 +115,11 @@ class Auth {
 
       final User? user = userCredential.user;
 
-      final userData = await _firebaseApi.getUserData(user!.uid);
+      if (user == null) {
+        throw Exception('User not found after sign-in.');
+      }
+
+      final userData = await _firebaseApi.getUserData(user.uid);
 
       if (userData == null) {
         await _firebaseApi.createUserData(
@@ -99,7 +130,10 @@ class Auth {
           phoneNumber: user.phoneNumber,
           username: user.displayName,
           imageUrl: user.photoURL,
+          admin: false,
         );
+      } else if (userData['admin'] == null) {
+        await _firebaseApi.updateUserAdminStatus(user.uid, false);
       }
 
       return user;

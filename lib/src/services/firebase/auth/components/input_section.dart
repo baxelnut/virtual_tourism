@@ -28,7 +28,9 @@ class _InputSectionState extends State<InputSection> {
         dense: true,
         shape: RoundedRectangleBorder(
           side: BorderSide(
-              color: theme.colorScheme.tertiary.withOpacity(0.5), width: 1),
+            color: theme.colorScheme.tertiary.withOpacity(0.5),
+            width: 1,
+          ),
           borderRadius: BorderRadius.circular(15),
         ),
         leading: Icon(

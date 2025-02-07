@@ -1,7 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
-import '../../components/cards/cards_header.dart';
 import '../../services/firebase/api/firebase_api.dart';
 import '../../services/firebase/auth/auth_page.dart';
 import 'image_storage_test.dart';
@@ -17,6 +16,7 @@ class TestExamplePages extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Component & Theme Testing'),
+        // backgroundColor: theme.colorScheme.primary,
       ),
       body: SingleChildScrollView(
         child: Padding(
@@ -135,17 +135,9 @@ class TestExamplePages extends StatelessWidget {
                   ),
                 ],
               ),
-              const Text('CardsHeader()'),
+
               const Divider(),
-              const CardsHeader(
-                cardsTitle: 'Top Picks',
-              ),
-              const CardsHeader(
-                cardsTitle: 'Top Countries',
-              ),
-              const CardsHeader(
-                cardsTitle: 'Popular',
-              ),
+
               // theme
               Container(
                 width: MediaQuery.of(context).size.width,

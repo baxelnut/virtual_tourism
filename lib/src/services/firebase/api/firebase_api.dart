@@ -43,6 +43,7 @@ class FirebaseApi with ChangeNotifier {
     final String? gender,
     final String? birthday,
     final String? imageUrl,
+    final bool? admin,
   }) async {
     _isLoading = true;
     notifyListeners();
@@ -60,6 +61,7 @@ class FirebaseApi with ChangeNotifier {
         'birthday': birthday ?? '',
         'imageUrl': imageUrl ?? '',
         'created': DateTime.now(),
+        'admin': false,
       });
     } catch (e) {
       print('Error creating user data: $e');
@@ -172,6 +174,17 @@ class FirebaseApi with ChangeNotifier {
     } finally {
       _isLoading = false;
       notifyListeners();
+    }
+  }
+
+  Future<void> updateUserAdminStatus(String userUid, bool adminValue) async {
+    try {
+      await _firestore.collection('users').doc(userUid).update({
+        'admin': adminValue,
+      });
+      notifyListeners();
+    } catch (e) {
+      print('Error updating admin status: $e');
     }
   }
 

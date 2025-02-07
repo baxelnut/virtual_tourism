@@ -143,6 +143,7 @@ class _AuthPageState extends State<AuthPage> {
 
     return Scaffold(
       resizeToAvoidBottomInset: true,
+      backgroundColor: theme.colorScheme.onPrimary,
       body: Stack(
         children: [
           SafeArea(
@@ -150,9 +151,10 @@ class _AuthPageState extends State<AuthPage> {
               child: Column(
                 children: [
                   HeaderSection(
-                      isSelected: isSelected,
-                      selectionOps: selectionOps,
-                      switchSelected: switchSelected),
+                    isSelected: isSelected,
+                    selectionOps: selectionOps,
+                    switchSelected: switchSelected,
+                  ),
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 20),
                     child: Column(
