@@ -95,7 +95,9 @@ class ReviewSection extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           const ButtonWriteReview(),
-          const ButtonShare(),
+          ButtonShare(
+            destinationData: destinationData,
+          ),
           ButtonDonate(
             destinationData: destinationData,
           ),

@@ -1,7 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:share_plus/share_plus.dart';
 
 class ButtonShare extends StatelessWidget {
-  const ButtonShare({super.key});
+  final Map<String, dynamic> destinationData;
+  const ButtonShare({
+    super.key,
+    required this.destinationData,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -9,7 +14,11 @@ class ButtonShare extends StatelessWidget {
 
     return ElevatedButton(
       onPressed: () {
-        print('Share clicked');
+        final String destinationName =
+            destinationData['destinationName'] ?? 'Unknown';
+        final String shareText =
+            '🚀 Explore "$destinationName" in VR! 🌍✨\nImmerse yourself in stunning eco-tours and discover nature like never before! 🌿🏕️\n🔗 Try it now!';
+        Share.share(shareText);
       },
       style: ElevatedButton.styleFrom(
         backgroundColor: theme.colorScheme.primary,
