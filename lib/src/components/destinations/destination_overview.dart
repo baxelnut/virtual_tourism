@@ -89,7 +89,9 @@ class DestinationOverviewState extends State<DestinationOverview> {
                     placeholderPath: placeholderPath,
                     screenSize: screenSize,
                   ),
-                  descriptionView(theme: theme),
+                  descriptionView(
+                    theme: theme,
+                  ),
                   buildTheTable(),
                   ReviewSection(
                     destinationData: widget.destinationData,
@@ -145,7 +147,7 @@ class DestinationOverviewState extends State<DestinationOverview> {
               children: [
                 const Spacer(),
                 Text(
-                  widget.destinationData["releaseDate"] ?? "No data",
+                  widget.destinationData["created"] ?? "No data",
                   style: theme.textTheme.labelMedium?.copyWith(
                     color: theme.colorScheme.onPrimary,
                   ),

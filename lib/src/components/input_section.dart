@@ -4,11 +4,13 @@ class InputSection extends StatefulWidget {
   final TextEditingController controller;
   final String hintText;
   final IconData icon;
+  final Color decorationColor;
   const InputSection({
     super.key,
     required this.controller,
     required this.hintText,
     required this.icon,
+    required this.decorationColor,
   });
 
   @override
@@ -28,14 +30,14 @@ class _InputSectionState extends State<InputSection> {
         dense: true,
         shape: RoundedRectangleBorder(
           side: BorderSide(
-            color: theme.colorScheme.tertiary.withOpacity(0.5),
+            color: widget.decorationColor.withOpacity(0.5),
             width: 1,
           ),
           borderRadius: BorderRadius.circular(15),
         ),
         leading: Icon(
           widget.icon,
-          color: theme.colorScheme.tertiary,
+          color: widget.decorationColor,
           size: 20,
         ),
         title: TextField(
@@ -44,14 +46,14 @@ class _InputSectionState extends State<InputSection> {
               ? obscurial
               : false,
           style: theme.textTheme.bodyLarge?.copyWith(
-            color: theme.colorScheme.tertiary,
+            color: widget.decorationColor,
             fontWeight: FontWeight.bold,
           ),
           decoration: InputDecoration(
             border: InputBorder.none,
             hintText: widget.hintText,
             hintStyle: theme.textTheme.bodyLarge?.copyWith(
-              color: theme.colorScheme.tertiary,
+              color: widget.decorationColor,
             ),
           ),
         ),
@@ -67,7 +69,7 @@ class _InputSectionState extends State<InputSection> {
               obscurial
                   ? Icons.visibility_off_rounded
                   : Icons.visibility_rounded,
-              color: theme.colorScheme.tertiary,
+              color: widget.decorationColor,
               size: 20,
             ),
           ),

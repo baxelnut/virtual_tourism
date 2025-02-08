@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -28,6 +29,8 @@ class _UploadImageState extends State<UploadImage> {
 
   final String placeholderPath =
       'https://hellenic.org/wp-content/plugins/elementor/assets/images/placeholder.png';
+
+  final User? user = FirebaseAuth.instance.currentUser;
 
   @override
   void initState() {
@@ -133,12 +136,13 @@ class _UploadImageState extends State<UploadImage> {
                 final description = descriptionController.text;
 
                 FirebaseApi().addDestination(
-                    collections: 'custom_destinations',
-                    category: 'custom_destinations',
-                    subcategory: 'custom_destinations',
-                    destinationName: name,
-                    country: country,
-                    description: description);
+                  collections: 'custom_destinations',
+                  category: 'custom_destinations',
+                  subcategory: 'custom_destinations',
+                  destinationName: name,
+                  country: country,
+                  description: description,
+                );
 
                 Navigator.of(context).pop();
               },

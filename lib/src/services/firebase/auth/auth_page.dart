@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 
 import '../../../app.dart';
+import '../../../components/input_section.dart';
 import 'auth.dart';
 import 'components/additional_action.dart';
 import 'components/alternative_methods.dart';
 import 'components/auth_button.dart';
 import 'components/header_section.dart';
-import 'components/input_section.dart';
 
 class AuthPage extends StatefulWidget {
   const AuthPage({super.key});
@@ -163,11 +163,14 @@ class _AuthPageState extends State<AuthPage> {
                           controller: _emailController,
                           hintText: 'Email',
                           icon: Icons.email_rounded,
+                          decorationColor: theme.colorScheme.tertiary,
+                          
                         ),
                         InputSection(
                           controller: _passwordController,
                           hintText: 'Password',
                           icon: Icons.lock_rounded,
+                          decorationColor: theme.colorScheme.tertiary,
                         ),
                         Visibility(
                           visible: isSelected[1],
@@ -175,6 +178,7 @@ class _AuthPageState extends State<AuthPage> {
                             controller: _confirmPasswordController,
                             hintText: 'Confirm password',
                             icon: Icons.lock_rounded,
+                            decorationColor: theme.colorScheme.tertiary,
                           ),
                         ),
                         AdditionalAction(

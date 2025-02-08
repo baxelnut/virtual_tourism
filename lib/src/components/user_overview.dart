@@ -2,10 +2,12 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+import '../pages/admin/your_content_page.dart';
+import '../pages/settings/user_profile.dart';
 import '../services/firebase/api/firebase_api.dart';
 import '../services/theme/theme.dart';
 import '../services/theme/theme_provider.dart';
-import '../pages/settings/user_profile.dart';
 
 class UserOverview extends StatefulWidget {
   final bool isFull;
@@ -158,18 +160,49 @@ class _UserOverviewState extends State<UserOverview> {
             ),
             Padding(
               padding: const EdgeInsets.all(12),
-              child: ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: theme.colorScheme.secondary,
-                ),
-                onPressed: () {
-                  handleEditProfile();
-                },
-                child: Text(
-                  'Edit Profile',
-                  style: theme.textTheme.bodyLarge
-                      ?.copyWith(color: theme.colorScheme.onSecondary),
-                ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: theme.colorScheme.secondary,
+                    ),
+                    onPressed: () {
+                      handleEditProfile();
+                    },
+                    child: Text(
+                      'Edit profile',
+                      style: theme.textTheme.bodyLarge
+                          ?.copyWith(color: theme.colorScheme.onSecondary),
+                    ),
+                  ),
+                  Visibility(
+                    visible: isAdmin,
+                    child: const SizedBox(
+                      width: 12,
+                    ),
+                  ),
+                  Visibility(
+                    visible: isAdmin,
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: theme.colorScheme.primary,
+                      ),
+                      onPressed: () {
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (context) => const YourContentPage(),
+                          ),
+                        );
+                      },
+                      child: Text(
+                        'Your content',
+                        style: theme.textTheme.bodyLarge
+                            ?.copyWith(color: theme.colorScheme.onPrimary),
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ),
           ],

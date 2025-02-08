@@ -203,22 +203,32 @@ class FirebaseApi with ChangeNotifier {
 
     try {
       await _firestore.collection(collections).doc(docId).set({
+        'category': category,
         'subcategory': subcategory,
         'destinationName': destinationName,
         'country': country,
         'description': description,
         'created': DateTime.now().toString(),
-        'submitted by': user!.displayName,
+        'userName': user!.displayName,
         'userId': user!.uid,
-        'email': user!.email
+        'userEmail': user!.email,
+        'imagePath': '', // placeholder
+        'thumbnailPath': '', // placeholder
       });
 
-      await _storageService.addDestination(
+      final Map<String, String>? urls = await _storageService.addDestination(
         collections: collections,
         category: category,
         subcategory: subcategory,
         imageId: docId,
       );
+
+      if (urls != null) {
+        await _firestore.collection(collections).doc(docId).update({
+          'imagePath': urls['imagePath'],
+          'thumbnailPath': urls['thumbnailPath'],
+        });
+      }
     } catch (e) {
       print('Error adding destination to database: $e');
     } finally {

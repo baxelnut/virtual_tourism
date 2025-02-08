@@ -49,22 +49,17 @@ class StorageService with ChangeNotifier {
 
   // not so useful
   Future<void> uploadImage({
-    required final String ref,
+    required String ref,
   }) async {
     _isUploading = true;
     notifyListeners();
-
     final ImagePicker picker = ImagePicker();
     final XFile? image = await picker.pickImage(source: ImageSource.gallery);
-
     if (image == null) return;
-
     try {
       String fileExtension = image.path.split('.').last;
-
       String filePath = '$ref$fileExtension';
       File file = File(image.path);
-
       await firebaseStorage.ref(filePath).putFile(file);
       String downloadUrl = await firebaseStorage.ref(filePath).getDownloadURL();
       _imageUrls.add(downloadUrl);
@@ -151,7 +146,7 @@ class StorageService with ChangeNotifier {
     return urls;
   }
 
-  Future<void> addDestination({
+  Future<Map<String, String>?> addDestination({
     required final String collections,
     required final String category,
     required final String subcategory,
@@ -163,8 +158,7 @@ class StorageService with ChangeNotifier {
     final ImagePicker picker = ImagePicker();
     final XFile? image = await picker.pickImage(source: ImageSource.gallery);
 
-    if (image == null) return;
-
+    if (image == null) return null;
     try {
       String originalFilePath = '$collections/$category/$subcategory/$imageId';
       String thumbnailFilePath =
@@ -172,17 +166,16 @@ class StorageService with ChangeNotifier {
       File file = File(image.path);
 
       await firebaseStorage.ref(originalFilePath).putFile(file);
+
       String originalDownloadUrl =
           await firebaseStorage.ref(originalFilePath).getDownloadURL();
-
       Uint8List imageBytes = await file.readAsBytes();
       img.Image? originalImage = img.decodeImage(imageBytes);
+
       if (originalImage == null) {
         throw Exception("Failed to decode image.");
       }
-
       img.Image thumbnailImage = img.copyResize(originalImage, width: 300);
-
       int quality = 80;
       int maxSizeInBytes = 500 * 1024;
       Uint8List thumbnailBytes =
@@ -192,23 +185,27 @@ class StorageService with ChangeNotifier {
         quality -= 10;
         thumbnailBytes = img.encodeJpg(thumbnailImage, quality: quality);
       }
-
       final tempDir = await getTemporaryDirectory();
-
       final thumbnailFile = File(
           '${tempDir.path}/${file.path.split('/').last.split('.').first}_thumbnail.jpg');
 
       await thumbnailFile.writeAsBytes(thumbnailBytes);
-
       await firebaseStorage.ref(thumbnailFilePath).putFile(thumbnailFile);
+
       String thumbnailDownloadUrl =
           await firebaseStorage.ref(thumbnailFilePath).getDownloadURL();
 
       _imageUrls.add(originalDownloadUrl);
       _imageUrls.add(thumbnailDownloadUrl);
       notifyListeners();
+
+      return {
+        'imagePath': originalDownloadUrl,
+        'thumbnailPath': thumbnailDownloadUrl,
+      };
     } catch (e) {
       print('Error uploading: $e');
+      return null;
     } finally {
       _isUploading = false;
       notifyListeners();
