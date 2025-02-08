@@ -44,10 +44,7 @@ class CardsEmerged extends StatelessWidget {
             height: screenSize.width / 2,
             decoration: BoxDecoration(
               gradient: const LinearGradient(
-                colors: [
-                  Colors.black,
-                  Colors.transparent,
-                ],
+                colors: [Colors.black, Colors.transparent],
                 begin: Alignment.bottomCenter,
                 end: Alignment.topCenter,
                 stops: [0.0, 1.0],
@@ -81,8 +78,9 @@ class CardsEmerged extends StatelessWidget {
                         // destinationData['country'] ?? 'Unknown Country',
                         overflow: TextOverflow.visible,
                         maxLines: 2,
-                        style: theme.textTheme.labelMedium
-                            ?.copyWith(color: theme.colorScheme.onPrimary),
+                        style: theme.textTheme.labelMedium?.copyWith(
+                          color: theme.colorScheme.onPrimary,
+                        ),
                       ),
                     ],
                   ),

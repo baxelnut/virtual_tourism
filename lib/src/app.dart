@@ -1,19 +1,19 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 
-import 'services/firebase/auth/auth_page.dart';
-import 'services/firebase/auth/verify_email_page.dart';
-import 'services/theme/theme.dart';
-import 'services/theme/theme_provider.dart';
 import 'pages/explore/explore_page.dart';
 import 'pages/home/home_page.dart';
 import 'pages/medals/medals_page.dart';
 import 'pages/settings/settings_page.dart';
 import 'pages/tour/tour_page.dart';
+import 'services/firebase/auth/auth_page.dart';
+import 'services/firebase/auth/verify_email_page.dart';
+import 'services/theme/theme.dart';
+import 'services/theme/theme_provider.dart';
 
 class MyApp extends StatefulWidget {
   const MyApp({
@@ -52,9 +52,10 @@ class _MyAppState extends State<MyApp> {
     final theme = Theme.of(context);
     TextStyle customTextStyle = GoogleFonts.outfit(
       textStyle: TextStyle(
-          fontSize: 16,
-          fontWeight: FontWeight.w600,
-          color: isDark ? const Color(0xffCE4919) : const Color(0xffB43D12)),
+        fontSize: 16,
+        fontWeight: FontWeight.w600,
+        color: isDark ? const Color(0xffCE4919) : const Color(0xffB43D12),
+      ),
     );
 
     return MaterialApp(
@@ -65,12 +66,14 @@ class _MyAppState extends State<MyApp> {
           stream: FirebaseAuth.instance.authStateChanges(),
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
-              return const Center(child: CircularProgressIndicator());
+              return const Center(
+                child: CircularProgressIndicator(),
+              );
             }
             if (snapshot.hasData) {
               final user = FirebaseAuth.instance.currentUser;
               if (user != null && !user.emailVerified) {
-                return const VerifyEmailPage(); // Redirect to VerifyEmailPage if not verified
+                return const VerifyEmailPage();
               } else {
                 switch (pageIndex) {
                   case 0:
@@ -140,37 +143,47 @@ class _MyAppState extends State<MyApp> {
                       gap: 10,
                       tabBackgroundColor: theme.colorScheme.onPrimary,
                       tabActiveBorder: const Border(
-                        top: BorderSide(color: Color(0xffB43D12), width: 1.69),
-                        bottom:
-                            BorderSide(color: Color(0xffB43D12), width: 1.69),
+                        top: BorderSide(
+                          color: Color(0xffB43D12),
+                          width: 1.69,
+                        ),
+                        bottom: BorderSide(
+                          color: Color(0xffB43D12),
+                          width: 1.69,
+                        ),
                       ),
                       activeColor: const Color(0xffB43D12),
                       tabs: [
                         GButton(
-                            icon: Icons.home_rounded,
-                            iconSize: 30,
-                            text: 'Home',
-                            textStyle: customTextStyle),
+                          icon: Icons.home_rounded,
+                          iconSize: 30,
+                          text: 'Home',
+                          textStyle: customTextStyle,
+                        ),
                         GButton(
-                            icon: Icons.tour_rounded,
-                            iconSize: 30,
-                            text: 'Tour',
-                            textStyle: customTextStyle),
+                          icon: Icons.tour_rounded,
+                          iconSize: 30,
+                          text: 'Tour',
+                          textStyle: customTextStyle,
+                        ),
                         GButton(
-                            icon: Icons.travel_explore_rounded,
-                            iconSize: 30,
-                            text: 'Explore',
-                            textStyle: customTextStyle),
+                          icon: Icons.travel_explore_rounded,
+                          iconSize: 30,
+                          text: 'Explore',
+                          textStyle: customTextStyle,
+                        ),
                         GButton(
-                            icon: Icons.military_tech_rounded,
-                            iconSize: 30,
-                            text: 'Medals',
-                            textStyle: customTextStyle),
+                          icon: Icons.military_tech_rounded,
+                          iconSize: 30,
+                          text: 'Medals',
+                          textStyle: customTextStyle,
+                        ),
                         GButton(
-                            icon: Icons.person_2_rounded,
-                            iconSize: 30,
-                            text: 'User',
-                            textStyle: customTextStyle),
+                          icon: Icons.person_2_rounded,
+                          iconSize: 30,
+                          text: 'User',
+                          textStyle: customTextStyle,
+                        ),
                       ],
                     ),
                   ),

@@ -75,14 +75,16 @@ class DestinationOverviewState extends State<DestinationOverview> {
   @override
   void initState() {
     super.initState();
-    String publisherUid = widget.destinationData['userId'];
-    fetchUserInfo(publisherUid, (userInfo) {
-      setState(() {
-        publisherImageUrl = userInfo['imageUrl'] != null
-            ? (userInfo['imageUrl'] as String)
-            : '';
+    String publisherUid = widget.destinationData['userId'] ?? 'Unknown';
+    if (publisherUid == "" || publisherUid == 'Unknown') {
+      fetchUserInfo(publisherUid, (userInfo) {
+        setState(() {
+          publisherImageUrl = userInfo['imageUrl'] != null
+              ? (userInfo['imageUrl'] as String)
+              : '';
+        });
       });
-    });
+    }
   }
 
   @override
@@ -131,9 +133,14 @@ class DestinationOverviewState extends State<DestinationOverview> {
                     placeholderPath: placeholderPath,
                     screenSize: screenSize,
                   ),
-                  publisherInfo(
-                    placeholderPath: placeholderPath,
-                    theme: theme,
+                  Visibility(
+                    visible: widget.destinationData['userId'] != null &&
+                        widget.destinationData['userId'] != '' &&
+                        widget.destinationData['userId'] != 'Unknown',
+                    child: publisherInfo(
+                      placeholderPath: placeholderPath,
+                      theme: theme,
+                    ),
                   ),
                   descriptionView(
                     theme: theme,
@@ -167,7 +174,8 @@ class DestinationOverviewState extends State<DestinationOverview> {
       child: Stack(
         children: [
           LoadImage(
-            imagePath: widget.destinationData["thumbnailPath"].isEmpty
+            imagePath: widget.destinationData["thumbnailPath"] == null ||
+                    widget.destinationData["thumbnailPath"] == ''
                 ? placeholderPath
                 : widget.destinationData["thumbnailPath"],
             width: screenSize.width,
@@ -278,7 +286,7 @@ class DestinationOverviewState extends State<DestinationOverview> {
         ),
         const SizedBox(width: 10),
         Text(
-          widget.destinationData['userName'],
+          widget.destinationData['userName'] ?? 'Unknown',
           style: theme.textTheme.titleLarge,
           maxLines: 1,
           overflow: TextOverflow.ellipsis,

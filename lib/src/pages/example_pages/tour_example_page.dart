@@ -47,6 +47,7 @@ class _TourExamplePageState extends State<TourExamplePage> {
 
   Widget caseStudyDestinations(BuildContext context) {
     final double cardSize = MediaQuery.of(context).size.width / 2;
+    
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 25),
       child: Column(

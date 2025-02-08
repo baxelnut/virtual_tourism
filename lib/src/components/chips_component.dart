@@ -50,7 +50,8 @@ class _ChipsComponentState extends State<ChipsComponent> {
             return ChoiceChip(
               padding: const EdgeInsets.symmetric(vertical: 0),
               selectedColor: theme.colorScheme.secondary,
-              labelStyle: theme.textTheme.bodyLarge?.copyWith(
+              backgroundColor: theme.colorScheme.secondary.withOpacity(0.1),
+              labelStyle: theme.textTheme.bodyMedium?.copyWith(
                 fontWeight: FontWeight.w900,
                 color: isSelected
                     ? theme.colorScheme.onSecondary
@@ -61,7 +62,9 @@ class _ChipsComponentState extends State<ChipsComponent> {
               ),
               label: Padding(
                 padding: const EdgeInsets.all(6),
-                child: Text(widget.listOfThangz[index]),
+                child: Text(
+                  widget.listOfThangz[index],
+                ),
               ),
               selected: isSelected,
               onSelected: (bool selected) {
