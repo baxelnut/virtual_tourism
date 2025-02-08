@@ -167,8 +167,9 @@ class DestinationOverviewState extends State<DestinationOverview> {
       child: Stack(
         children: [
           LoadImage(
-            imagePath:
-                widget.destinationData["thumbnailPath"] ?? placeholderPath,
+            imagePath: widget.destinationData["thumbnailPath"].isEmpty
+                ? placeholderPath
+                : widget.destinationData["thumbnailPath"],
             width: screenSize.width,
             height: screenSize.width / 1.5,
           ),

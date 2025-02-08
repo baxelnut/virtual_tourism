@@ -164,13 +164,16 @@ class _AuthPageState extends State<AuthPage> {
                           hintText: 'Email',
                           icon: Icons.email_rounded,
                           decorationColor: theme.colorScheme.tertiary,
-                          
+                          maxLength: 320,
+                          maxLines: 1,
                         ),
                         InputSection(
                           controller: _passwordController,
                           hintText: 'Password',
                           icon: Icons.lock_rounded,
                           decorationColor: theme.colorScheme.tertiary,
+                          maxLength: 320,
+                          maxLines: 1,
                         ),
                         Visibility(
                           visible: isSelected[1],
@@ -179,6 +182,8 @@ class _AuthPageState extends State<AuthPage> {
                             hintText: 'Confirm password',
                             icon: Icons.lock_rounded,
                             decorationColor: theme.colorScheme.tertiary,
+                            maxLength: 128,
+                            maxLines: 1,
                           ),
                         ),
                         AdditionalAction(

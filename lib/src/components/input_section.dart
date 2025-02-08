@@ -5,12 +5,16 @@ class InputSection extends StatefulWidget {
   final String hintText;
   final IconData icon;
   final Color decorationColor;
+  final int maxLength;
+  final int? maxLines;
   const InputSection({
     super.key,
     required this.controller,
     required this.hintText,
     required this.icon,
     required this.decorationColor,
+    required this.maxLength,
+    required this.maxLines,
   });
 
   @override
@@ -55,7 +59,11 @@ class _InputSectionState extends State<InputSection> {
             hintStyle: theme.textTheme.bodyLarge?.copyWith(
               color: widget.decorationColor,
             ),
+            counterText: "",
+            counter: null,
           ),
+          maxLength: widget.maxLength,
+          maxLines: widget.maxLines,
         ),
         trailing: Visibility(
           visible: widget.hintText.toLowerCase().contains('password'),

@@ -73,7 +73,7 @@ class _InputDropdownState extends State<InputDropdown> {
             return DropdownMenuItem<String>(
               value: item,
               child: SizedBox(
-                width: 120,
+                width: 140,
                 child: Text(
                   item,
                   textAlign: TextAlign.center,
