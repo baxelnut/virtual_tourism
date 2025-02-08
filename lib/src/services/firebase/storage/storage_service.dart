@@ -151,19 +151,25 @@ class StorageService with ChangeNotifier {
     required final String category,
     required final String subcategory,
     required final String imageId,
+    required final String typeShit,
   }) async {
     _isUploading = true;
     notifyListeners();
 
     final ImagePicker picker = ImagePicker();
-    final XFile? image = await picker.pickImage(source: ImageSource.gallery);
+    final XFile? image = await picker.pickImage(
+      source: ImageSource.gallery,
+    );
 
     if (image == null) return null;
     try {
-      String originalFilePath = '$collections/$category/$subcategory/$imageId';
+      String originalFilePath =
+          '$collections/$typeShit/$category/$subcategory/$imageId';
       String thumbnailFilePath =
-          '$collections/$category/$subcategory/${imageId}_thumbnail';
+          '$collections/$typeShit/$category/$subcategory/${imageId}_thumbnail';
+
       File file = File(image.path);
+      int fileSizeInBytes = await file.length();
 
       await firebaseStorage.ref(originalFilePath).putFile(file);
 
@@ -175,16 +181,27 @@ class StorageService with ChangeNotifier {
       if (originalImage == null) {
         throw Exception("Failed to decode image.");
       }
-      img.Image thumbnailImage = img.copyResize(originalImage, width: 300);
+      img.Image thumbnailImage = img.copyResize(
+        originalImage,
+        width: 300,
+      );
+
       int quality = 80;
       int maxSizeInBytes = 500 * 1024;
-      Uint8List thumbnailBytes =
-          img.encodeJpg(thumbnailImage, quality: quality);
+
+      Uint8List thumbnailBytes = img.encodeJpg(
+        thumbnailImage,
+        quality: quality,
+      );
 
       while (thumbnailBytes.length > maxSizeInBytes && quality > 0) {
         quality -= 10;
-        thumbnailBytes = img.encodeJpg(thumbnailImage, quality: quality);
+        thumbnailBytes = img.encodeJpg(
+          thumbnailImage,
+          quality: quality,
+        );
       }
+
       final tempDir = await getTemporaryDirectory();
       final thumbnailFile = File(
           '${tempDir.path}/${file.path.split('/').last.split('.').first}_thumbnail.jpg');
@@ -197,11 +214,13 @@ class StorageService with ChangeNotifier {
 
       _imageUrls.add(originalDownloadUrl);
       _imageUrls.add(thumbnailDownloadUrl);
+
       notifyListeners();
 
       return {
         'imagePath': originalDownloadUrl,
         'thumbnailPath': thumbnailDownloadUrl,
+        'imageSize': '${fileSizeInBytes / 1000000} MB',
       };
     } catch (e) {
       print('Error uploading: $e');

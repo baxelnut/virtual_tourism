@@ -2,6 +2,7 @@
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../content/image_screen.dart';
@@ -72,11 +73,23 @@ class DestinationOverviewState extends State<DestinationOverview> {
     }
   }
 
+  String formatDate(String? dateTimeString, String dateTimeFormat) {
+    if (dateTimeString == null || dateTimeString.isEmpty) return "-";
+    try {
+      DateTime parsedDate = DateTime.parse(dateTimeString);
+      return DateFormat(dateTimeFormat).format(parsedDate);
+    } catch (e) {
+      return "-";
+    }
+  }
+
   @override
   void initState() {
     super.initState();
     String publisherUid = widget.destinationData['userId'] ?? 'Unknown';
-    if (publisherUid == "" || publisherUid == 'Unknown') {
+    if (publisherUid != "" ||
+        publisherUid != 'Unknown' ||
+        widget.destinationData['userId'] != null) {
       fetchUserInfo(publisherUid, (userInfo) {
         setState(() {
           publisherImageUrl = userInfo['imageUrl'] != null
@@ -145,7 +158,10 @@ class DestinationOverviewState extends State<DestinationOverview> {
                   descriptionView(
                     theme: theme,
                   ),
-                  buildTheTable(),
+                  buildTheTable(
+                    theme: theme,
+                    screenSize: screenSize,
+                  ),
                   ReviewSection(
                     destinationData: widget.destinationData,
                   ),
@@ -203,7 +219,10 @@ class DestinationOverviewState extends State<DestinationOverview> {
               children: [
                 const Spacer(),
                 Text(
-                  widget.destinationData["created"] ?? "No data",
+                  formatDate(
+                    widget.destinationData["created"],
+                    "d MMM y",
+                  ),
                   style: theme.textTheme.labelMedium?.copyWith(
                     color: theme.colorScheme.onPrimary,
                   ),
@@ -252,7 +271,6 @@ class DestinationOverviewState extends State<DestinationOverview> {
                   ),
                 ),
               ),
-              // MaterialPageRoute(builder: (context) => const ExampleJump()),
             );
           },
           style: ElevatedButton.styleFrom(
@@ -314,73 +332,62 @@ class DestinationOverviewState extends State<DestinationOverview> {
     );
   }
 
-  Widget buildTheTable() {
-    return SingleChildScrollView(
-      scrollDirection: Axis.horizontal,
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 30),
-        child: DataTable(
-          columnSpacing: 16.0,
-          columns: const <DataColumn>[
-            DataColumn(
-              label: Text(
-                "Release Date",
-              ),
+  Widget buildTheTable({
+    required ThemeData theme,
+    required Size screenSize,
+  }) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 30),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          for (var entry in {
+            "Released": formatDate(
+              widget.destinationData["created"],
+              "E, d MMM y, h:mm a",
             ),
-            DataColumn(
-              label: Text(
-                "Size",
-              ),
-            ),
-            DataColumn(
-              label: Text(
-                "Field of View",
-              ),
-            ),
-            DataColumn(
-              label: Text(
-                "Source",
-              ),
-            ),
-          ],
-          rows: [
-            DataRow(
-              cells: <DataCell>[
-                DataCell(
-                  Text(
-                    widget.destinationData["releaseDate"] ?? "No data",
-                  ),
-                ),
-                DataCell(
-                  Text(
-                    widget.destinationData["size"] ?? "No data",
-                  ),
-                ),
-                DataCell(
-                  Text(
-                    widget.destinationData["fieldOfView"] ?? "No data",
-                  ),
-                ),
-                DataCell(
-                  GestureDetector(
-                    onTap: () {
-                      _launchURL(
-                        widget.destinationData["sourcePath"] ?? "",
-                      );
-                    },
+            "Size": widget.destinationData["imageSize"] ?? "-",
+            "Source": widget.destinationData["source"] ?? ""
+          }.entries)
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 4.0),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  SizedBox(
+                    width: screenSize.width * 0.3,
                     child: Text(
-                      widget.destinationData["sourcePath"] ?? "No data",
+                      entry.key,
                       style: const TextStyle(
-                        color: Colors.blue,
-                        decoration: TextDecoration.underline,
+                        fontWeight: FontWeight.bold,
                       ),
                     ),
                   ),
-                ),
-              ],
+                  SizedBox(
+                    width: screenSize.width / 2,
+                    child: entry.key == "Source"
+                        ? GestureDetector(
+                            onTap: () => _launchURL(entry.value),
+                            child: Text(
+                              entry.value.isNotEmpty ? entry.value : "-",
+                              style: const TextStyle(
+                                color: Colors.blue,
+                                decoration: TextDecoration.underline,
+                              ),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          )
+                        : Text(
+                            entry.value,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                  ),
+                ],
+              ),
             ),
-          ],
-        ),
+        ],
       ),
     );
   }

@@ -164,19 +164,18 @@ class _CreateContentPageState extends State<CreateContentPage> {
         width: screenSize.width,
         child: ElevatedButton(
           onPressed: () {
-            final name = nameController.text;
-            final country = _selectedCountry ?? '';
-            final description = descriptionController.text;
-
             FirebaseApi().addDestination(
               collections: 'verified_user_uploads',
+              typeShit: _selectedType,
+              destinationName: nameController.text,
               category: _selectedCategory,
               subcategory: _selectedSubcategory ?? '',
-              destinationName: name,
-              country: country,
-              description: description,
+              description: descriptionController.text,
+              externalSource: websiteController.text.trim(),
+              address: addressController.text,
+              continent: _selectedContinent,
+              country: _selectedCountry ?? '',
             );
-
             Navigator.of(context).pop();
           },
           style: ElevatedButton.styleFrom(

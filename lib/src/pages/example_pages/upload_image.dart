@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../components/content/image_screen.dart';
-import '../../services/firebase/api/firebase_api.dart';
+// import '../../services/firebase/api/firebase_api.dart';
 import '../../services/firebase/storage/storage_service.dart';
 
 class UploadImage extends StatefulWidget {
@@ -131,18 +131,18 @@ class _UploadImageState extends State<UploadImage> {
             ),
             TextButton(
               onPressed: () {
-                final name = nameController.text;
-                final country = countryController.text;
-                final description = descriptionController.text;
+                // final name = nameController.text;
+                // final country = countryController.text;
+                // final description = descriptionController.text;
 
-                FirebaseApi().addDestination(
-                  collections: 'custom_destinations',
-                  category: 'custom_destinations',
-                  subcategory: 'custom_destinations',
-                  destinationName: name,
-                  country: country,
-                  description: description,
-                );
+                // FirebaseApi().addDestination(
+                //   collections: 'custom_destinations',
+                //   category: 'custom_destinations',
+                //   subcategory: 'custom_destinations',
+                //   destinationName: name,
+                //   country: country,
+                //   description: description,
+                // );
 
                 Navigator.of(context).pop();
               },

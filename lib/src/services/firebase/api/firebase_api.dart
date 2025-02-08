@@ -193,8 +193,12 @@ class FirebaseApi with ChangeNotifier {
     required final String category,
     required final String subcategory,
     required final String destinationName,
+    required final String continent,
     required final String country,
     required final String description,
+    required final String externalSource,
+    required final String typeShit,
+    required final String address,
   }) async {
     _isLoading = true;
     notifyListeners();
@@ -202,32 +206,43 @@ class FirebaseApi with ChangeNotifier {
     String docId = _firestore.collection(collections).doc().id;
 
     try {
-      await _firestore.collection(collections).doc(docId).set({
-        'category': category,
-        'subcategory': subcategory,
-        'destinationName': destinationName,
-        'country': country,
-        'description': description,
-        'created': DateTime.now().toString(),
-        'userName': user!.displayName,
-        'userId': user!.uid,
-        'userEmail': user!.email,
-        'imagePath': '', // placeholder
-        'thumbnailPath': '', // placeholder
-      });
+      await _firestore.collection(collections).doc(docId).set(
+        {
+          'category': category,
+          'subcategory': subcategory,
+          'destinationName': destinationName,
+          'continent': continent,
+          'country': country,
+          'description': description,
+          'created': DateTime.now().toString(),
+          'userName': user!.displayName,
+          'userId': user!.uid,
+          'userEmail': user!.email,
+          'imagePath': '', // placeholder
+          'thumbnailPath': '', // placeholder
+          'imageSize': '', // placeholder
+          'source': externalSource,
+          'type': typeShit,
+          'address': address,
+        },
+      );
 
       final Map<String, String>? urls = await _storageService.addDestination(
         collections: collections,
         category: category,
         subcategory: subcategory,
         imageId: docId,
+        typeShit: typeShit,
       );
 
       if (urls != null) {
-        await _firestore.collection(collections).doc(docId).update({
-          'imagePath': urls['imagePath'],
-          'thumbnailPath': urls['thumbnailPath'],
-        });
+        await _firestore.collection(collections).doc(docId).update(
+          {
+            'imagePath': urls['imagePath'],
+            'thumbnailPath': urls['thumbnailPath'],
+            'imageSize': urls['imageSize'],
+          },
+        );
       }
     } catch (e) {
       print('Error adding destination to database: $e');
