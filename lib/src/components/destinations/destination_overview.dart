@@ -1,5 +1,6 @@
 // ignore_for_file: avoid_print
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -21,6 +22,7 @@ class DestinationOverview extends StatefulWidget {
 
 class DestinationOverviewState extends State<DestinationOverview> {
   bool _isLoading = false;
+  late String publisherImageUrl = '';
 
   void _launchURL(String url) async {
     final Uri uri = Uri.parse(url);
@@ -41,6 +43,46 @@ class DestinationOverviewState extends State<DestinationOverview> {
         _isLoading = false;
       });
     }
+  }
+
+  Future<void> fetchUserInfo(
+      String uid, Function(Map<String, Object>) onUserFetched) async {
+    try {
+      DocumentSnapshot userDoc =
+          await FirebaseFirestore.instance.collection('users').doc(uid).get();
+
+      if (userDoc.exists) {
+        String userImageUrl = userDoc['imageUrl'] != null
+            ? (userDoc['imageUrl'] as String?) ?? ''
+            : '';
+        String userName = userDoc['username'] != null
+            ? (userDoc['username'] as String?) ?? 'No Name'
+            : 'No Name';
+
+        onUserFetched({
+          'imageUrl': userImageUrl,
+          'username': userName,
+          'isAdmin': userDoc['admin'],
+        });
+      } else {
+        print("User not found.");
+      }
+    } catch (e) {
+      print("Error fetching user: $e");
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    String publisherUid = widget.destinationData['userId'];
+    fetchUserInfo(publisherUid, (userInfo) {
+      setState(() {
+        publisherImageUrl = userInfo['imageUrl'] != null
+            ? (userInfo['imageUrl'] as String)
+            : '';
+      });
+    });
   }
 
   @override
@@ -89,6 +131,10 @@ class DestinationOverviewState extends State<DestinationOverview> {
                     placeholderPath: placeholderPath,
                     screenSize: screenSize,
                   ),
+                  publisherInfo(
+                    placeholderPath: placeholderPath,
+                    theme: theme,
+                  ),
                   descriptionView(
                     theme: theme,
                   ),
@@ -121,7 +167,8 @@ class DestinationOverviewState extends State<DestinationOverview> {
       child: Stack(
         children: [
           LoadImage(
-            imagePath: widget.destinationData["imagePath"] ?? placeholderPath,
+            imagePath:
+                widget.destinationData["thumbnailPath"] ?? placeholderPath,
             width: screenSize.width,
             height: screenSize.width / 1.5,
           ),
@@ -215,11 +262,41 @@ class DestinationOverviewState extends State<DestinationOverview> {
     );
   }
 
+  Widget publisherInfo({
+    required ThemeData theme,
+    required String placeholderPath,
+  }) {
+    return Row(
+      children: [
+        const SizedBox(width: 20),
+        CircleAvatar(
+          radius: 16,
+          backgroundImage: NetworkImage(
+            publisherImageUrl.isNotEmpty ? publisherImageUrl : placeholderPath,
+          ),
+        ),
+        const SizedBox(width: 10),
+        Text(
+          widget.destinationData['userName'],
+          style: theme.textTheme.titleLarge,
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
+        ),
+        const SizedBox(width: 10),
+        const Icon(
+          Icons.verified_rounded,
+          size: 20,
+          color: Colors.blue,
+        ),
+      ],
+    );
+  }
+
   Widget descriptionView({
     required ThemeData theme,
   }) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 30),
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 30),
       child: Text(
         widget.destinationData['description'] ?? 'No description available',
         textAlign: TextAlign.left,

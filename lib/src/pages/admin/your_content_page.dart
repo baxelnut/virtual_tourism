@@ -89,6 +89,7 @@ class _YourContentPageState extends State<YourContentPage> {
               searchBar(
                 theme: theme,
               ),
+              const SizedBox(height: 16),
               FutureBuilder<List<Map<String, dynamic>>>(
                 future: _fetchDestinationsFuture,
                 builder: (context, snapshot) {
