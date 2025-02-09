@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import '../../components/input_dropdown.dart';
 import '../../components/input_section.dart';
 import '../../services/firebase/api/firebase_api.dart';
+import 'hotspot_input.dart';
 
 class CreateContentPage extends StatefulWidget {
   final User? user;
@@ -28,6 +29,8 @@ class _CreateContentPageState extends State<CreateContentPage> {
   String? _selectedCountry;
   String _selectedType = "Photographic";
 
+  Map<String, dynamic> _hotspotData = {};
+
   @override
   void initState() {
     super.initState();
@@ -41,6 +44,8 @@ class _CreateContentPageState extends State<CreateContentPage> {
   void dispose() {
     nameController.dispose();
     descriptionController.dispose();
+    websiteController.dispose();
+    addressController.dispose();
     super.dispose();
   }
 
@@ -143,6 +148,18 @@ class _CreateContentPageState extends State<CreateContentPage> {
                   });
                 },
               ),
+              Visibility(
+                visible: _selectedType == "Tour",
+                child: HotspotInput(
+                  onChanged: (data) {
+                    WidgetsBinding.instance.addPostFrameCallback((_) {
+                      setState(() {
+                        _hotspotData = data;
+                      });
+                    });
+                  },
+                ),
+              ),
               _buildSubmitButton(
                 screenSize: screenSize,
                 theme: theme,
@@ -164,26 +181,32 @@ class _CreateContentPageState extends State<CreateContentPage> {
         width: screenSize.width,
         child: ElevatedButton(
           onPressed: () {
-            FirebaseApi().addDestination(
-              collections: 'verified_user_uploads',
-              typeShit: _selectedType,
-              destinationName: nameController.text,
-              category: _selectedCategory,
-              subcategory: _selectedSubcategory ?? '',
-              description: descriptionController.text,
-              externalSource: websiteController.text.trim(),
-              address: addressController.text,
-              continent: _selectedContinent,
-              country: _selectedCountry ?? '',
-            );
-            Navigator.of(context).pop();
+            if (_selectedType == 'Photographic') {
+              FirebaseApi().addDestination(
+                collections: 'verified_user_uploads',
+                typeShit: _selectedType,
+                destinationName: nameController.text,
+                category: _selectedCategory,
+                subcategory: _selectedSubcategory ?? '',
+                description: descriptionController.text,
+                externalSource: websiteController.text.trim(),
+                address: addressController.text,
+                continent: _selectedContinent,
+                country: _selectedCountry ?? '',
+                hotspotData: _hotspotData,
+              );
+              Navigator.of(context).pop();
+            } else if (_selectedType == 'Tour') {
+            } else {
+              Navigator.of(context).pop();
+            }
           },
           style: ElevatedButton.styleFrom(
             backgroundColor: theme.colorScheme.primary,
             padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 12),
           ),
           child: Text(
-            'Upload a photo',
+            _selectedType == "Tour" ? 'Confirm' : 'Upload a photo',
             style: theme.textTheme.bodyMedium?.copyWith(
               color: theme.colorScheme.onPrimary,
               fontWeight: FontWeight.bold,
@@ -194,17 +217,489 @@ class _CreateContentPageState extends State<CreateContentPage> {
     );
   }
 
+  // include: controversial yet legal (at least in some countries) e.g. gambling
+  // exclude: illegal and morally wrong
   Map<String, List<String>> categoryMap = {
-    'Travel': ['Adventure', 'Culture', 'Luxury', 'Budget'],
-    'Food': ['Restaurants', 'Street Food', 'Recipes'],
-    'Lifestyle': ['Fashion', 'Health & Fitness', 'Home & Decor'],
-    'Entertainment': ['Movies', 'Music', 'Art & Events'],
-    'Technology': ['Gadgets', 'Reviews', 'Innovations'],
-    'Sports': ['Football', 'Basketball', 'Tennis', 'Cricket'],
-    'Business': ['Finance', 'Startups', 'Market Trends'],
-    'Education': ['Schools', 'Universities', 'Online Courses'],
-    'Health': ['Nutrition', 'Fitness', 'Wellness'],
-    'Art': ['Painting', 'Sculpture', 'Photography'],
+    'Accessible': [
+      'Inclusive Travel',
+      'Barrier-Free Destinations',
+      'Sensory Friendly Experiences',
+      'Other',
+    ],
+    'Adventure': [
+      'Hiking',
+      'Mountain Climbing',
+      'Bungee Jumping',
+      'Paragliding',
+      'Whitewater Rafting',
+      'Zip-lining',
+      'Caving',
+      'Off-Road Driving',
+      'Extreme Camping',
+      'Other',
+    ],
+    'Agritourism': [
+      'Farm Stays',
+      'Vineyard Tours',
+      'Agro-Tourism Activities',
+      'Orchard Visits',
+      'Ranching Experiences',
+      'Equestrian Tours',
+      'Other',
+    ],
+    'Alternative': [
+      'Slow Travel',
+      'Backpacker Journeys',
+      'Experimental Travel',
+      'Counterculture Experiences',
+      'Nomadic Adventures',
+      'Other',
+    ],
+    'Archaeological': [
+      'Ancient Ruins',
+      'Excavation Sites',
+      'Prehistoric Sites',
+      'Other',
+    ],
+    'Astrotourism': [
+      'Star Gazing',
+      'Observatory Visits',
+      'Meteor Shower Events',
+      'Other',
+    ],
+    'Atomic': [
+      'Nuclear Site Tours',
+      'Atomic Age Museums',
+      'Cold War Relics',
+      'Other',
+    ],
+    'Birth': [
+      'Maternity Tourism',
+      'Postpartum Retreats',
+      'Other',
+    ],
+    'Bookstore': [
+      'Famous Bookstores',
+      'Literary Cafes',
+      'Libraries',
+      'Other',
+    ],
+    'Business': [
+      'Meetings',
+      'Incentives',
+      'Conferences',
+      'Exhibitions',
+      'Corporate Retreats',
+      'Team Building',
+      'Trade Shows',
+      'Other',
+    ],
+    'Casino/Gambling': [
+      'Casino Resorts',
+      'Gambling Cruises',
+      'Betting Halls',
+      'Other',
+    ],
+    'Cave': [
+      'Speleology Tours',
+      'Cave Exploration',
+      'Other',
+    ],
+    'Culinary': [
+      'Food Tours',
+      'Cooking Classes',
+      'Wine Tasting',
+      'Street Food Exploration',
+      'Local Markets',
+      'Gastronomic Experiences',
+      'Other',
+    ],
+    'Cultural': [
+      'Heritage Sites',
+      'Museums',
+      'Festivals',
+      'Art Galleries',
+      'Architecture Tours',
+      'Folk Traditions',
+      'Cultural Immersion',
+      'Local Festivals',
+      'Other',
+    ],
+    'Cycle': [
+      'Bicycle Tours',
+      'Mountain Biking',
+      'Other',
+    ],
+    'Dark': [
+      'Disaster Sites',
+      'War Memorials',
+      'Cemeteries',
+      'Haunted Locations',
+      'Crime Scene Tours',
+      'Other',
+    ],
+    'Dental': [
+      'Affordable Dental Clinics Abroad',
+      'Other',
+    ],
+    'Digital Detox': [
+      'Digital Detox Retreats',
+      'Disconnect & Reconnect Experiences',
+      'Other',
+    ],
+    'Disaster': [
+      'Post-Disaster Tours',
+      'Crisis Region Visits',
+      'Natural Disaster Sites',
+      'Other',
+    ],
+    'Domestic': [
+      'Staycations',
+      'Local Travel',
+      'Regional Attractions',
+      'Other',
+    ],
+    'Drug': [
+      'Cannabis Tourism',
+      'Psychedelic Retreats',
+      'Other',
+    ],
+    'Ecotourism': [
+      'Wildlife Safaris',
+      'Nature Reserves',
+      'Conservation Tours',
+      'Bird Watching',
+      'Nature Trails',
+      'Other',
+    ],
+    'Educational': [
+      'Campus Tours',
+      'Historical Lectures',
+      'Cultural Workshops',
+      'Language Immersion Programs',
+      'Other',
+    ],
+    'Enotourism': [
+      'Wine Tours',
+      'Vineyard Visits',
+      'Wine Festivals',
+      'Other',
+    ],
+    'Extreme': [
+      'Base Jumping',
+      'Wingsuit Flying',
+      'Ice Climbing',
+      'Parkour Tours',
+      'Ice Diving',
+      'Other',
+    ],
+    'Factory Tours': [
+      'Industrial Heritage Tours',
+      'Brewery Tours',
+      'Distillery Tours',
+      'Craft Workshops',
+      'Other',
+    ],
+    'Fashion': [
+      'Fashion Weeks',
+      'Designer Boutiques',
+      'Shopping District Tours',
+      'Other',
+    ],
+    'Festival': [
+      'Music Festivals',
+      'Cultural Festivals',
+      'Food Festivals',
+      'Film Festivals',
+      'Other',
+    ],
+    'Film & TV': [
+      'Film Location Tours',
+      'TV Show Destinations',
+      'Cinema Museums',
+      'Other',
+    ],
+    'Gaming': [
+      'Video Game Conventions',
+      'Esports Arenas',
+      'Retro Gaming Cafes',
+      'Other',
+    ],
+    'Garden': [
+      'Botanical Gardens',
+      'Landscape Parks',
+      'Zen Gardens',
+      'Japanese Gardens',
+      'Other',
+    ],
+    'Genealogy': [
+      'Ancestry Tours',
+      'Heritage Visits',
+      'Family History Research',
+      'Other',
+    ],
+    'Geotourism': [
+      'Geological Site Tours',
+      'Landform Exploration',
+      'Volcano Tours',
+      'Other',
+    ],
+    'Halal': [
+      'Muslim-Friendly Destinations',
+      'Halal Accommodations',
+      'Other',
+    ],
+    'Heritage': [
+      'Historical Landmarks',
+      'World Heritage Sites',
+      'Colonial Towns',
+      'Civil War Sites',
+      'Other',
+    ],
+    'Honeymoon': [
+      'Romantic Getaways',
+      'Couples Retreats',
+      'Other',
+    ],
+    'Hot Springs': [
+      'Thermal Baths',
+      'Geothermal Spas',
+      'Other',
+    ],
+    'Jungle': [
+      'Rainforest Expeditions',
+      'Wild Jungle Tours',
+      'Tropical Adventures',
+      'Other',
+    ],
+    'Justice': [
+      'Revolutionary Tours',
+      'Social Justice Tours',
+      'Political Heritage',
+      'Other',
+    ],
+    'Kosher': [
+      'Jewish-Friendly Destinations',
+      'Kosher Food Tours',
+      'Other',
+    ],
+    'LGBT': [
+      'Gay-Friendly Destinations',
+      'Pride Events',
+      'LGBT History Tours',
+      'Other',
+    ],
+    'Literary': [
+      'Author Birthplaces',
+      'Literary Festivals',
+      'Book Tours',
+      'Other',
+    ],
+    'Medical': [
+      'Cosmetic Surgery',
+      'Fertility Treatments',
+      'Wellness Clinics',
+      'Health Resorts',
+      'Other',
+    ],
+    'Militarism Heritage': [
+      'Battlefields',
+      'Military Museums',
+      'Fort Tours',
+      'Naval History',
+      'Warship Museums',
+      'Other',
+    ],
+    'Motorcycle': [
+      'Motorcycle Rallies',
+      'Scenic Motorcycle Routes',
+      'Other',
+    ],
+    'Music': [
+      'Concert Tours',
+      'Music Festivals',
+      'Live Performances',
+      'Opera Houses',
+      'Jazz Clubs',
+      'Music Museums',
+      'Other',
+    ],
+    'Nautical': [
+      'Cruise Ships',
+      'Yacht Charters',
+      'Sailing Tours',
+      'Island Hopping',
+      'Submarine Tours',
+      'Other',
+    ],
+    'Pop-Culture': [
+      'Film Location Tours',
+      'TV Show Destinations',
+      'Comic Conventions',
+      'Fan Festivals',
+      'Other',
+    ],
+    'Religious': [
+      'Pilgrimages',
+      'Sacred Sites',
+      'Churches',
+      'Mosques',
+      'Temples',
+      'Synagogues',
+      'Shrines',
+      'Monasteries',
+      'Spiritual Retreats',
+      'Other',
+    ],
+    'Road Trip': [
+      'Self-Drive Tours',
+      'Motorhome Adventures',
+      'Other',
+    ],
+    'Rural': [
+      'Village Stays',
+      'Agro-Tourism',
+      'Eco-Lodges',
+      'Countryside Retreats',
+      'Other',
+    ],
+    'Sacred Travel': [
+      'Religious Pilgrimages',
+      'Holy Site Tours',
+      'Spiritual Journeys',
+      'Other',
+    ],
+    'Safaris': [
+      'Wildlife Safaris',
+      'Big Five Tours',
+      'Bird Safaris',
+      'Other',
+    ],
+    'Science & Innovation': [
+      'Science Centers',
+      'Technology Hubs',
+      'Innovation Museums',
+      'Other',
+    ],
+    'Sex': [
+      'Erotic Tourism',
+      'Adult Entertainment',
+      'Burlesque Shows',
+      'Other',
+    ],
+    'Shopping': [
+      'Luxury Shopping',
+      'Outlet Malls',
+      'Traditional Markets',
+      'Flea Markets',
+      'Other',
+    ],
+    'Slum': [
+      'Informal Settlement Tours',
+      'Urban Exploration',
+      'Street Art & Graffiti Tours',
+      'Other',
+    ],
+    'Space': [
+      'Suborbital Flights',
+      'Orbital Experiences',
+      'Lunar Missions',
+      'Zero Gravity Experiences',
+      'Other',
+    ],
+    'Sports': [
+      'Event Tourism',
+      'Adventure Sports',
+      'Golf Tours',
+      'Skiing Holidays',
+      'Motorsports',
+      'Cycling Tours',
+      'Marathon Routes',
+      'Other',
+    ],
+    'Stag Party': [
+      'Bachelor Party Destinations',
+      'Nightlife Tours',
+      'Other',
+    ],
+    'Sustainable': [
+      'Eco-Friendly Tours',
+      'Community-Based Tourism',
+      'Carbon Neutral Travel',
+      'Other',
+    ],
+    'Shark': [
+      'Shark Diving',
+      'Marine Wildlife Tours',
+      'Other',
+    ],
+    'Theme Park': [
+      'Amusement Parks',
+      'Water Parks',
+      'Adventure Parks',
+      'Other',
+    ],
+    'Tolkien': [
+      'Film Set Tours',
+      'Middle-Earth Inspired Destinations',
+      'Other',
+    ],
+    'Train': [
+      'Scenic Rail Journeys',
+      'Historic Train Rides',
+      'Luxury Train Tours',
+      'Other',
+    ],
+    'Vacation': [
+      'Holiday Packages',
+      'Resort Stays',
+      'Family Holidays',
+      'Other',
+    ],
+    'Volunteer': [
+      'Voluntourism',
+      'Community Service Travel',
+      'Disaster Relief Volunteering',
+      'Other',
+    ],
+    'War': [
+      'Conflict Zone Tours',
+      'Military History Tours',
+      'Battlefield Tours',
+      'Other',
+    ],
+    'Water': [
+      'Beach Holidays',
+      'Surfing',
+      'Water Sports',
+      'Diving',
+      'Kayaking',
+      'Other',
+    ],
+    'Wellness': [
+      'Spa Retreats',
+      'Yoga Retreats',
+      'Meditation Retreats',
+      'Thermal Baths',
+      'Other',
+    ],
+    'Wildlife': [
+      'Animal Safaris',
+      'Bird Watching',
+      'Marine Wildlife Tours',
+      'Animal Sanctuaries',
+      'Other',
+    ],
+    'Winter': [
+      'Ski Resorts',
+      'Northern Lights',
+      'Ice Hotels',
+      'Snow Festivals',
+      'Other',
+    ],
+    'Other': [
+      'Other',
+    ],
   };
 
   Map<String, List<String>> countriesMap = {
@@ -422,6 +917,8 @@ class _CreateContentPageState extends State<CreateContentPage> {
       'Tuvalu',
       'Vanuatu'
     ],
-    'Antarctica': ['Antarctica']
+    'Antarctica': [
+      'Antarctica',
+    ],
   };
 }

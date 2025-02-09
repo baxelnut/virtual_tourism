@@ -199,6 +199,7 @@ class FirebaseApi with ChangeNotifier {
     required final String externalSource,
     required final String typeShit,
     required final String address,
+    required final Map<String, dynamic> hotspotData,
   }) async {
     _isLoading = true;
     notifyListeners();
@@ -218,12 +219,13 @@ class FirebaseApi with ChangeNotifier {
           'userName': user!.displayName,
           'userId': user!.uid,
           'userEmail': user!.email,
-          'imagePath': '', // placeholder
-          'thumbnailPath': '', // placeholder
-          'imageSize': '', // placeholder
+          'imagePath': '', // placeholder for original image URL
+          'thumbnailPath': '', // placeholder for thumbnail URL
+          'imageSize': '', // placeholder for image size
           'source': externalSource,
           'type': typeShit,
           'address': address,
+          'hotspotData': hotspotData,
         },
       );
 

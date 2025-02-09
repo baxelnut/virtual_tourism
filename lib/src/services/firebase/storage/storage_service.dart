@@ -157,9 +157,7 @@ class StorageService with ChangeNotifier {
     notifyListeners();
 
     final ImagePicker picker = ImagePicker();
-    final XFile? image = await picker.pickImage(
-      source: ImageSource.gallery,
-    );
+    final XFile? image = await picker.pickImage(source: ImageSource.gallery);
 
     if (image == null) return null;
     try {
@@ -167,60 +165,46 @@ class StorageService with ChangeNotifier {
           '$collections/$typeShit/$category/$subcategory/$imageId';
       String thumbnailFilePath =
           '$collections/$typeShit/$category/$subcategory/${imageId}_thumbnail';
-
       File file = File(image.path);
       int fileSizeInBytes = await file.length();
 
       await firebaseStorage.ref(originalFilePath).putFile(file);
-
       String originalDownloadUrl =
           await firebaseStorage.ref(originalFilePath).getDownloadURL();
+
       Uint8List imageBytes = await file.readAsBytes();
       img.Image? originalImage = img.decodeImage(imageBytes);
-
       if (originalImage == null) {
         throw Exception("Failed to decode image.");
       }
-      img.Image thumbnailImage = img.copyResize(
-        originalImage,
-        width: 300,
-      );
+      img.Image thumbnailImage = img.copyResize(originalImage, width: 300);
 
       int quality = 80;
       int maxSizeInBytes = 500 * 1024;
-
-      Uint8List thumbnailBytes = img.encodeJpg(
-        thumbnailImage,
-        quality: quality,
-      );
+      Uint8List thumbnailBytes =
+          img.encodeJpg(thumbnailImage, quality: quality);
 
       while (thumbnailBytes.length > maxSizeInBytes && quality > 0) {
         quality -= 10;
-        thumbnailBytes = img.encodeJpg(
-          thumbnailImage,
-          quality: quality,
-        );
+        thumbnailBytes = img.encodeJpg(thumbnailImage, quality: quality);
       }
 
       final tempDir = await getTemporaryDirectory();
       final thumbnailFile = File(
           '${tempDir.path}/${file.path.split('/').last.split('.').first}_thumbnail.jpg');
-
       await thumbnailFile.writeAsBytes(thumbnailBytes);
       await firebaseStorage.ref(thumbnailFilePath).putFile(thumbnailFile);
-
       String thumbnailDownloadUrl =
           await firebaseStorage.ref(thumbnailFilePath).getDownloadURL();
 
       _imageUrls.add(originalDownloadUrl);
       _imageUrls.add(thumbnailDownloadUrl);
-
       notifyListeners();
 
       return {
         'imagePath': originalDownloadUrl,
         'thumbnailPath': thumbnailDownloadUrl,
-        'imageSize': '${fileSizeInBytes / 1000000} MB',
+        'imageSize': '${(fileSizeInBytes / 1000000).toStringAsFixed(2)} MB',
       };
     } catch (e) {
       print('Error uploading: $e');
