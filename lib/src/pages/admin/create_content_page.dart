@@ -209,19 +209,21 @@ class _CreateContentPageState extends State<CreateContentPage> {
         child: ElevatedButton(
           onPressed: () {
             if (nameController.text.isNotEmpty) {
-              FirebaseApi().addDestination(
-                collections: 'verified_user_uploads',
-                typeShit: _selectedType,
-                destinationName: nameController.text.trim(),
-                category: _selectedCategory,
-                subcategory: _selectedSubcategory ?? '',
-                description: descriptionController.text.trim(),
-                externalSource: websiteController.text.trim(),
-                address: addressController.text.trim(),
-                continent: _selectedContinent,
-                country: _selectedCountry ?? '',
-                hotspotData: _hotspotData,
-              );
+              if (_selectedType == "Photographic") {
+                FirebaseApi().addDestination(
+                  collections: 'verified_user_uploads',
+                  typeShit: _selectedType,
+                  destinationName: nameController.text.trim(),
+                  category: _selectedCategory,
+                  subcategory: _selectedSubcategory ?? '',
+                  description: descriptionController.text.trim(),
+                  externalSource: websiteController.text.trim(),
+                  address: addressController.text.trim(),
+                  continent: _selectedContinent,
+                  country: _selectedCountry ?? '',
+                  hotspotData: _hotspotData,
+                );
+              }
               Navigator.of(context).pop();
               _showSnackBar("Please wait...");
             } else {

@@ -129,11 +129,13 @@ class _HotspotInputState extends State<HotspotInput> {
     return true;
   }
 
-  void toggleConfirm() {
+  void _onImageUploadComplete(int index) {
     setState(() {
+      _hotspotImages[index] = widget.hotspotData['hotspot$index']['imagePath'];
       isConfirmed = isConfirmEnabled;
     });
     widget.onConfirmChanged(isConfirmed);
+    // print('Updated _hotspotImages[index] ${_hotspotImages[index]}');
   }
 
   final Map<int, String> _hotspotImages = {};
@@ -185,8 +187,8 @@ class _HotspotInputState extends State<HotspotInput> {
               _incrementbutton(),
             ],
           ),
-          Text(isConfirmEnabled.toString()),
-          Text(isConfirmed.toString()),
+          // Text(isConfirmEnabled.toString()),
+          // Text(isConfirmed.toString()),
         ],
       ),
     );
@@ -257,40 +259,6 @@ class _HotspotInputState extends State<HotspotInput> {
     );
   }
 
-  // final ImagePicker _picker = ImagePicker();
-  // final StorageService _storageService = StorageService();
-
-  // Future<void> _pickAndUploadImage(int index) async {
-  //   final XFile? pickedFile =
-  //       await _picker.pickImage(source: ImageSource.gallery);
-  //   if (pickedFile == null) return;
-
-  //   File imageFile = File(pickedFile.path);
-  //   setState(() {
-  //     _hotspotImages[index] = 'uploading';
-  //   });
-
-  //   String? downloadUrl = await _storageService.uploadHotspotImage(
-
-  //     collections: 'verified_user_uploads',
-  //     typeShit: widget.selectedType,
-  //     category: widget.selectedCategory,
-  //     subcategory: widget.selectedCategory,
-  //     imageId: docId,
-  //     hotspotNumber: index + 1,
-  //   );
-
-  //   if (downloadUrl != null) {
-  //     setState(() {
-  //       _hotspotImages[index] = downloadUrl;
-  //     });
-  //   } else {
-  //     setState(() {
-  //       _hotspotImages.remove(index);
-  //     });
-  //   }
-  // }
-
   Widget _pinPointButton({
     required int index,
     required ThemeData theme,
@@ -330,13 +298,13 @@ class _HotspotInputState extends State<HotspotInput> {
               _hotspotImages.remove(index);
             });
           }
-          if (isConfirmEnabled) {
-            toggleConfirm();
+          if (!isConfirmEnabled) {
+            _onImageUploadComplete(index);
           }
         });
-        print('Updated _hotspotImages: $_hotspotImages');
-        print('isConfirmEnabled: $isConfirmEnabled');
-        print('isConfirmed: $isConfirmed');
+        // print('Updated _hotspotImages: $_hotspotImages');
+        // print('isConfirmEnabled: $isConfirmEnabled');
+        // print('isConfirmed: $isConfirmed');
       },
       style: ElevatedButton.styleFrom(
         shape: const CircleBorder(),
