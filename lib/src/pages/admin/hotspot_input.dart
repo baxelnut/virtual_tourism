@@ -1,10 +1,36 @@
 import 'package:flutter/material.dart';
 
+import '../../services/firebase/api/firebase_api.dart';
+
 class HotspotInput extends StatefulWidget {
+  final String collections;
+  final String category;
+  final String subcategory;
+  final String destinationName;
+  final String continent;
+  final String country;
+  final String description;
+  final String externalSource;
+  final String typeShit;
+  final String address;
+  final Map<String, dynamic> hotspotData;
   final ValueChanged<Map<String, dynamic>>? onChanged;
+  final Function(bool) onConfirmChanged;
   const HotspotInput({
     super.key,
+    required this.collections,
+    required this.category,
+    required this.subcategory,
+    required this.destinationName,
+    required this.continent,
+    required this.country,
+    required this.description,
+    required this.externalSource,
+    required this.typeShit,
+    required this.address,
+    required this.hotspotData,
     this.onChanged,
+    required this.onConfirmChanged,
   });
 
   @override
@@ -33,18 +59,35 @@ class _HotspotInputState extends State<HotspotInput> {
   }
 
   void _notifyHotspotData() {
-    Map<String, dynamic> hotspotData = {};
-    hotspotData['hotspotQty'] = _hotspotQty;
+    Map<String, dynamic> hotspotData = {
+      'hotspotQty': _hotspotQty,
+    };
     for (int i = 0; i < _hotspotQty; i++) {
-      int latitude = int.tryParse(_latControllers[i].text.trim()) ?? 0;
-      int longitude = int.tryParse(_lonControllers[i].text.trim()) ?? 0;
-      hotspotData['hotspot${i + 1}'] = {
+      double latitude = double.tryParse(_latControllers[i].text.trim()) ?? 0.0;
+      double longitude = double.tryParse(_lonControllers[i].text.trim()) ?? 0.0;
+      hotspotData['hotspot$i'] = {
         'latitude': latitude,
         'longitude': longitude,
+        'imagePath': widget.hotspotData['hotspot$i']?['imagePath'] ?? '',
+        'thumbnailPath':
+            widget.hotspotData['hotspot$i']?['thumbnailPath'] ?? '',
       };
     }
-    if (widget.onChanged != null) {
-      widget.onChanged!(hotspotData);
+
+    widget.onChanged?.call(hotspotData);
+    _syncHotspotImages();
+    setState(() {
+      isConfirmed = isConfirmEnabled;
+    });
+  }
+
+  void _syncHotspotImages() {
+    _hotspotImages.clear();
+    for (int i = 0; i < _hotspotQty; i++) {
+      String? imagePath = widget.hotspotData['hotspot$i']?['imagePath'];
+      if (imagePath != null && imagePath.isNotEmpty) {
+        _hotspotImages[i] = imagePath;
+      }
     }
   }
 
@@ -53,6 +96,7 @@ class _HotspotInputState extends State<HotspotInput> {
       _hotspotQty++;
       _latControllers.add(TextEditingController());
       _lonControllers.add(TextEditingController());
+      isConfirmed = false;
     });
     _notifyHotspotData();
   }
@@ -65,10 +109,34 @@ class _HotspotInputState extends State<HotspotInput> {
         _lonControllers.last.dispose();
         _latControllers.removeLast();
         _lonControllers.removeLast();
+        _hotspotImages.remove(_hotspotQty);
+        isConfirmed = false;
       });
       _notifyHotspotData();
     }
   }
+
+  bool isConfirmed = false;
+  bool get isConfirmEnabled {
+    if (_hotspotImages.length != _hotspotQty) return false;
+    for (int i = 0; i < _hotspotQty; i++) {
+      if (!_hotspotImages.containsKey(i) ||
+          _hotspotImages[i]!.isEmpty ||
+          _hotspotImages[i] == 'uploading') {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  void toggleConfirm() {
+    setState(() {
+      isConfirmed = isConfirmEnabled;
+    });
+    widget.onConfirmChanged(isConfirmed);
+  }
+
+  final Map<int, String> _hotspotImages = {};
 
   @override
   void dispose() {
@@ -117,6 +185,8 @@ class _HotspotInputState extends State<HotspotInput> {
               _incrementbutton(),
             ],
           ),
+          Text(isConfirmEnabled.toString()),
+          Text(isConfirmed.toString()),
         ],
       ),
     );
@@ -142,9 +212,12 @@ class _HotspotInputState extends State<HotspotInput> {
                 child: TextField(
                   controller: _latControllers[index],
                   keyboardType: TextInputType.number,
-                  decoration: const InputDecoration(
+                  decoration: InputDecoration(
                     labelText: 'Latitude',
-                    border: OutlineInputBorder(
+                    labelStyle: theme.textTheme.bodyLarge?.copyWith(
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    border: const OutlineInputBorder(
                       borderRadius: BorderRadius.all(
                         Radius.circular(12),
                       ),
@@ -158,9 +231,12 @@ class _HotspotInputState extends State<HotspotInput> {
                 child: TextField(
                   controller: _lonControllers[index],
                   keyboardType: TextInputType.number,
-                  decoration: const InputDecoration(
+                  decoration: InputDecoration(
                     labelText: 'Longitude',
-                    border: OutlineInputBorder(
+                    labelStyle: theme.textTheme.bodyLarge?.copyWith(
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    border: const OutlineInputBorder(
                       borderRadius: BorderRadius.all(
                         Radius.circular(12),
                       ),
@@ -171,6 +247,7 @@ class _HotspotInputState extends State<HotspotInput> {
               ),
               const SizedBox(width: 20),
               _pinPointButton(
+                index: index,
                 theme: theme,
               ),
             ],
@@ -180,23 +257,115 @@ class _HotspotInputState extends State<HotspotInput> {
     );
   }
 
+  // final ImagePicker _picker = ImagePicker();
+  // final StorageService _storageService = StorageService();
+
+  // Future<void> _pickAndUploadImage(int index) async {
+  //   final XFile? pickedFile =
+  //       await _picker.pickImage(source: ImageSource.gallery);
+  //   if (pickedFile == null) return;
+
+  //   File imageFile = File(pickedFile.path);
+  //   setState(() {
+  //     _hotspotImages[index] = 'uploading';
+  //   });
+
+  //   String? downloadUrl = await _storageService.uploadHotspotImage(
+
+  //     collections: 'verified_user_uploads',
+  //     typeShit: widget.selectedType,
+  //     category: widget.selectedCategory,
+  //     subcategory: widget.selectedCategory,
+  //     imageId: docId,
+  //     hotspotNumber: index + 1,
+  //   );
+
+  //   if (downloadUrl != null) {
+  //     setState(() {
+  //       _hotspotImages[index] = downloadUrl;
+  //     });
+  //   } else {
+  //     setState(() {
+  //       _hotspotImages.remove(index);
+  //     });
+  //   }
+  // }
+
   Widget _pinPointButton({
+    required int index,
     required ThemeData theme,
   }) {
     return ElevatedButton(
-      onPressed: () {
-        print('fucking work');
+      onPressed: () async {
+        if (widget.destinationName.isEmpty) {
+          _showSnackBar("Title can't be empty.");
+          return;
+        }
+        _showSnackBar("Please wait...");
+        setState(() {
+          _hotspotImages[index] = 'uploading';
+        });
+        String? downloadUrl = await FirebaseApi().addDestination(
+          collections: 'verified_user_uploads',
+          typeShit: widget.typeShit,
+          destinationName: widget.destinationName,
+          category: widget.category,
+          subcategory: widget.subcategory,
+          description: widget.description,
+          externalSource: widget.externalSource,
+          address: widget.address,
+          continent: widget.continent,
+          country: widget.country,
+          hotspotData: widget.hotspotData,
+          hotspotIndex: index,
+        );
+
+        setState(() {
+          if (downloadUrl != null) {
+            setState(() {
+              _hotspotImages[index] = downloadUrl;
+            });
+          } else {
+            setState(() {
+              _hotspotImages.remove(index);
+            });
+          }
+          if (isConfirmEnabled) {
+            toggleConfirm();
+          }
+        });
+        print('Updated _hotspotImages: $_hotspotImages');
+        print('isConfirmEnabled: $isConfirmEnabled');
+        print('isConfirmed: $isConfirmed');
       },
       style: ElevatedButton.styleFrom(
         shape: const CircleBorder(),
-        backgroundColor: theme.colorScheme.secondary,
+        backgroundColor: _hotspotImages[index] == 'uploading'
+            ? theme.colorScheme.onSecondary
+            : _hotspotImages.containsKey(index)
+                ? Colors.green
+                : theme.colorScheme.secondary,
         padding: const EdgeInsets.all(12),
       ),
-      child: Icon(
-        Icons.add_a_photo_rounded,
-        color: theme.colorScheme.onSecondary,
-        size: 24,
-      ),
+      child: _hotspotImages[index] == 'uploading'
+          ? SizedBox(
+              width: 24,
+              height: 24,
+              child: CircularProgressIndicator(
+                color: theme.colorScheme.secondary,
+              ),
+            )
+          : _hotspotImages.containsKey(index)
+              ? Icon(
+                  Icons.remove_red_eye_rounded,
+                  color: theme.colorScheme.onSecondary,
+                  size: 24,
+                )
+              : Icon(
+                  Icons.add_a_photo_rounded,
+                  color: theme.colorScheme.onSecondary,
+                  size: 24,
+                ),
     );
   }
 

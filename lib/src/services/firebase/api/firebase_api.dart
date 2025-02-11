@@ -188,7 +188,7 @@ class FirebaseApi with ChangeNotifier {
     }
   }
 
-  Future<void> addDestination({
+  Future<String?> addDestination({
     required final String collections,
     required final String category,
     required final String subcategory,
@@ -199,14 +199,29 @@ class FirebaseApi with ChangeNotifier {
     required final String externalSource,
     required final String typeShit,
     required final String address,
-    required final Map<String, dynamic> hotspotData,
+    required Map<String, dynamic> hotspotData,
+    final int? hotspotIndex,
   }) async {
     _isLoading = true;
     notifyListeners();
 
-    String docId = _firestore.collection(collections).doc().id;
-
     try {
+      QuerySnapshot querySnapshot = await _firestore
+          .collection(collections)
+          .where('destinationName', isEqualTo: destinationName)
+          .limit(1)
+          .get();
+
+      String? docId;
+      bool isUpdating = false;
+
+      if (querySnapshot.docs.isNotEmpty) {
+        docId = querySnapshot.docs.first.id;
+        isUpdating = true;
+      } else {
+        docId = _firestore.collection(collections).doc().id;
+      }
+
       await _firestore.collection(collections).doc(docId).set(
         {
           'category': category,
@@ -215,7 +230,9 @@ class FirebaseApi with ChangeNotifier {
           'continent': continent,
           'country': country,
           'description': description,
-          'created': DateTime.now().toString(),
+          'created': isUpdating
+              ? FieldValue.serverTimestamp()
+              : DateTime.now().toString(),
           'userName': user!.displayName,
           'userId': user!.uid,
           'userEmail': user!.email,
@@ -227,31 +244,89 @@ class FirebaseApi with ChangeNotifier {
           'address': address,
           'hotspotData': hotspotData,
         },
+        SetOptions(merge: true),
       );
 
-      final Map<String, String>? urls = await _storageService.addDestination(
-        collections: collections,
-        category: category,
-        subcategory: subcategory,
-        imageId: docId,
-        typeShit: typeShit,
-      );
-
-      if (urls != null) {
-        await _firestore.collection(collections).doc(docId).update(
-          {
-            'imagePath': urls['imagePath'],
-            'thumbnailPath': urls['thumbnailPath'],
-            'imageSize': urls['imageSize'],
-          },
+      if (typeShit == "Photographic") {
+        final Map<String, String>? urls = await _storageService.addImage(
+          collections: collections,
+          category: category,
+          subcategory: subcategory,
+          imageId: docId,
+          typeShit: typeShit,
         );
+        if (urls != null) {
+          await _firestore.collection(collections).doc(docId).set(
+            {
+              'imagePath': urls['imagePath'],
+              'thumbnailPath': urls['thumbnailPath'],
+              'imageSize': urls['imageSize'],
+            },
+            SetOptions(merge: true),
+          );
+        }
+      }
+
+      if (typeShit == "Tour") {
+        final Map<String, String>? hotspot =
+            await _storageService.uploadHotspotImage(
+          collections: collections,
+          typeShit: typeShit,
+          category: category,
+          subcategory: subcategory,
+          imageId: docId,
+          hotspotIndex: hotspotIndex!,
+        );
+
+        if (hotspot != null) {
+          hotspotData['hotspot$hotspotIndex'] = {
+            'imagePath': hotspot['imagePath'],
+            'thumbnailPath': hotspot['thumbnailPath'],
+          };
+
+          // print("Updated hotspotData: $hotspotData"); // Debugging step
+
+          String? hotspot0ThumbnailPath;
+          try {
+            DocumentSnapshot snapshot =
+                await _firestore.collection(collections).doc(docId).get();
+
+            if (snapshot.exists) {
+              Map<String, dynamic>? data =
+                  snapshot.data() as Map<String, dynamic>?;
+              if (data != null &&
+                  data.containsKey('hotspotData') &&
+                  data['hotspotData'] is Map &&
+                  data['hotspotData']['hotspot0'] is Map &&
+                  data['hotspotData']['hotspot0']
+                      .containsKey('thumbnailPath')) {
+                hotspot0ThumbnailPath =
+                    data['hotspotData']['hotspot0']['thumbnailPath'];
+              }
+            }
+          } catch (e) {
+            print("Error fetching hotspot0 thumbnailPath: $e");
+          }
+
+          String? finalThumbnailPath =
+              hotspot0ThumbnailPath ?? hotspot['thumbnailPath'];
+
+          await _firestore.collection(collections).doc(docId).set(
+            {
+              'hotspotData': hotspotData,
+              'thumbnailPath': finalThumbnailPath,
+            },
+            SetOptions(merge: true),
+          );
+        }
       }
     } catch (e) {
-      print('Error adding destination to database: $e');
+      print('Error adding/updating destination in database: $e');
     } finally {
       _isLoading = false;
       notifyListeners();
     }
+    return null;
   }
 
   Future<List<Map<String, dynamic>>> fetchDestinations({

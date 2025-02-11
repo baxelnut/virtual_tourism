@@ -80,6 +80,7 @@ class _CreateContentPageState extends State<CreateContentPage> {
                 decorationColor: theme.colorScheme.onSurface,
                 maxLength: 100,
                 maxLines: 1,
+                isReadOnly: false,
               ),
               InputSection(
                 controller: descriptionController,
@@ -88,6 +89,7 @@ class _CreateContentPageState extends State<CreateContentPage> {
                 decorationColor: theme.colorScheme.onSurface,
                 maxLength: 6000,
                 maxLines: null,
+                isReadOnly: nameController.text.isEmpty,
               ),
               InputDropdown(
                 title: 'Category*',
@@ -118,14 +120,16 @@ class _CreateContentPageState extends State<CreateContentPage> {
                 decorationColor: theme.colorScheme.onSurface,
                 maxLength: 253,
                 maxLines: 1,
+                isReadOnly: nameController.text.isEmpty,
               ),
               InputSection(
                 controller: addressController,
-                hintText: 'Address*',
+                hintText: 'Address',
                 icon: Icons.location_on,
                 decorationColor: theme.colorScheme.onSurface,
                 maxLength: 253,
                 maxLines: null,
+                isReadOnly: nameController.text.isEmpty,
               ),
               InputDropdown(
                 title: 'Continent*',
@@ -158,17 +162,40 @@ class _CreateContentPageState extends State<CreateContentPage> {
                       });
                     });
                   },
+                  collections: 'verified_user_uploads',
+                  typeShit: _selectedType,
+                  destinationName: nameController.text.trim(),
+                  category: _selectedCategory,
+                  subcategory: _selectedSubcategory ?? '',
+                  description: descriptionController.text.trim(),
+                  externalSource: websiteController.text.trim(),
+                  address: addressController.text.trim(),
+                  continent: _selectedContinent,
+                  country: _selectedCountry ?? '',
+                  hotspotData: _hotspotData,
+                  onConfirmChanged: updateConfirmState,
                 ),
               ),
-              _buildSubmitButton(
-                screenSize: screenSize,
-                theme: theme,
-              ),
+              (_selectedType == "Tour" && isConfirmedEnabled) ||
+                      _selectedType == "Photographic"
+                  ? _buildSubmitButton(
+                      screenSize: screenSize,
+                      theme: theme,
+                    )
+                  : const SizedBox(height: 40),
             ],
           ),
         ),
       ),
     );
+  }
+
+  bool isConfirmedEnabled = false;
+
+  void updateConfirmState(bool value) {
+    setState(() {
+      isConfirmedEnabled = value;
+    });
   }
 
   Widget _buildSubmitButton({
@@ -181,24 +208,24 @@ class _CreateContentPageState extends State<CreateContentPage> {
         width: screenSize.width,
         child: ElevatedButton(
           onPressed: () {
-            if (_selectedType == 'Photographic') {
+            if (nameController.text.isNotEmpty) {
               FirebaseApi().addDestination(
                 collections: 'verified_user_uploads',
                 typeShit: _selectedType,
-                destinationName: nameController.text,
+                destinationName: nameController.text.trim(),
                 category: _selectedCategory,
                 subcategory: _selectedSubcategory ?? '',
-                description: descriptionController.text,
+                description: descriptionController.text.trim(),
                 externalSource: websiteController.text.trim(),
-                address: addressController.text,
+                address: addressController.text.trim(),
                 continent: _selectedContinent,
                 country: _selectedCountry ?? '',
                 hotspotData: _hotspotData,
               );
               Navigator.of(context).pop();
-            } else if (_selectedType == 'Tour') {
+              _showSnackBar("Please wait...");
             } else {
-              Navigator.of(context).pop();
+              _showSnackBar("Title can't be emtpy.");
             }
           },
           style: ElevatedButton.styleFrom(
@@ -213,6 +240,16 @@ class _CreateContentPageState extends State<CreateContentPage> {
             ),
           ),
         ),
+      ),
+    );
+  }
+
+  void _showSnackBar(String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message),
+        duration: const Duration(seconds: 2),
+        behavior: SnackBarBehavior.floating,
       ),
     );
   }

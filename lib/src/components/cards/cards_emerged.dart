@@ -5,7 +5,6 @@ import '../destinations/destination_overview.dart';
 
 class CardsEmerged extends StatelessWidget {
   final Map<String, dynamic> destinationData;
-
   const CardsEmerged({
     super.key,
     required this.destinationData,

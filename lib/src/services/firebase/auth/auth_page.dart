@@ -166,6 +166,7 @@ class _AuthPageState extends State<AuthPage> {
                           decorationColor: theme.colorScheme.tertiary,
                           maxLength: 320,
                           maxLines: 1,
+                          isReadOnly: false,
                         ),
                         InputSection(
                           controller: _passwordController,
@@ -174,6 +175,7 @@ class _AuthPageState extends State<AuthPage> {
                           decorationColor: theme.colorScheme.tertiary,
                           maxLength: 320,
                           maxLines: 1,
+                          isReadOnly: false,
                         ),
                         Visibility(
                           visible: isSelected[1],
@@ -184,6 +186,7 @@ class _AuthPageState extends State<AuthPage> {
                             decorationColor: theme.colorScheme.tertiary,
                             maxLength: 128,
                             maxLines: 1,
+                            isReadOnly: false,
                           ),
                         ),
                         AdditionalAction(

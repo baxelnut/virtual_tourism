@@ -45,12 +45,14 @@ class _YourContentPageState extends State<YourContentPage> {
 
   Future<String> getThumbnailUrl({
     required String destinationId,
+    required String typeShi,
     required String category,
     required String subcategory,
   }) async {
-    final originalPath = '$collection/$category/$subcategory/$destinationId';
+    final originalPath =
+        '$collection/$typeShi/$category/$subcategory/$destinationId';
     final thumbnailPath =
-        '$collection/$category/$subcategory/${destinationId}_thumbnail';
+        '$collection/$typeShi/$category/$subcategory/${destinationId}_thumbnail';
     try {
       return await FirebaseStorage.instance.ref(thumbnailPath).getDownloadURL();
     } catch (e) {
@@ -72,6 +74,9 @@ class _YourContentPageState extends State<YourContentPage> {
     _fetchDestinationsFuture = fetchDestinations();
   }
 
+  // temporarwawrerereaakontol
+  late String typeShi = 'Photographic';
+
   @override
   Widget build(BuildContext context) {
     final ThemeData theme = Theme.of(context);
@@ -90,6 +95,20 @@ class _YourContentPageState extends State<YourContentPage> {
                 theme: theme,
               ),
               const SizedBox(height: 16),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  Switch(
+                    value: typeShi == "Tour",
+                    onChanged: (bool newValue) {
+                      setState(() {
+                        typeShi = newValue ? "Tour" : "Photographic";
+                      });
+                    },
+                  ),
+                  Text(typeShi),
+                ],
+              ),
               FutureBuilder<List<Map<String, dynamic>>>(
                 future: _fetchDestinationsFuture,
                 builder: (context, snapshot) {
@@ -134,6 +153,7 @@ class _YourContentPageState extends State<YourContentPage> {
                           destinationId: destination['id'],
                           category: destination['category'],
                           subcategory: destination['subcategory'],
+                          typeShi: typeShi,
                         ),
                         builder: (context, imageSnapshot) {
                           if (imageSnapshot.connectionState ==
@@ -158,6 +178,7 @@ class _YourContentPageState extends State<YourContentPage> {
 
                           return YourContentTiles(
                             destinationData: destination,
+                            selectedType: typeShi,
                           );
                         },
                       );
@@ -165,6 +186,7 @@ class _YourContentPageState extends State<YourContentPage> {
                   );
                 },
               ),
+              const SizedBox(height: 50),
             ],
           ),
         ),
@@ -181,8 +203,10 @@ class _YourContentPageState extends State<YourContentPage> {
                 ),
               );
             },
-            child: const Icon(
+            child: Icon(
               Icons.add_rounded,
+              size: 35,
+              color: theme.colorScheme.onPrimary,
             ),
           );
         },

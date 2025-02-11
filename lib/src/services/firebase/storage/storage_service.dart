@@ -146,7 +146,7 @@ class StorageService with ChangeNotifier {
     return urls;
   }
 
-  Future<Map<String, String>?> addDestination({
+  Future<Map<String, String>?> addImage({
     required final String collections,
     required final String category,
     required final String subcategory,
@@ -212,6 +212,71 @@ class StorageService with ChangeNotifier {
     } finally {
       _isUploading = false;
       notifyListeners();
+    }
+  }
+
+  Future<Map<String, String>?> uploadHotspotImage({
+    required String collections,
+    required String typeShit,
+    required String category,
+    required String subcategory,
+    required String imageId,
+    required int hotspotIndex,
+  }) async {
+    final ImagePicker picker = ImagePicker();
+    final XFile? pickedFile =
+        await picker.pickImage(source: ImageSource.gallery);
+
+    if (pickedFile == null) {
+      print('🔥 Error uploading image: null');
+      return null;
+    }
+
+    File imageFile = File(pickedFile.path);
+
+    try {
+      String imagePath =
+          '$collections/$typeShit/$category/$subcategory/${imageId}_$hotspotIndex';
+      String thumbnailPath =
+          '$collections/$typeShit/$category/$subcategory/${imageId}_${hotspotIndex}_thumbnail';
+
+      TaskSnapshot snapshot =
+          await firebaseStorage.ref(imagePath).putFile(imageFile);
+      String originalDownloadUrl = await snapshot.ref.getDownloadURL();
+
+      Uint8List imageBytes = await imageFile.readAsBytes();
+      img.Image? originalImage = img.decodeImage(imageBytes);
+      if (originalImage == null) {
+        throw Exception("Failed to decode image.");
+      }
+
+      img.Image thumbnailImage = img.copyResize(originalImage, width: 300);
+
+      int quality = 80;
+      int maxSizeInBytes = 500 * 1024;
+      Uint8List thumbnailBytes =
+          img.encodeJpg(thumbnailImage, quality: quality);
+
+      while (thumbnailBytes.length > maxSizeInBytes && quality > 0) {
+        quality -= 10;
+        thumbnailBytes = img.encodeJpg(thumbnailImage, quality: quality);
+      }
+
+      final tempDir = await getTemporaryDirectory();
+      final thumbnailFile = File(
+          '${tempDir.path}/${imageFile.path.split('/').last.split('.').first}_thumbnail');
+      await thumbnailFile.writeAsBytes(thumbnailBytes);
+      await firebaseStorage.ref(thumbnailPath).putFile(thumbnailFile);
+      String thumbnailDownloadUrl =
+          await firebaseStorage.ref(thumbnailPath).getDownloadURL();
+
+      return {
+        'imagePath': originalDownloadUrl,
+        'thumbnailPath': thumbnailDownloadUrl,
+      };
+    } catch (e) {
+      print('🔥 Error uploading image: $e');
+      return null;
     }
   }
 }

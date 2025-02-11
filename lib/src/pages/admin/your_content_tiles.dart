@@ -5,9 +5,11 @@ import '../../components/content/load_image.dart';
 
 class YourContentTiles extends StatelessWidget {
   final Map<String, dynamic> destinationData;
+  final String selectedType;
   const YourContentTiles({
     super.key,
     required this.destinationData,
+    required this.selectedType,
   });
 
   @override
@@ -58,11 +60,14 @@ class YourContentTiles extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          Text(
-                            destinationData['destinationName'],
-                            style: theme.textTheme.headlineSmall,
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
+                          SizedBox(
+                            width: 200,
+                            child: Text(
+                              destinationData['destinationName'],
+                              style: theme.textTheme.headlineSmall,
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                            ),
                           ),
                           GestureDetector(
                             onTap: () {},

@@ -11,7 +11,6 @@ import 'review_section.dart';
 
 class DestinationOverview extends StatefulWidget {
   final Map<String, dynamic> destinationData;
-
   const DestinationOverview({
     super.key,
     required this.destinationData,
@@ -47,40 +46,48 @@ class DestinationOverviewState extends State<DestinationOverview> {
   }
 
   Future<void> fetchUserInfo(
-      String uid, Function(Map<String, Object>) onUserFetched) async {
+    String uid,
+    Function(Map<String, Object>) onUserFetched,
+  ) async {
     try {
       DocumentSnapshot userDoc =
           await FirebaseFirestore.instance.collection('users').doc(uid).get();
 
-      if (userDoc.exists) {
-        String userImageUrl = userDoc['imageUrl'] != null
-            ? (userDoc['imageUrl'] as String?) ?? ''
-            : '';
-        String userName = userDoc['username'] != null
-            ? (userDoc['username'] as String?) ?? 'No Name'
-            : 'No Name';
-
-        onUserFetched({
-          'imageUrl': userImageUrl,
-          'username': userName,
-          'isAdmin': userDoc['admin'],
-        });
-      } else {
+      if (!userDoc.exists) {
         print("User not found.");
+        return;
       }
+
+      String userName = userDoc['username'] ?? 'No Name';
+      String userImageUrl = (userDoc['imageUrl'] as String?) ?? '';
+
+      onUserFetched({
+        'imageUrl': userImageUrl,
+        'username': userName,
+        'isAdmin': userDoc['admin'],
+      });
     } catch (e) {
       print("Error fetching user: $e");
     }
   }
 
-  String formatDate(String? dateTimeString, String dateTimeFormat) {
-    if (dateTimeString == null || dateTimeString.isEmpty) return "-";
-    try {
-      DateTime parsedDate = DateTime.parse(dateTimeString);
-      return DateFormat(dateTimeFormat).format(parsedDate);
-    } catch (e) {
+  String formatDate(dynamic dateTime, String dateTimeFormat) {
+    if (dateTime == null) return "-";
+
+    DateTime parsedDate;
+    if (dateTime is Timestamp) {
+      parsedDate = dateTime.toDate();
+    } else if (dateTime is String) {
+      try {
+        parsedDate = DateTime.parse(dateTime);
+      } catch (e) {
+        return "-";
+      }
+    } else {
       return "-";
     }
+
+    return DateFormat(dateTimeFormat).format(parsedDate);
   }
 
   @override
@@ -261,12 +268,19 @@ class DestinationOverviewState extends State<DestinationOverview> {
         width: screenSize.width,
         child: ElevatedButton(
           onPressed: () {
+            print(
+                widget.destinationData["hotspotData"]["hotspot0"]["imagePath"]);
             Navigator.of(context).push(
               MaterialPageRoute(
                 builder: (context) => ImageScreen(
                   image: Image(
                     image: NetworkImage(
-                      widget.destinationData['imagePath'] ?? placeholderPath,
+                      widget.destinationData["type"] == 'Tour'
+                          ? (widget.destinationData["hotspotData"]["hotspot0"]
+                                  ["imagePath"] ??
+                              placeholderPath)
+                          : widget.destinationData["imagePath"].isEmpty ??
+                              placeholderPath,
                     ),
                   ),
                 ),
@@ -342,12 +356,16 @@ class DestinationOverviewState extends State<DestinationOverview> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           for (var entry in {
+            widget.destinationData["type"] == 'Tour' ? 'Hotspots' : 'Size':
+                widget.destinationData["type"] == 'Tour'
+                    ? widget.destinationData["hotspotData"]["hotspotQty"]
+                        .toString()
+                    : widget.destinationData["imageSize"].toString(),
             "Released": formatDate(
               widget.destinationData["created"],
               "E, d MMM y, h:mm a",
             ),
-            "Size": widget.destinationData["imageSize"] ?? "-",
-            "Source": widget.destinationData["source"] ?? ""
+            "Source": widget.destinationData["source"]
           }.entries)
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 4.0),

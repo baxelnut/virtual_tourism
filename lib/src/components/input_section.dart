@@ -7,6 +7,7 @@ class InputSection extends StatefulWidget {
   final Color decorationColor;
   final int maxLength;
   final int? maxLines;
+  final bool isReadOnly;
   const InputSection({
     super.key,
     required this.controller,
@@ -15,6 +16,7 @@ class InputSection extends StatefulWidget {
     required this.decorationColor,
     required this.maxLength,
     required this.maxLines,
+    required this.isReadOnly,
   });
 
   @override
@@ -45,6 +47,7 @@ class _InputSectionState extends State<InputSection> {
           size: 20,
         ),
         title: TextField(
+          readOnly: widget.isReadOnly,
           controller: widget.controller,
           obscureText: widget.hintText.toLowerCase().contains('password')
               ? obscurial
