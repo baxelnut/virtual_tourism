@@ -31,6 +31,23 @@ class _CreateContentPageState extends State<CreateContentPage> {
 
   Map<String, dynamic> _hotspotData = {};
 
+  bool isConfirmedEnabled = false;
+
+  void updateConfirmState(bool value) {
+    setState(() {
+      isConfirmedEnabled = value;
+    });
+  }
+
+  void checkConfirmState() {
+    int uploadedPictures = _hotspotData.length;
+    int requiredPictures = _hotspotData['hotspot_count'] ?? 0;
+
+    setState(() {
+      isConfirmedEnabled = uploadedPictures == requiredPictures;
+    });
+  }
+
   @override
   void initState() {
     super.initState();
@@ -159,6 +176,7 @@ class _CreateContentPageState extends State<CreateContentPage> {
                     WidgetsBinding.instance.addPostFrameCallback((_) {
                       setState(() {
                         _hotspotData = data;
+                        checkConfirmState();
                       });
                     });
                   },
@@ -188,14 +206,6 @@ class _CreateContentPageState extends State<CreateContentPage> {
         ),
       ),
     );
-  }
-
-  bool isConfirmedEnabled = false;
-
-  void updateConfirmState(bool value) {
-    setState(() {
-      isConfirmedEnabled = value;
-    });
   }
 
   Widget _buildSubmitButton({

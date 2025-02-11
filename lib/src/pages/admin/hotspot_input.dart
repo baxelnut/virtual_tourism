@@ -92,6 +92,15 @@ class _HotspotInputState extends State<HotspotInput> {
   }
 
   void _increment() {
+    if (!isConfirmEnabled) {
+      int requiredNumber = _hotspotQty;
+      if (_hotspotQty == 2) {
+        _showSnackBar("Fill Hotspot 1 & 2 first");
+      } else if (_hotspotQty > 2) {
+        _showSnackBar("Fill Hotspot $requiredNumber first");
+      }
+      return;
+    }
     setState(() {
       _hotspotQty++;
       _latControllers.add(TextEditingController());
@@ -134,7 +143,7 @@ class _HotspotInputState extends State<HotspotInput> {
       _hotspotImages[index] = widget.hotspotData['hotspot$index']['imagePath'];
       isConfirmed = isConfirmEnabled;
     });
-    widget.onConfirmChanged(isConfirmed);
+    widget.onConfirmChanged(isConfirmed); 
     // print('Updated _hotspotImages[index] ${_hotspotImages[index]}');
   }
 
