@@ -387,7 +387,7 @@ class DestinationOverviewState extends State<DestinationOverview> {
                         ? GestureDetector(
                             onTap: () => _launchURL(entry.value),
                             child: Text(
-                              entry.value.isNotEmpty ? entry.value : "-",
+                              entry.value ?? "-",
                               style: const TextStyle(
                                 color: Colors.blue,
                                 decoration: TextDecoration.underline,

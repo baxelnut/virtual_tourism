@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../components/content/pin_point_coords.dart';
 import '../../services/firebase/api/firebase_api.dart';
 
 class HotspotInput extends StatefulWidget {
@@ -38,6 +39,9 @@ class HotspotInput extends StatefulWidget {
 }
 
 class _HotspotInputState extends State<HotspotInput> {
+  final String placeholderPath =
+      'https://hellenic.org/wp-content/plugins/elementor/assets/images/placeholder.png';
+
   int _hotspotQty = 2;
   final List<TextEditingController> _latControllers = [];
   final List<TextEditingController> _lonControllers = [];
@@ -143,7 +147,7 @@ class _HotspotInputState extends State<HotspotInput> {
       _hotspotImages[index] = widget.hotspotData['hotspot$index']['imagePath'];
       isConfirmed = isConfirmEnabled;
     });
-    widget.onConfirmChanged(isConfirmed); 
+    widget.onConfirmChanged(isConfirmed);
     // print('Updated _hotspotImages[index] ${_hotspotImages[index]}');
   }
 
@@ -278,49 +282,78 @@ class _HotspotInputState extends State<HotspotInput> {
           _showSnackBar("Title can't be empty.");
           return;
         }
-        _showSnackBar("Please wait...");
-        setState(() {
-          _hotspotImages[index] = 'uploading';
-        });
-        String? downloadUrl = await FirebaseApi().addDestination(
-          collections: 'verified_user_uploads',
-          typeShit: widget.typeShit,
-          destinationName: widget.destinationName,
-          category: widget.category,
-          subcategory: widget.subcategory,
-          description: widget.description,
-          externalSource: widget.externalSource,
-          address: widget.address,
-          continent: widget.continent,
-          country: widget.country,
-          hotspotData: widget.hotspotData,
-          hotspotIndex: index,
-        );
+        if (isConfirmed == true) {
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (context) => PinPointCoords(
+                image: Image(
+                  image: NetworkImage(
+                    widget.typeShit == 'Tour'
+                        ? (widget.hotspotData["hotspot0"]["imagePath"] ??
+                            placeholderPath)
+                        : placeholderPath,
+                  ),
+                ),
+                onCoordinatesSelected: (double latitude, double longitude) {
+                  setState(() {
+                    _latControllers[index].text = latitude.toStringAsFixed(1);
+                    _lonControllers[index].text = longitude.toStringAsFixed(1);
+                  });
+                  _notifyHotspotData();
+                },
+              ),
+            ),
+          );
+        } else {
+          _showSnackBar("Please wait...");
+          setState(() {
+            _hotspotImages[index] = 'uploading';
+          });
+          String? downloadUrl = await FirebaseApi().addDestination(
+            collections: 'verified_user_uploads',
+            typeShit: widget.typeShit,
+            destinationName: widget.destinationName,
+            category: widget.category,
+            subcategory: widget.subcategory,
+            description: widget.description,
+            externalSource: widget.externalSource,
+            address: widget.address,
+            continent: widget.continent,
+            country: widget.country,
+            hotspotData: widget.hotspotData,
+            hotspotIndex: index,
+          );
 
-        setState(() {
-          if (downloadUrl != null) {
-            setState(() {
-              _hotspotImages[index] = downloadUrl;
-            });
-          } else {
-            setState(() {
-              _hotspotImages.remove(index);
-            });
-          }
-          if (!isConfirmEnabled) {
-            _onImageUploadComplete(index);
-          }
-        });
-        // print('Updated _hotspotImages: $_hotspotImages');
-        // print('isConfirmEnabled: $isConfirmEnabled');
-        // print('isConfirmed: $isConfirmed');
+          setState(() {
+            if (downloadUrl != null) {
+              setState(() {
+                _hotspotImages[index] = downloadUrl;
+              });
+            } else {
+              setState(() {
+                _hotspotImages.remove(index);
+              });
+            }
+            if (!isConfirmEnabled) {
+              _onImageUploadComplete(index);
+            }
+          });
+          // print('Updated _hotspotImages: $_hotspotImages');
+          // print('isConfirmEnabled: $isConfirmEnabled');
+          // print('isConfirmed: $isConfirmed');
+        }
       },
       style: ElevatedButton.styleFrom(
         shape: const CircleBorder(),
         backgroundColor: _hotspotImages[index] == 'uploading'
             ? theme.colorScheme.onSecondary
             : _hotspotImages.containsKey(index)
-                ? Colors.green
+                ? (_latControllers[index].text == "0.0" &&
+                            _lonControllers[index].text == "0.0") ||
+                        (_latControllers[index].text == "" &&
+                            _lonControllers[index].text == "")
+                    ? Colors.yellow
+                    : Colors.green
                 : theme.colorScheme.secondary,
         padding: const EdgeInsets.all(12),
       ),
