@@ -30,6 +30,7 @@ class _CreateContentPageState extends State<CreateContentPage> {
   String _selectedType = "Photographic";
 
   Map<String, dynamic> _hotspotData = {};
+  int hotspotQty = 2;
 
   bool isConfirmedEnabled = false;
 
@@ -39,14 +40,20 @@ class _CreateContentPageState extends State<CreateContentPage> {
     });
   }
 
-  void checkConfirmState() {
-    int uploadedPictures = _hotspotData.length;
-    int requiredPictures = _hotspotData['hotspot_count'] ?? 0;
+  // void _updateHotspotQty(int qty) {
+  //   setState(() {
+  //     hotspotQty = qty;
+  //   });
+  // }
 
-    setState(() {
-      isConfirmedEnabled = uploadedPictures == requiredPictures;
-    });
-  }
+  // void checkConfirmState() {
+  //   int uploadedPictures = _hotspotData.length;
+  //   int requiredPictures = hotspotQty;
+
+  //   setState(() {
+  //     isConfirmedEnabled = uploadedPictures == requiredPictures;
+  //   });
+  // }
 
   @override
   void initState() {
@@ -176,7 +183,7 @@ class _CreateContentPageState extends State<CreateContentPage> {
                     WidgetsBinding.instance.addPostFrameCallback((_) {
                       setState(() {
                         _hotspotData = data;
-                        checkConfirmState();
+                        // checkConfirmState();
                       });
                     });
                   },
@@ -192,8 +199,12 @@ class _CreateContentPageState extends State<CreateContentPage> {
                   country: _selectedCountry ?? '',
                   hotspotData: _hotspotData,
                   onConfirmChanged: updateConfirmState,
+                  // onHotspotQtyChanged: _updateHotspotQty,
                 ),
               ),
+              // Text(isConfirmedEnabled.toString()),
+              // Text(_hotspotData.length.toString()),
+              // Text(hotspotQty.toString()),
               (_selectedType == "Tour" && isConfirmedEnabled) ||
                       _selectedType == "Photographic"
                   ? _buildSubmitButton(
