@@ -39,12 +39,15 @@ class HotspotInput extends StatefulWidget {
 }
 
 class _HotspotInputState extends State<HotspotInput> {
+  final FirebaseApi _firebaseApi = FirebaseApi();
   final String placeholderPath =
       'https://hellenic.org/wp-content/plugins/elementor/assets/images/placeholder.png';
 
   int _hotspotQty = 2;
   final List<TextEditingController> _latControllers = [];
   final List<TextEditingController> _lonControllers = [];
+
+  late Map<String, dynamic> updatedHotspot = widget.hotspotData;
 
   @override
   void initState() {
@@ -63,26 +66,20 @@ class _HotspotInputState extends State<HotspotInput> {
   }
 
   void _notifyHotspotData() {
-    Map<String, dynamic> hotspotData = {
-      'hotspotQty': _hotspotQty,
-    };
     for (int i = 0; i < _hotspotQty; i++) {
       double latitude = double.tryParse(_latControllers[i].text.trim()) ?? 0.0;
       double longitude = double.tryParse(_lonControllers[i].text.trim()) ?? 0.0;
-      hotspotData['hotspot$i'] = {
-        'latitude': latitude,
-        'longitude': longitude,
-        'imagePath': widget.hotspotData['hotspot$i']?['imagePath'] ?? '',
-        'thumbnailPath':
-            widget.hotspotData['hotspot$i']?['thumbnailPath'] ?? '',
-      };
-    }
 
-    widget.onChanged?.call(hotspotData);
-    _syncHotspotImages();
-    setState(() {
-      isConfirmed = isConfirmEnabled;
-    });
+      setState(() {
+        updatedHotspot['hotspot$i'] = {
+          'latitude': latitude,
+          'longitude': longitude,
+          'imagePath': widget.hotspotData['hotspot$i']?['imagePath'] ?? '',
+          'thumbnailPath':
+              widget.hotspotData['hotspot$i']?['thumbnailPath'] ?? '',
+        };
+      });
+    }
   }
 
   void _syncHotspotImages() {
@@ -294,12 +291,28 @@ class _HotspotInputState extends State<HotspotInput> {
                         : placeholderPath,
                   ),
                 ),
-                onCoordinatesSelected: (double latitude, double longitude) {
+                onCoordinatesSelected:
+                    (double latitude, double longitude) async {
                   setState(() {
                     _latControllers[index].text = latitude.toStringAsFixed(1);
                     _lonControllers[index].text = longitude.toStringAsFixed(1);
+                    _notifyHotspotData();
                   });
-                  _notifyHotspotData();
+                  await _firebaseApi.addDestination(
+                    collections: 'verified_user_uploads',
+                    typeShit: widget.typeShit,
+                    destinationName: widget.destinationName,
+                    category: widget.category,
+                    subcategory: widget.subcategory,
+                    description: widget.description,
+                    externalSource: widget.externalSource,
+                    address: widget.address,
+                    continent: widget.continent,
+                    country: widget.country,
+                    hotspotData: updatedHotspot,
+                    hotspotIndex: index,
+                    decideCoords: true,
+                  );
                 },
               ),
             ),
@@ -309,7 +322,8 @@ class _HotspotInputState extends State<HotspotInput> {
           setState(() {
             _hotspotImages[index] = 'uploading';
           });
-          String? downloadUrl = await FirebaseApi().addDestination(
+          _notifyHotspotData();
+          String? downloadUrl = await _firebaseApi.addDestination(
             collections: 'verified_user_uploads',
             typeShit: widget.typeShit,
             destinationName: widget.destinationName,
@@ -320,9 +334,15 @@ class _HotspotInputState extends State<HotspotInput> {
             address: widget.address,
             continent: widget.continent,
             country: widget.country,
-            hotspotData: widget.hotspotData,
+            hotspotData: updatedHotspot,
             hotspotIndex: index,
           );
+
+          widget.onChanged?.call(updatedHotspot);
+          _syncHotspotImages();
+          setState(() {
+            isConfirmed = isConfirmEnabled;
+          });
 
           setState(() {
             if (downloadUrl != null) {

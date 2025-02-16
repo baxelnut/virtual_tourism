@@ -201,6 +201,7 @@ class FirebaseApi with ChangeNotifier {
     required final String address,
     required Map<String, dynamic> hotspotData,
     final int? hotspotIndex,
+    final bool? decideCoords,
   }) async {
     _isLoading = true;
     notifyListeners();
@@ -268,55 +269,60 @@ class FirebaseApi with ChangeNotifier {
       }
 
       if (typeShit == "Tour") {
-        final Map<String, String>? hotspot =
-            await _storageService.uploadHotspotImage(
-          collections: collections,
-          typeShit: typeShit,
-          category: category,
-          subcategory: subcategory,
-          imageId: docId,
-          hotspotIndex: hotspotIndex!,
-        );
+        if (decideCoords == false || decideCoords == null) {
+          final Map<String, String>? hotspot =
+              await _storageService.uploadHotspotImage(
+            collections: collections,
+            typeShit: typeShit,
+            category: category,
+            subcategory: subcategory,
+            imageId: docId,
+            hotspotIndex: hotspotIndex!,
+          );
 
-        if (hotspot != null) {
-          hotspotData['hotspot$hotspotIndex'] = {
-            'imagePath': hotspot['imagePath'],
-            'thumbnailPath': hotspot['thumbnailPath'],
-          };
+          if (hotspot != null) {
+            hotspotData['hotspot$hotspotIndex'] = {
+              'imagePath': hotspot['imagePath'],
+              'thumbnailPath': hotspot['thumbnailPath'],
+            };
 
-          // print("Updated hotspotData: $hotspotData"); // Debugging step
+            String? hotspot0ThumbnailPath;
+            try {
+              DocumentSnapshot snapshot =
+                  await _firestore.collection(collections).doc(docId).get();
 
-          String? hotspot0ThumbnailPath;
-          try {
-            DocumentSnapshot snapshot =
-                await _firestore.collection(collections).doc(docId).get();
-
-            if (snapshot.exists) {
-              Map<String, dynamic>? data =
-                  snapshot.data() as Map<String, dynamic>?;
-              if (data != null &&
-                  data.containsKey('hotspotData') &&
-                  data['hotspotData'] is Map &&
-                  data['hotspotData']['hotspot0'] is Map &&
-                  data['hotspotData']['hotspot0']
-                      .containsKey('thumbnailPath')) {
-                hotspot0ThumbnailPath =
-                    data['hotspotData']['hotspot0']['thumbnailPath'];
+              if (snapshot.exists) {
+                Map<String, dynamic>? data =
+                    snapshot.data() as Map<String, dynamic>?;
+                if (data != null &&
+                    data.containsKey('hotspotData') &&
+                    data['hotspotData'] is Map &&
+                    data['hotspotData']['hotspot0'] is Map &&
+                    data['hotspotData']['hotspot0']
+                        .containsKey('thumbnailPath')) {
+                  hotspot0ThumbnailPath =
+                      data['hotspotData']['hotspot0']['thumbnailPath'];
+                }
               }
+            } catch (e) {
+              print("Error fetching hotspot0 thumbnailPath: $e");
             }
-          } catch (e) {
-            print("Error fetching hotspot0 thumbnailPath: $e");
+
+            String? finalThumbnailPath =
+                hotspot0ThumbnailPath ?? hotspot['thumbnailPath'];
+
+            await _firestore.collection(collections).doc(docId).update(
+              {
+                'hotspotData': hotspotData,
+                'thumbnailPath': finalThumbnailPath,
+              },
+            );
           }
-
-          String? finalThumbnailPath =
-              hotspot0ThumbnailPath ?? hotspot['thumbnailPath'];
-
-          await _firestore.collection(collections).doc(docId).set(
+        } else if (decideCoords == true) {
+          await _firestore.collection(collections).doc(docId).update(
             {
               'hotspotData': hotspotData,
-              'thumbnailPath': finalThumbnailPath,
             },
-            SetOptions(merge: true),
           );
         }
       }
