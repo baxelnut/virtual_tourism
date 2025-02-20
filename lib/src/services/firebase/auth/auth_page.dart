@@ -47,7 +47,7 @@ class _AuthPageState extends State<AuthPage> {
     });
   }
 
-  void showAlertDialog(BuildContext context, String message) {
+  void showAlertDialog(String message) {
     final theme = Theme.of(context);
 
     showDialog(
@@ -92,20 +92,19 @@ class _AuthPageState extends State<AuthPage> {
             );
 
             if (context.mounted) {
-              showAlertDialog(context, 'Successfully registered');
+              showAlertDialog('Successfully registered');
               Navigator.of(context).pushReplacement(
                 MaterialPageRoute(builder: (context) => const MyApp()),
               );
             }
           } catch (e) {
             if (context.mounted) {
-              showAlertDialog(context, 'Failed to register: \n${e.toString()}');
+              showAlertDialog('Failed to register: \n${e.toString()}');
             }
           }
         } else {
           if (context.mounted) {
             showAlertDialog(
-              context,
               'Failed to register: \n${!isConfirmPasswordFilled ? 'Fill all fields' : 'Passwords do not match'}',
             );
           }
@@ -118,20 +117,20 @@ class _AuthPageState extends State<AuthPage> {
           );
 
           if (context.mounted) {
-            showAlertDialog(context, 'Successfully logged in');
+            showAlertDialog('Successfully logged in');
             Navigator.of(context).pushReplacement(
               MaterialPageRoute(builder: (context) => const MyApp()),
             );
           }
         } catch (e) {
           if (context.mounted) {
-            showAlertDialog(context, 'Failed to login: \n${e.toString()}');
+            showAlertDialog('Failed to login: \n${e.toString()}');
           }
         }
       }
     } else {
       if (context.mounted) {
-        showAlertDialog(context,
+        showAlertDialog(
             'Failed to ${isRegistering ? 'register' : 'login'}: \nFill all fields');
       }
     }
