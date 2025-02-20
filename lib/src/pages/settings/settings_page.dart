@@ -6,6 +6,7 @@ import '../../components/user_overview.dart';
 import '../../services/firebase/auth/auth.dart';
 import '../../services/theme/theme.dart';
 import '../../services/theme/theme_provider.dart';
+import 'privacy_and_policy.dart';
 import 'settings_tiles.dart';
 
 class SettingsPage extends StatefulWidget {
@@ -86,7 +87,11 @@ class _SettingsPageState extends State<SettingsPage> {
           const Icon(Icons.chevron_right_rounded),
         ],
         'function': [
-          () => handleOnTap(),
+          () => Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => const PrivacyAndPolicy(),
+                ),
+              ),
           () => handleOnTap(),
           () => handleOnTap(),
         ],
@@ -140,7 +145,7 @@ class _SettingsPageState extends State<SettingsPage> {
                     trailingWidget: List<Widget>.from(thang['trailingWidget']),
                     onTap: thang['function'],
                   ),
-                const SizedBox(height: 125)
+                const SizedBox(height: 100),
               ],
             ),
           ),
@@ -149,10 +154,11 @@ class _SettingsPageState extends State<SettingsPage> {
     );
   }
 
-  Widget buildSwitch(
-      {required BuildContext context,
-      required bool value,
-      required ValueChanged<bool> onChanged}) {
+  Widget buildSwitch({
+    required BuildContext context,
+    required bool value,
+    required ValueChanged<bool> onChanged,
+  }) {
     final theme = Theme.of(context);
     return Switch(
       thumbColor: WidgetStatePropertyAll(
