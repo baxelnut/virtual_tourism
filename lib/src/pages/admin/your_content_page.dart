@@ -7,8 +7,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../services/firebase/storage/storage_service.dart';
+import 'content_tiles.dart';
 import 'create_content_page.dart';
-import 'your_content_tiles.dart';
 
 class YourContentPage extends StatefulWidget {
   const YourContentPage({super.key});
@@ -147,7 +147,6 @@ class _YourContentPageState extends State<YourContentPage> {
                     itemCount: destinations.length,
                     itemBuilder: (context, index) {
                       final destination = destinations[index];
-
                       return FutureBuilder<String>(
                         future: getThumbnailUrl(
                           destinationId: destination['id'],
@@ -175,10 +174,8 @@ class _YourContentPageState extends State<YourContentPage> {
                               ),
                             );
                           }
-
-                          return YourContentTiles(
+                          return ContentTiles(
                             destinationData: destination,
-                            selectedType: typeShi,
                           );
                         },
                       );

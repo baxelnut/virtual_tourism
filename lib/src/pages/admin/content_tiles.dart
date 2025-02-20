@@ -3,13 +3,11 @@ import 'package:virtual_tourism/src/components/destinations/destination_overview
 
 import '../../components/content/load_image.dart';
 
-class YourContentTiles extends StatelessWidget {
+class ContentTiles extends StatelessWidget {
   final Map<String, dynamic> destinationData;
-  final String selectedType;
-  const YourContentTiles({
+  const ContentTiles({
     super.key,
     required this.destinationData,
-    required this.selectedType,
   });
 
   String getImagePath(
