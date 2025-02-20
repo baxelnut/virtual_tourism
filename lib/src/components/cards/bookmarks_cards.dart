@@ -1,14 +1,10 @@
 import 'package:flutter/material.dart';
 
-class CommCardsLarge extends StatelessWidget {
-  final String imagePath;
-  final String title;
-  final String subtitle;
-  const CommCardsLarge({
+class BookmarksCards extends StatelessWidget {
+  final Map<String, dynamic> destinationData;
+  const BookmarksCards({
     super.key,
-    required this.imagePath,
-    required this.title,
-    required this.subtitle,
+    required this.destinationData,
   });
 
   @override
@@ -26,7 +22,7 @@ class CommCardsLarge extends StatelessWidget {
           decoration: BoxDecoration(
             image: DecorationImage(
               image: NetworkImage(
-                imagePath,
+                destinationData['thumbnailPath'],
               ),
               fit: BoxFit.cover,
             ),
@@ -55,7 +51,7 @@ class CommCardsLarge extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      title,
+                      destinationData['destinationName'],
                       style: theme.textTheme.headlineSmall?.copyWith(
                         color: theme.colorScheme.onPrimary,
                         shadows: [
@@ -71,7 +67,7 @@ class CommCardsLarge extends StatelessWidget {
                       overflow: TextOverflow.ellipsis,
                     ),
                     Text(
-                      subtitle,
+                      destinationData['description'],
                       style: theme.textTheme.bodyMedium?.copyWith(
                         color: theme.colorScheme.onPrimary,
                         shadows: [

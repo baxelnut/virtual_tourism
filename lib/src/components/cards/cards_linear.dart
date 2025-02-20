@@ -7,12 +7,14 @@ class CardsLinear extends StatelessWidget {
   final String country;
   final String thumbnailPath;
   final String imagePath;
+  final Map<String, dynamic>? destinationData;
   const CardsLinear({
     super.key,
     required this.country,
     required this.flag,
     required this.thumbnailPath,
     required this.imagePath,
+    this.destinationData,
   });
 
   @override

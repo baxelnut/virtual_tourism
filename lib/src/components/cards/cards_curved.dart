@@ -1,34 +1,35 @@
 import 'package:flutter/material.dart';
-import 'package:virtual_tourism/src/components/content/photographic_screen.dart';
+
+import '../content/photographic_screen.dart';
 
 class CardsCurved extends StatelessWidget {
-  final String destination;
-  final String description;
-  final String thumbnailPath;
-  final String imagePath;
-  const CardsCurved(
-      {super.key,
-      required this.destination,
-      required this.description,
-      required this.thumbnailPath,
-      required this.imagePath});
+  final Map<String, dynamic> destinationData;
+  const CardsCurved({
+    super.key,
+    required this.destinationData,
+  });
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final screenSize = MediaQuery.of(context).size;
+    const String placeholderPath =
+        'https://hellenic.org/wp-content/plugins/elementor/assets/images/placeholder.png';
+
     return Padding(
       padding: const EdgeInsets.only(left: 5),
       child: Container(
         width: screenSize.width / 1.9,
         height: screenSize.height / 2.5,
         decoration: BoxDecoration(
-            color: theme.colorScheme.primary,
-            borderRadius: const BorderRadius.only(
-                topLeft: Radius.circular(360),
-                topRight: Radius.circular(360),
-                bottomLeft: Radius.circular(90),
-                bottomRight: Radius.circular(90))),
+          color: theme.colorScheme.primary,
+          borderRadius: const BorderRadius.only(
+            topLeft: Radius.circular(360),
+            topRight: Radius.circular(360),
+            bottomLeft: Radius.circular(90),
+            bottomRight: Radius.circular(90),
+          ),
+        ),
         child: Column(
           children: [
             Padding(
@@ -36,13 +37,16 @@ class CardsCurved extends StatelessWidget {
               child: InkWell(
                 child: CircleAvatar(
                   radius: screenSize.width / 4,
-                  backgroundImage: NetworkImage(thumbnailPath),
+                  backgroundImage: NetworkImage(
+                    destinationData['thumbnailPath'] ?? placeholderPath,
+                  ),
                 ),
                 onTap: () {
                   Navigator.of(context).push(
                     MaterialPageRoute(
                       builder: (context) => PhotographicScreen(
-                        imageUrl: imagePath,
+                        imageUrl:
+                            destinationData['imagePath'] ?? placeholderPath,
                       ),
                     ),
                   );
@@ -52,7 +56,13 @@ class CardsCurved extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 8),
               child: Text(
-                destination.toUpperCase(),
+                destinationData['destination']
+                        .split(' ')
+                        .map((word) =>
+                            '${word[0].toUpperCase()}${word.substring(1)}')
+                        .join(' ')
+                        .toUpperCase() ??
+                    "No data",
                 textAlign: TextAlign.center,
                 overflow: TextOverflow.ellipsis,
                 maxLines: 2,
@@ -64,7 +74,7 @@ class CardsCurved extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.only(right: 8, left: 14, top: 5),
               child: Text(
-                description,
+                destinationData['description'] ?? "No description",
                 overflow: TextOverflow.ellipsis,
                 maxLines: 3,
                 textAlign: TextAlign.center,

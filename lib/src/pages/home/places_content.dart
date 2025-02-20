@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+// import 'package:virtual_tourism/src/pages/home/top_picks.dart';
 
 import '../../components/cards/cards_emerged.dart';
 import '../../components/cards/cards_header.dart';
@@ -32,6 +33,7 @@ class PlacesContent extends StatelessWidget {
             overflow: TextOverflow.ellipsis,
           ),
         ),
+        // TopPicks(),
         topCountries(
           theme: theme,
         ),

@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../pages/admin/your_content_page.dart';
+import '../pages/bookmarks/bookmarks_page.dart';
 import '../pages/settings/user_profile.dart';
 import '../services/firebase/api/firebase_api.dart';
 import '../services/theme/theme.dart';
@@ -61,7 +62,11 @@ class _UserOverviewState extends State<UserOverview> {
   }
 
   handleBookmarks() {
-    print('handle bookmarks');
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => const BookmarksPage(),
+      ),
+    );
   }
 
   _getImageProvider() {

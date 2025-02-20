@@ -105,13 +105,13 @@ class _TopPicksState extends State<TopPicks> {
               scrollDirection: Axis.horizontal,
               child: Row(
                 children: topPickList.map((topPicksData) {
-                  final String destinationName =
-                      (topPicksData['destination'] as String?)
-                              ?.replaceAll('_', ' ') ??
-                          'Unknown';
-                  final String description =
-                      (topPicksData['description'] as String?) ??
-                          'No description available.';
+                  // final String destinationName =
+                  //     (topPicksData['destination'] as String?)
+                  //             ?.replaceAll('_', ' ') ??
+                  //         'Unknown';
+                  // final String description =
+                  //     (topPicksData['description'] as String?) ??
+                  //         'No description available.';
                   final String? destinationId = topPicksData['id'];
 
                   if (destinationId == null) {
@@ -133,7 +133,7 @@ class _TopPicksState extends State<TopPicks> {
                         return const SizedBox.shrink();
                       }
 
-                      final String thumbnailPath = thumbnailSnapshot.data ?? '';
+                      // final String thumbnailPath = thumbnailSnapshot.data ?? '';
                       return FutureBuilder<String>(
                         future: getImageUrl(destinationId),
                         builder: (context, imageSnapshot) {
@@ -149,17 +149,10 @@ class _TopPicksState extends State<TopPicks> {
                             return const SizedBox.shrink();
                           }
 
-                          final String imagePath = imageSnapshot.data ?? '';
+                          // final String imagePath = imageSnapshot.data ?? '';
 
                           return CardsCurved(
-                            destination: destinationName
-                                .split(' ')
-                                .map((word) =>
-                                    '${word[0].toUpperCase()}${word.substring(1)}')
-                                .join(' '),
-                            description: description,
-                            thumbnailPath: thumbnailPath,
-                            imagePath: imagePath,
+                            destinationData: topPicksData,
                           );
                         },
                       );
