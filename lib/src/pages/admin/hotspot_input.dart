@@ -290,7 +290,7 @@ class _HotspotInputState extends State<HotspotInput> {
                 image: Image(
                   image: NetworkImage(
                     widget.typeShit == 'Tour'
-                        ? (widget.hotspotData["hotspot0"]["imagePath"] ??
+                        ? (widget.hotspotData["hotspot$index"]["imagePath"] ??
                             placeholderPath)
                         : placeholderPath,
                   ),

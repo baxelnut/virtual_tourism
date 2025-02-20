@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-
-import '../content/image_screen.dart';
+import 'package:virtual_tourism/src/components/content/photographic_screen.dart';
 
 class CardsCurved extends StatelessWidget {
   final String destination;
@@ -42,26 +41,8 @@ class CardsCurved extends StatelessWidget {
                 onTap: () {
                   Navigator.of(context).push(
                     MaterialPageRoute(
-                      builder: (context) => ImageScreen(
-                        image: Image.network(
-                          imagePath,
-                          fit: BoxFit.cover,
-                          width: screenSize.width / 3,
-                          height: screenSize.width / 2,
-                          loadingBuilder: (context, child, loadingProgress) {
-                            if (loadingProgress == null) return child;
-                            return Center(
-                              child: CircularProgressIndicator(
-                                value: loadingProgress.expectedTotalBytes !=
-                                        null
-                                    ? loadingProgress.cumulativeBytesLoaded /
-                                        (loadingProgress.expectedTotalBytes ??
-                                            1)
-                                    : null,
-                              ),
-                            );
-                          },
-                        ),
+                      builder: (context) => PhotographicScreen(
+                        imageUrl: imagePath,
                       ),
                     ),
                   );

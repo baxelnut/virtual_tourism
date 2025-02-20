@@ -1,13 +1,16 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
-import 'image_screen.dart';
+import 'photographic_screen.dart';
 
 class Thumbnail extends StatelessWidget {
   final String imagePath;
   final String thumbPath;
-  const Thumbnail(
-      {required this.imagePath, required this.thumbPath, super.key});
+  const Thumbnail({
+    super.key,
+    required this.imagePath,
+    required this.thumbPath,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -27,15 +30,8 @@ class Thumbnail extends StatelessWidget {
         onTap: () {
           Navigator.of(context).push(
             MaterialPageRoute(
-              builder: (context) => ImageScreen(
-                image: Image.asset(imagePath),
-                // appBarTitle: imagePath
-                //     .split('/')
-                //     .last
-                //     .split('.')
-                //     .first
-                //     .toUpperCase()
-                //     .replaceAll('_', ' '),
+              builder: (context) => PhotographicScreen(
+                imageUrl: imagePath,
               ),
             ),
           );

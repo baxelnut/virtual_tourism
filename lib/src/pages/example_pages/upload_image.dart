@@ -5,8 +5,8 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../../components/content/image_screen.dart';
 // import '../../services/firebase/api/firebase_api.dart';
+import '../../components/content/photographic_screen.dart';
 import '../../services/firebase/storage/storage_service.dart';
 
 class UploadImage extends StatefulWidget {
@@ -242,10 +242,8 @@ class _UploadImageState extends State<UploadImage> {
                             onTap: () {
                               Navigator.of(context).push(
                                 MaterialPageRoute(
-                                  builder: (context) => ImageScreen(
-                                    image: Image(
-                                      image: NetworkImage(imageUrl),
-                                    ),
+                                  builder: (context) => PhotographicScreen(
+                                    imageUrl: imageUrl,
                                   ),
                                 ),
                               );

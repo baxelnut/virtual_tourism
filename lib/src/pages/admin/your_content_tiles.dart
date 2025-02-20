@@ -12,6 +12,18 @@ class YourContentTiles extends StatelessWidget {
     required this.selectedType,
   });
 
+  String getImagePath(
+      Map<String, dynamic> destinationData, String placeholderPath) {
+    final thumbnailPath = destinationData["thumbnailPath"] ?? '';
+    final hotspotImagePath =
+        destinationData["hotspotData"]?["hotspot0"]?["imagePath"] ?? '';
+
+    if (thumbnailPath.isNotEmpty) return thumbnailPath;
+    if (hotspotImagePath.isNotEmpty) return hotspotImagePath;
+
+    return placeholderPath;
+  }
+
   @override
   Widget build(BuildContext context) {
     final ThemeData theme = Theme.of(context);
@@ -41,9 +53,7 @@ class YourContentTiles extends StatelessWidget {
               ClipRRect(
                 borderRadius: BorderRadius.circular(6),
                 child: LoadImage(
-                  imagePath: destinationData["thumbnailPath"].isEmpty
-                      ? placeholderPath
-                      : destinationData["thumbnailPath"],
+                  imagePath: getImagePath(destinationData, placeholderPath),
                   width: 100,
                   height: 100,
                 ),

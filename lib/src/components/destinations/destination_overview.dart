@@ -5,8 +5,9 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-import '../content/image_screen.dart';
 import '../content/load_image.dart';
+import '../content/photographic_screen.dart';
+import '../content/tour_screen.dart';
 import 'review_section.dart';
 
 class DestinationOverview extends StatefulWidget {
@@ -88,6 +89,18 @@ class DestinationOverviewState extends State<DestinationOverview> {
     }
 
     return DateFormat(dateTimeFormat).format(parsedDate);
+  }
+
+  String getImagePath(
+      Map<String, dynamic> destinationData, String placeholderPath) {
+    final thumbnailPath = destinationData["thumbnailPath"] ?? '';
+    final hotspotImagePath =
+        destinationData["hotspotData"]?["hotspot0"]?["imagePath"] ?? '';
+
+    if (thumbnailPath.isNotEmpty) return thumbnailPath;
+    if (hotspotImagePath.isNotEmpty) return hotspotImagePath;
+
+    return placeholderPath;
   }
 
   @override
@@ -197,10 +210,7 @@ class DestinationOverviewState extends State<DestinationOverview> {
       child: Stack(
         children: [
           LoadImage(
-            imagePath: widget.destinationData["thumbnailPath"] == null ||
-                    widget.destinationData["thumbnailPath"] == ''
-                ? placeholderPath
-                : widget.destinationData["thumbnailPath"],
+            imagePath: getImagePath(widget.destinationData, placeholderPath),
             width: screenSize.width,
             height: screenSize.width / 1.5,
           ),
@@ -268,22 +278,24 @@ class DestinationOverviewState extends State<DestinationOverview> {
         width: screenSize.width,
         child: ElevatedButton(
           onPressed: () {
-            print(
-                widget.destinationData["hotspotData"]["hotspot0"]["imagePath"]);
             Navigator.of(context).push(
               MaterialPageRoute(
-                builder: (context) => ImageScreen(
-                  image: Image(
-                    image: NetworkImage(
-                      widget.destinationData["type"] == 'Tour'
-                          ? (widget.destinationData["hotspotData"]["hotspot0"]
-                                  ["imagePath"] ??
-                              placeholderPath)
-                          : widget.destinationData["imagePath"].isEmpty ??
-                              placeholderPath,
-                    ),
-                  ),
-                ),
+                builder: (context) {
+                  String? type = widget.destinationData["type"];
+
+                  if (type == "Tour") {
+                    return TourScreen(
+                      destinationData: widget.destinationData,
+                    );
+                  } else {
+                    return PhotographicScreen(
+                      imageUrl: (widget.destinationData["imagePath"] != null &&
+                              widget.destinationData["imagePath"].isNotEmpty)
+                          ? widget.destinationData["imagePath"]
+                          : placeholderPath,
+                    );
+                  }
+                },
               ),
             );
           },
@@ -358,8 +370,7 @@ class DestinationOverviewState extends State<DestinationOverview> {
           for (var entry in {
             widget.destinationData["type"] == 'Tour' ? 'Hotspots' : 'Size':
                 widget.destinationData["type"] == 'Tour'
-                    ? widget.destinationData["hotspotData"]["hotspotQty"]
-                        .toString()
+                    ? widget.destinationData["hotspotData"].length.toString()
                     : widget.destinationData["imageSize"].toString(),
             "Released": formatDate(
               widget.destinationData["created"],
