@@ -6,6 +6,7 @@ import '../../components/user_overview.dart';
 import '../../services/firebase/auth/auth.dart';
 import '../../services/theme/theme.dart';
 import '../../services/theme/theme_provider.dart';
+import 'help_and_support.dart';
 import 'privacy_and_policy.dart';
 import 'settings_tiles.dart';
 
@@ -18,10 +19,33 @@ class SettingsPage extends StatefulWidget {
 
 class _SettingsPageState extends State<SettingsPage> {
   bool notifAllowed = false;
-  bool languageEN = true;
 
   final Auth _auth = Auth();
   final user = FirebaseAuth.instance.currentUser;
+
+  void showAlertDialog(String title, String message) {
+    final theme = Theme.of(context);
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(title),
+          content: Text(message),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text(
+                "OK",
+                style: theme.textTheme.titleMedium,
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
 
   void handleOnTap() {
     print('fuck');
@@ -47,7 +71,7 @@ class _SettingsPageState extends State<SettingsPage> {
           'Dark mode',
           'Push notification',
           'Language',
-          'Manage permission'
+          'Manage permission',
         ],
         'trailingWidget': [
           buildSwitch(
@@ -69,7 +93,8 @@ class _SettingsPageState extends State<SettingsPage> {
         'function': [
           () => handleOnTap(),
           () => handleOnTap(),
-          () => handleOnTap(),
+          () => showAlertDialog('Coming Soon :(',
+              'This feature is still in development. We\'re working hard to bring it to you soon. Stay tuned!'),
           () => handleOnTap(),
         ],
       },
@@ -78,9 +103,13 @@ class _SettingsPageState extends State<SettingsPage> {
         'leadingIcon': [
           Icons.info_outline_rounded,
           Icons.email_rounded,
-          Icons.lock_outline_rounded
+          Icons.lock_outline_rounded,
         ],
-        'title': ['Privacy policy', 'Change email', 'Change password'],
+        'title': [
+          'Privacy policy',
+          'Change email',
+          'Change password',
+        ],
         'trailingWidget': [
           const Icon(Icons.chevron_right_rounded),
           const Icon(Icons.chevron_right_rounded),
@@ -103,22 +132,32 @@ class _SettingsPageState extends State<SettingsPage> {
           Icons.star_rate_rounded,
           Icons.check_rounded,
         ],
-        'title': ['Help & support', 'Rate app', 'Version'],
+        'title': [
+          'Help & support',
+          'Rate app',
+          'Version',
+        ],
         'trailingWidget': [
           const Icon(Icons.chevron_right_rounded),
-          const Icon(Icons.chevron_right_rounded),
+          const Text(''),
           const Text('1.0.0'),
         ],
         'function': [
-          () => handleOnTap(),
-          () => handleOnTap(),
-          () => handleOnTap(),
+          () => Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => const HelpAndSupport(),
+                ),
+              ),
+          () {},
+          () {},
         ],
       },
       {
         'heading': '',
         'leadingIcon': [Icons.logout_rounded],
-        'title': ['Logout'],
+        'title': [
+          'Logout',
+        ],
         'trailingWidget': [
           const SizedBox(),
         ],
