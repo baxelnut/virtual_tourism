@@ -232,7 +232,7 @@ class _CreateContentPageState extends State<CreateContentPage> {
             if (nameController.text.isNotEmpty) {
               if (_selectedType == "Photographic") {
                 FirebaseApi().addDestination(
-                  collections: 'verified_user_uploads',
+                  collectionId: 'verified_user_uploads',
                   typeShit: _selectedType,
                   destinationName: nameController.text.trim(),
                   category: _selectedCategory,

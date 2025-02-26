@@ -216,7 +216,7 @@ class StorageService with ChangeNotifier {
   }
 
   Future<Map<String, String>?> uploadHotspotImage({
-    required String collections,
+    required String collectionId,
     required String typeShit,
     required String category,
     required String subcategory,
@@ -236,9 +236,9 @@ class StorageService with ChangeNotifier {
 
     try {
       String imagePath =
-          '$collections/$typeShit/$category/$subcategory/${imageId}_$hotspotIndex';
+          '$collectionId/$typeShit/$category/$subcategory/${imageId}_$hotspotIndex';
       String thumbnailPath =
-          '$collections/$typeShit/$category/$subcategory/${imageId}_${hotspotIndex}_thumbnail';
+          '$collectionId/$typeShit/$category/$subcategory/${imageId}_${hotspotIndex}_thumbnail';
 
       TaskSnapshot snapshot =
           await firebaseStorage.ref(imagePath).putFile(imageFile);

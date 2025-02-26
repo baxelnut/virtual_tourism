@@ -303,7 +303,7 @@ class _HotspotInputState extends State<HotspotInput> {
                     _notifyHotspotData();
                   });
                   await _firebaseApi.addDestination(
-                    collections: 'verified_user_uploads',
+                    collectionId: 'verified_user_uploads',
                     typeShit: widget.typeShit,
                     destinationName: widget.destinationName,
                     category: widget.category,
@@ -328,7 +328,7 @@ class _HotspotInputState extends State<HotspotInput> {
           });
           _notifyHotspotData();
           String? downloadUrl = await _firebaseApi.addDestination(
-            collections: 'verified_user_uploads',
+            collectionId: 'verified_user_uploads',
             typeShit: widget.typeShit,
             destinationName: widget.destinationName,
             category: widget.category,

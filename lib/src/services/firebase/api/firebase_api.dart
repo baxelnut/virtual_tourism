@@ -189,7 +189,7 @@ class FirebaseApi with ChangeNotifier {
   }
 
   Future<String?> addDestination({
-    required final String collections,
+    required final String collectionId,
     required final String category,
     required final String subcategory,
     required final String destinationName,
@@ -208,7 +208,7 @@ class FirebaseApi with ChangeNotifier {
 
     try {
       QuerySnapshot querySnapshot = await _firestore
-          .collection(collections)
+          .collection(collectionId)
           .where('destinationName', isEqualTo: destinationName)
           .limit(1)
           .get();
@@ -220,10 +220,10 @@ class FirebaseApi with ChangeNotifier {
         docId = querySnapshot.docs.first.id;
         isUpdating = true;
       } else {
-        docId = _firestore.collection(collections).doc().id;
+        docId = _firestore.collection(collectionId).doc().id;
       }
 
-      await _firestore.collection(collections).doc(docId).set(
+      await _firestore.collection(collectionId).doc(docId).set(
         {
           'category': category,
           'subcategory': subcategory,
@@ -250,14 +250,14 @@ class FirebaseApi with ChangeNotifier {
 
       if (typeShit == "Photographic") {
         final Map<String, String>? urls = await _storageService.addImage(
-          collections: collections,
+          collections: collectionId,
           category: category,
           subcategory: subcategory,
           imageId: docId,
           typeShit: typeShit,
         );
         if (urls != null) {
-          await _firestore.collection(collections).doc(docId).set(
+          await _firestore.collection(collectionId).doc(docId).set(
             {
               'imagePath': urls['imagePath'],
               'thumbnailPath': urls['thumbnailPath'],
@@ -272,7 +272,7 @@ class FirebaseApi with ChangeNotifier {
         if (decideCoords == false || decideCoords == null) {
           final Map<String, String>? hotspot =
               await _storageService.uploadHotspotImage(
-            collections: collections,
+            collectionId: collectionId,
             typeShit: typeShit,
             category: category,
             subcategory: subcategory,
@@ -289,7 +289,7 @@ class FirebaseApi with ChangeNotifier {
             String? hotspot0ThumbnailPath;
             try {
               DocumentSnapshot snapshot =
-                  await _firestore.collection(collections).doc(docId).get();
+                  await _firestore.collection(collectionId).doc(docId).get();
 
               if (snapshot.exists) {
                 Map<String, dynamic>? data =
@@ -311,7 +311,7 @@ class FirebaseApi with ChangeNotifier {
             String? finalThumbnailPath =
                 hotspot0ThumbnailPath ?? hotspot['thumbnailPath'];
 
-            await _firestore.collection(collections).doc(docId).update(
+            await _firestore.collection(collectionId).doc(docId).update(
               {
                 'hotspotData': hotspotData,
                 'thumbnailPath': finalThumbnailPath,
@@ -319,7 +319,7 @@ class FirebaseApi with ChangeNotifier {
             );
           }
         } else if (decideCoords == true) {
-          await _firestore.collection(collections).doc(docId).update(
+          await _firestore.collection(collectionId).doc(docId).update(
             {
               'hotspotData': hotspotData,
             },
@@ -436,5 +436,28 @@ class FirebaseApi with ChangeNotifier {
       print('Error updating visited state: $e');
       rethrow;
     }
+  }
+
+  Future<void> addReview({
+    required String collectionId,
+    required String destinationId,
+    required String userId,
+    required String userName,
+    required int ratingStars,
+    String? reviewComment,
+  }) async {
+    final reviewData = {
+      'userName': userName,
+      'ratingStars': ratingStars,
+      'reviewComment': reviewComment ?? '',
+      'timestamp': FieldValue.serverTimestamp(),
+    };
+
+    await FirebaseFirestore.instance
+        .collection(collectionId)
+        .doc(destinationId)
+        .update({
+      'rating.$userId': reviewData,
+    });
   }
 }
