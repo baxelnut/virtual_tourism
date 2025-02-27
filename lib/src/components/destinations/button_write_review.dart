@@ -18,70 +18,120 @@ class _ButtonWriteReviewState extends State<ButtonWriteReview> {
 
   void showReviewModal(BuildContext context) {
     FirebaseApi firebaseApi = FirebaseApi();
+    final ThemeData theme = Theme.of(context);
+    final Size screenSize = MediaQuery.of(context).size;
 
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
       builder: (BuildContext context) {
-        return Padding(
-          padding: EdgeInsets.only(
-            bottom: MediaQuery.of(context).viewInsets.bottom + 20,
-            left: 20,
-            right: 20,
-            top: 20,
-          ),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text(
-                'Write a Review',
-                style: Theme.of(context).textTheme.titleLarge,
-              ),
-              const SizedBox(height: 10),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: List<Widget>.generate(5, (int index) {
-                  return IconButton(
-                    onPressed: () {
-                      setState(() {
-                        ratingStars = (index + 1).toDouble();
-                      });
-                    },
-                    icon: Icon(
-                      Icons.star,
-                      color: index < ratingStars.toInt()
-                          ? Colors.amber
-                          : Colors.grey,
-                    ),
-                  );
-                }),
-              ),
-              TextField(
-                controller: reviewController,
-                decoration: const InputDecoration(
-                  hintText: 'Write your review here...',
-                  border: OutlineInputBorder(),
-                ),
-                maxLines: 3,
-              ),
-              const SizedBox(height: 10),
-              ElevatedButton(
-                onPressed: () {
-                  firebaseApi.addReview(
-                    collectionId: "verified_user_uploads",
-                    destinationId: widget.destinationData['id'],
-                    userId: widget.destinationData['userId'],
-                    userName: widget.destinationData['userName'],
-                    ratingStars: double.tryParse(ratingStars.toString()) ?? 0.0,
-                    reviewComment: reviewController.text,
-                  );
+        double localRatingStars = 0.0;
+        TextEditingController localReviewController =
+            TextEditingController(text: reviewController.text);
 
-                  Navigator.pop(context);
-                },
-                child: const Text('Submit'),
+        return StatefulBuilder(
+          builder: (context, setModalState) {
+            return Padding(
+              padding: EdgeInsets.only(
+                bottom: MediaQuery.of(context).viewInsets.bottom + 20,
+                left: 20,
+                right: 20,
+                top: 20,
               ),
-            ],
-          ),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    'Write a Review',
+                    style: Theme.of(context).textTheme.titleLarge,
+                  ),
+                  const SizedBox(height: 10),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: List<Widget>.generate(5, (int index) {
+                      return IconButton(
+                        onPressed: () {
+                          setModalState(() {
+                            localRatingStars = (index + 1).toDouble();
+                          });
+                        },
+                        icon: Icon(
+                          Icons.star,
+                          color: index < localRatingStars.toInt()
+                              ? Colors.amber
+                              : Colors.grey,
+                        ),
+                      );
+                    }),
+                  ),
+                  TextField(
+                    controller: localReviewController,
+                    decoration: const InputDecoration(
+                      hintText: 'Write your review here...',
+                      border: OutlineInputBorder(),
+                    ),
+                    maxLines: 3,
+                  ),
+                  const SizedBox(height: 10),
+                  SizedBox(
+                    width: screenSize.width,
+                    child: ElevatedButton(
+                      onPressed: () {
+                        if (localRatingStars == 0.0) {
+                          showDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return AlertDialog(
+                                title: const Text("Warning"),
+                                content: const Text(
+                                    "Please rate before submitting."),
+                                actions: [
+                                  TextButton(
+                                    onPressed: () {
+                                      Navigator.pop(context);
+                                    },
+                                    child: const Text("OK"),
+                                  ),
+                                ],
+                              );
+                            },
+                          );
+                          return;
+                        }
+
+                        setState(() {
+                          ratingStars = localRatingStars;
+                          reviewController.text = localReviewController.text;
+                        });
+
+                        firebaseApi.addReview(
+                          collectionId: "verified_user_uploads",
+                          destinationId: widget.destinationData['id'],
+                          userId: widget.destinationData['userId'],
+                          userName: widget.destinationData['userName'],
+                          ratingStars: localRatingStars,
+                          reviewComment: localReviewController.text,
+                        );
+
+                        Navigator.pop(context);
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: theme.colorScheme.primary,
+                        padding: const EdgeInsets.symmetric(
+                            vertical: 0, horizontal: 12),
+                      ),
+                      child: Text(
+                        'Post',
+                        style: theme.textTheme.bodyLarge?.copyWith(
+                            color: theme.colorScheme.onPrimary,
+                            fontWeight: FontWeight.w900),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            );
+          },
         );
       },
     );

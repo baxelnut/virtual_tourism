@@ -71,8 +71,8 @@ class _ButtonDonateState extends State<ButtonDonate> {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final screenSize = MediaQuery.of(context).size;
+    final ThemeData theme = Theme.of(context);
+    final Size screenSize = MediaQuery.of(context).size;
 
     return Padding(
       padding: const EdgeInsets.only(right: 20, top: 8, bottom: 12),
