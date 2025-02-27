@@ -10,13 +10,18 @@ import 'rating_reviewer_qty.dart';
 import 'rating_stars.dart';
 import 'review_tiles.dart';
 
-class ReviewSection extends StatelessWidget {
+class ReviewSection extends StatefulWidget {
   final Map<String, dynamic> destinationData;
   const ReviewSection({
     super.key,
     required this.destinationData,
   });
 
+  @override
+  State<ReviewSection> createState() => _ReviewSectionState();
+}
+
+class _ReviewSectionState extends State<ReviewSection> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -101,15 +106,17 @@ class ReviewSection extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           const SizedBox(width: 30),
-          const ButtonWriteReview(),
+          ButtonWriteReview(
+            destinationData: widget.destinationData,
+          ),
           ButtonShare(
-            destinationData: destinationData,
+            destinationData: widget.destinationData,
           ),
           ButtonDonate(
-            destinationData: destinationData,
+            destinationData: widget.destinationData,
           ),
           ButtonShop(
-            destinationData: destinationData,
+            destinationData: widget.destinationData,
           ),
           const SizedBox(width: 30),
         ],

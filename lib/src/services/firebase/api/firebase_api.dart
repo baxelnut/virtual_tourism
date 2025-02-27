@@ -237,9 +237,9 @@ class FirebaseApi with ChangeNotifier {
           'userName': user!.displayName,
           'userId': user!.uid,
           'userEmail': user!.email,
-          'imagePath': '', // placeholder for original image URL
-          'thumbnailPath': '', // placeholder for thumbnail URL
-          'imageSize': '', // placeholder for image size
+          'imagePath': '',
+          'thumbnailPath': '',
+          'imageSize': '',
           'source': externalSource,
           'type': typeShit,
           'address': address,
@@ -443,7 +443,7 @@ class FirebaseApi with ChangeNotifier {
     required String destinationId,
     required String userId,
     required String userName,
-    required int ratingStars,
+    required double ratingStars,
     String? reviewComment,
   }) async {
     final reviewData = {
@@ -453,11 +453,46 @@ class FirebaseApi with ChangeNotifier {
       'timestamp': FieldValue.serverTimestamp(),
     };
 
+    final docRef =
+        FirebaseFirestore.instance.collection(collectionId).doc(destinationId);
+
+    await docRef.set({
+      'ratings': {
+        userId: reviewData,
+      }
+    }, SetOptions(merge: true));
+  }
+
+  Future<void> deleteReview({
+    required String collectionId,
+    required String destinationId,
+    required String userId,
+  }) async {
     await FirebaseFirestore.instance
         .collection(collectionId)
         .doc(destinationId)
         .update({
-      'rating.$userId': reviewData,
+      'ratings.$userId': FieldValue.delete(),
     });
+  }
+
+  Future<double> getAverageRating({
+    required String collectionId,
+    required String destinationId,
+  }) async {
+    final doc = await FirebaseFirestore.instance
+        .collection(collectionId)
+        .doc(destinationId)
+        .get();
+
+    final Map<String, dynamic>? ratings = doc.data()?['rating'];
+
+    if (ratings == null || ratings.isEmpty) return 0.0;
+
+    final totalStars = ratings.values.fold<num>(0, (stars, review) {
+      return stars + (review['ratingStars'] ?? 0);
+    });
+
+    return totalStars / ratings.length;
   }
 }
