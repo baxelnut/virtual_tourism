@@ -69,10 +69,9 @@ class _ReviewSectionState extends State<ReviewSection> {
           theme: theme,
         ),
         _reviewWidget(
-          numOfComment: '208',
+          ratings: widget.destinationData['ratings'],
           screenSize: screenSize,
           theme: theme,
-          context: context,
         ),
       ],
     );
@@ -144,11 +143,25 @@ class _ReviewSectionState extends State<ReviewSection> {
   }
 
   Widget _reviewWidget({
-    required String numOfComment,
+    required Map<String, dynamic>? ratings,
     required Size screenSize,
     required ThemeData theme,
-    required BuildContext context,
   }) {
+    int numOfComments = ratings?.length ?? 0;
+    String randomComment = 'No reviews yet.';
+
+    if (numOfComments > 0) {
+      final List<String> allComments = ratings!.values
+          .map((review) => review['reviewComment']?.toString() ?? '')
+          .where((comment) => comment.isNotEmpty)
+          .toList();
+
+      if (allComments.isNotEmpty) {
+        allComments.shuffle();
+        randomComment = allComments.first;
+      }
+    }
+
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 30),
       child: Column(
@@ -163,13 +176,13 @@ class _ReviewSectionState extends State<ReviewSection> {
                 ),
                 const SizedBox(width: 10),
                 Text(
-                  numOfComment,
+                  numOfComments.toString(),
                   style: theme.textTheme.labelLarge,
                 ),
               ],
             ),
             subtitle: Text(
-              'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
+              randomComment,
               style: theme.textTheme.bodyMedium,
               maxLines: 3,
               overflow: TextOverflow.ellipsis,
