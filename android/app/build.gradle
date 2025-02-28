@@ -45,10 +45,10 @@ android {
 
     signingConfigs {
         release {
-            storeFile file("virtual_tourism-release-key.jks") 
-            storePassword "password"
-            keyAlias "virtual_tourism-key"
-            keyPassword "password"
+            // storeFile file("virtual_tourism-release-key.jks") 
+            // storePassword "password"
+            // keyAlias "virtual_tourism-key"
+            // keyPassword "password"
         }
     }
 
