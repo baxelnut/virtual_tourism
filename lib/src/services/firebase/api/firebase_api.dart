@@ -511,4 +511,26 @@ class FirebaseApi with ChangeNotifier {
       return [];
     }
   }
+
+  Future<List<Map<String, dynamic>>> getDestinationReviews(
+      {
+        required String collectionId,
+        required String destinationId,
+
+      }) async {
+    try {
+      QuerySnapshot reviewsSnapshot = await _firestore
+          .collection(collectionId)
+          .doc(destinationId)
+          .collection('ratings')
+          .get();
+
+      return reviewsSnapshot.docs
+          .map((doc) => doc.data() as Map<String, dynamic>)
+          .toList();
+    } catch (e) {
+      print('Error fetching reviews: $e');
+      return [];
+    }
+  }
 }

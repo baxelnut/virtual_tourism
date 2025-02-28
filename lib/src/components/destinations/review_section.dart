@@ -1,4 +1,6 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 import 'button_donate.dart';
 import 'button_share.dart';
@@ -22,10 +24,24 @@ class ReviewSection extends StatefulWidget {
 }
 
 class _ReviewSectionState extends State<ReviewSection> {
+  String _formatTimestamp(dynamic timestamp) {
+    if (timestamp is! Timestamp) return '-';
+
+    DateTime dateTime = timestamp.toDate();
+    DateTime now = DateTime.now();
+    Duration difference = now.difference(dateTime);
+
+    if (difference.inHours < 24) {
+      return '${difference.inHours} hours ago';
+    } else {
+      return DateFormat('d MMMM yyyy').format(dateTime);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final screenSize = MediaQuery.of(context).size;
+    final ThemeData theme = Theme.of(context);
+    final Size screenSize = MediaQuery.of(context).size;
 
     final List<int> ratings = [89, 21, 13, 10, 5];
 
@@ -172,26 +188,37 @@ class _ReviewSectionState extends State<ReviewSection> {
             contentPadding: const EdgeInsets.symmetric(horizontal: 16),
             onTap: () {
               showModalBottomSheet(
-                  context: context,
-                  builder: (BuildContext context) {
-                    return SingleChildScrollView(
+                context: context,
+                isScrollControlled: true,
+                shape: const RoundedRectangleBorder(
+                  borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+                ),
+                builder: (BuildContext context) {
+                  return SizedBox(
+                    height: screenSize.height / 2,
+                    child: SingleChildScrollView(
                       child: Column(
                         children: [
                           const SizedBox(height: 20),
                           Text(
                             'Reviews',
-                            style: theme.textTheme.titleLarge,
+                            style: Theme.of(context).textTheme.titleLarge,
                           ),
                           const SizedBox(height: 12),
                           Divider(
-                            color: theme.colorScheme.onSurface.withOpacity(0.5),
+                            color: Theme.of(context)
+                                .colorScheme
+                                .onSurface
+                                .withOpacity(0.5),
                           ),
                           _commentSection(theme),
                           const SizedBox(height: 20),
                         ],
                       ),
-                    );
-                  });
+                    ),
+                  );
+                },
+              );
             },
           ),
         ],
@@ -200,45 +227,62 @@ class _ReviewSectionState extends State<ReviewSection> {
   }
 
   Widget _commentSection(ThemeData theme) {
-    return const Column(
-      children: [
-        ReviewTiles(
-          userProfile:
-              'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSC_vMfeGWA4KtFPNYeTBc26CCwScfuU2Ouxw&s',
-          userName: '50 Cent',
-          userRating: 5,
-          userComment:
-              'Yo, this app is fire! 💯 Definitely puttin’ my homies on this one. No cap. ❤️',
-          datePosted: '30 Jan 2025',
-        ),
-        ReviewTiles(
-          userProfile:
-              'https://upload.wikimedia.org/wikipedia/commons/thumb/1/17/Snoop_Dogg_2019_by_Glenn_Francis.jpg/330px-Snoop_Dogg_2019_by_Glenn_Francis.jpg',
-          userName: 'Snoopy Doggy',
-          userRating: 3,
-          userComment:
-              'Man, this app straight doo-doo. 😂 I’ma pass this to my ops, let them struggle while I stay chillin’. 🔫 (On baked AF tho… 🌿🔥)',
-          datePosted: '30 Jan 2025',
-        ),
-        ReviewTiles(
-          userProfile:
-              'https://upload.wikimedia.org/wikipedia/commons/thumb/c/cb/Elon_Musk_Royal_Society_crop.jpg/330px-Elon_Musk_Royal_Society_crop.jpg',
-          userName: 'Elon Musk',
-          userRating: 5,
-          userComment:
-              'This app is quite literally revolutionary. Highly recommend for optimal efficiency. Also, Dogecoin integration when? 🚀🐶',
-          datePosted: '30 Jan 2025',
-        ),
-        ReviewTiles(
-          userProfile:
-              'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSeGVUGslmHUWyeqopY1PThHAnuQ8XL0E2RYw&s',
-          userName: 'Batman',
-          userRating: 5,
-          userComment:
-              'This app… is what this city needs. But I must test it… in the shadows. 🦇',
-          datePosted: '30 Jan 2025',
-        ),
-      ],
+    final dynamic rawReviews = widget.destinationData['ratings'];
+
+    final List<Map<String, dynamic>> reviews = rawReviews is Map
+        ? rawReviews.entries.map((e) {
+            final reviewData = e.value as Map<String, dynamic>;
+            reviewData['userUid'] = e.key;
+            return reviewData;
+          }).toList()
+        : [];
+
+    if (reviews.isEmpty) {
+      return const Text('No reviews yet. Be the first to leave a review!');
+    }
+
+    List<String> userUids = reviews
+        .map((r) => r['userUid']?.toString())
+        .where((uid) => uid != null && uid.isNotEmpty)
+        .cast<String>()
+        .toList();
+
+    if (userUids.isEmpty) {
+      return const Text('Failed to load user data.');
+    }
+
+    return FutureBuilder<QuerySnapshot>(
+      future: FirebaseFirestore.instance
+          .collection('users')
+          .where(FieldPath.documentId, whereIn: userUids)
+          .get(),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const CircularProgressIndicator();
+        }
+
+        if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+          return const Text('Failed to load reviews.');
+        }
+
+        Map<String, String> userImageMap = {
+          for (var doc in snapshot.data!.docs)
+            doc.id: (doc.data() as Map<String, dynamic>?)?['imageUrl'] ?? ''
+        };
+
+        return Column(
+          children: reviews.map((review) {
+            final userImageUrl = userImageMap[review['userUid']] ?? '';
+            return ReviewTiles(
+              userProfile: userImageUrl,
+              userName: review['userName'] ?? 'Anonymous',
+              userRating: (review['ratingStars'] ?? 5).toInt(),
+              userComment: review['reviewComment'] ?? '',
+              datePosted: _formatTimestamp(review['timestamp']),
+            );
+          }).toList(),
+        );
+      },
     );
   }
 }
