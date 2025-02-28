@@ -17,13 +17,12 @@ class ReviewTiles extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
+    final ThemeData theme = Theme.of(context);
 
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8),
       child: ListTile(
         dense: true,
-        
         title: Column(
           crossAxisAlignment: CrossAxisAlignment.end,
           children: [
@@ -52,6 +51,8 @@ class ReviewTiles extends StatelessWidget {
               userComment,
               style: theme.textTheme.labelMedium,
               textAlign: TextAlign.end,
+              maxLines: 69,
+              overflow: TextOverflow.ellipsis,
             ),
             const SizedBox(height: 8),
             Text(
@@ -62,9 +63,18 @@ class ReviewTiles extends StatelessWidget {
             ),
           ],
         ),
-        trailing: CircleAvatar(
-          radius: 16,
-          backgroundImage: NetworkImage(userProfile),
+        trailing: SizedBox(
+          width: 40,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              CircleAvatar(
+                radius: 16,
+                backgroundImage: NetworkImage(userProfile),
+              ),
+              const SizedBox(height: 8),
+            ],
+          ),
         ),
       ),
     );

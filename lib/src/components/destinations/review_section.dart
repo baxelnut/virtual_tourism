@@ -197,7 +197,7 @@ class _ReviewSectionState extends State<ReviewSection> {
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(16),
             ),
-            minTileHeight: 100,
+            minTileHeight: 80,
             contentPadding: const EdgeInsets.symmetric(horizontal: 16),
             onTap: () {
               showModalBottomSheet(
