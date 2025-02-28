@@ -68,10 +68,10 @@ class _ReviewSectionState extends State<ReviewSection> {
     required List<int> ratings,
   }) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 30),
+      padding: const EdgeInsets.symmetric(horizontal: 40),
       child: SizedBox(
         width: screenSize.width,
-        height: 130,
+        height: 150,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
@@ -101,25 +101,28 @@ class _ReviewSectionState extends State<ReviewSection> {
   }) {
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          const SizedBox(width: 30),
-          ButtonWriteReview(
-            destinationData: widget.destinationData,
-          ),
-          ButtonShare(
-            destinationData: widget.destinationData,
-          ),
-          ButtonDonate(
-            destinationData: widget.destinationData,
-          ),
-          ButtonShop(
-            destinationData: widget.destinationData,
-          ),
-          const SizedBox(width: 30),
-        ],
+      child: Padding(
+        padding: const EdgeInsets.only(bottom: 5, top: 20),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            const SizedBox(width: 30),
+            ButtonWriteReview(
+              destinationData: widget.destinationData,
+            ),
+            ButtonShare(
+              destinationData: widget.destinationData,
+            ),
+            ButtonDonate(
+              destinationData: widget.destinationData,
+            ),
+            ButtonShop(
+              destinationData: widget.destinationData,
+            ),
+            const SizedBox(width: 30),
+          ],
+        ),
       ),
     );
   }

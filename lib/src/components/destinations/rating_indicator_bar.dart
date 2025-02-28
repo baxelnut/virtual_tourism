@@ -17,6 +17,7 @@ class RatingIndicatorBar extends StatelessWidget {
         .toList();
 
     return Column(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: List.generate(5, (index) {
         final percentage = percentages[index];

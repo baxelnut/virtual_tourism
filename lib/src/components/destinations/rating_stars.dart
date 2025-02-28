@@ -6,6 +6,7 @@ class RatingStars extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: List.generate(
         5,
         (index) {

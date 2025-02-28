@@ -30,7 +30,7 @@ class RatingAverage extends StatelessWidget {
         ),
         Text(
           '$totalRatings ratings',
-          style: theme.textTheme.labelMedium,
+          style: theme.textTheme.labelLarge,
         ),
       ],
     );

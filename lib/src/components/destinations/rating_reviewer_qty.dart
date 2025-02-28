@@ -12,6 +12,7 @@ class RatingReviewerQty extends StatelessWidget {
     final theme = Theme.of(context);
 
     return Column(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
       crossAxisAlignment: CrossAxisAlignment.end,
       children: List.generate(ratings.length, (index) {
         return Text(
