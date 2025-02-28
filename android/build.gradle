@@ -2,11 +2,11 @@ buildscript {
     repositories {
         google()
         mavenCentral()
-    }   
+    }
     dependencies {
         classpath 'com.google.gms:google-services:4.4.2'
-        classpath "com.android.tools.build:gradle:7.4.2"
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:1.8.0" 
+        classpath "com.android.tools.build:gradle:7.4.2" 
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:1.8.0"
     }
 }
 
@@ -17,13 +17,12 @@ allprojects {
     }
 }
 
-ext.kotlin_version = "1.9.22"
+ext.kotlin_version = "1.9.22" 
 
 rootProject.buildDir = '../build'
+
 subprojects {
     project.buildDir = "${rootProject.buildDir}/${project.name}"
-}
-subprojects {
     project.evaluationDependsOn(':app')
 }
 
@@ -34,5 +33,5 @@ tasks.register("clean", Delete) {
 apply plugin: 'com.google.gms.google-services'
 
 ext {
-    flutterSdkVersion = 33
+    flutterSdkVersion = 33 
 }
