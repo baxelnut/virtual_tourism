@@ -210,7 +210,6 @@ class _ReviewSectionState extends State<ReviewSection> {
           userComment:
               'Yo, this app is fire! 💯 Definitely puttin’ my homies on this one. No cap. ❤️',
           datePosted: '30 Jan 2025',
-          isLiked: true,
         ),
         ReviewTiles(
           userProfile:
@@ -220,7 +219,6 @@ class _ReviewSectionState extends State<ReviewSection> {
           userComment:
               'Man, this app straight doo-doo. 😂 I’ma pass this to my ops, let them struggle while I stay chillin’. 🔫 (On baked AF tho… 🌿🔥)',
           datePosted: '30 Jan 2025',
-          isLiked: false,
         ),
         ReviewTiles(
           userProfile:
@@ -230,7 +228,6 @@ class _ReviewSectionState extends State<ReviewSection> {
           userComment:
               'This app is quite literally revolutionary. Highly recommend for optimal efficiency. Also, Dogecoin integration when? 🚀🐶',
           datePosted: '30 Jan 2025',
-          isLiked: false,
         ),
         ReviewTiles(
           userProfile:
@@ -240,7 +237,6 @@ class _ReviewSectionState extends State<ReviewSection> {
           userComment:
               'This app… is what this city needs. But I must test it… in the shadows. 🦇',
           datePosted: '30 Jan 2025',
-          isLiked: true,
         ),
       ],
     );

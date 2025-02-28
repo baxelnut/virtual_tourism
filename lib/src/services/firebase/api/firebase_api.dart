@@ -438,6 +438,26 @@ class FirebaseApi with ChangeNotifier {
     }
   }
 
+  Future<double> getAverageRating({
+    required String collectionId,
+    required String destinationId,
+  }) async {
+    final doc = await FirebaseFirestore.instance
+        .collection(collectionId)
+        .doc(destinationId)
+        .get();
+
+    final Map<String, dynamic>? ratings = doc.data()?['rating'];
+
+    if (ratings == null || ratings.isEmpty) return 0.0;
+
+    final totalStars = ratings.values.fold<num>(0, (stars, review) {
+      return stars + (review['ratingStars'] ?? 0);
+    });
+
+    return totalStars / ratings.length;
+  }
+
   Future<void> addReview({
     required String collectionId,
     required String destinationId,
@@ -476,23 +496,19 @@ class FirebaseApi with ChangeNotifier {
     });
   }
 
-  Future<double> getAverageRating({
-    required String collectionId,
-    required String destinationId,
-  }) async {
-    final doc = await FirebaseFirestore.instance
-        .collection(collectionId)
-        .doc(destinationId)
-        .get();
-
-    final Map<String, dynamic>? ratings = doc.data()?['rating'];
-
-    if (ratings == null || ratings.isEmpty) return 0.0;
-
-    final totalStars = ratings.values.fold<num>(0, (stars, review) {
-      return stars + (review['ratingStars'] ?? 0);
-    });
-
-    return totalStars / ratings.length;
+  Future<List<Map<String, dynamic>>> getReviews(String destinationId) async {
+    try {
+      QuerySnapshot snapshot = await _firestore
+          .collection('destinations')
+          .doc(destinationId)
+          .collection('reviews')
+          .get();
+      return snapshot.docs
+          .map((doc) => doc.data() as Map<String, dynamic>)
+          .toList();
+    } catch (e) {
+      print('Error fetching reviews: $e');
+      return [];
+    }
   }
 }

@@ -6,7 +6,6 @@ class ReviewTiles extends StatelessWidget {
   final int userRating;
   final String userComment;
   final String datePosted;
-  final bool isLiked;
   const ReviewTiles({
     super.key,
     required this.userProfile,
@@ -14,7 +13,6 @@ class ReviewTiles extends StatelessWidget {
     required this.userRating,
     required this.userComment,
     required this.datePosted,
-    required this.isLiked,
   });
 
   @override
@@ -25,11 +23,7 @@ class ReviewTiles extends StatelessWidget {
       padding: const EdgeInsets.symmetric(vertical: 8),
       child: ListTile(
         dense: true,
-        leading: Icon(
-          isLiked ? Icons.favorite_rounded : Icons.favorite_outline_rounded,
-          size: 12,
-          color: isLiked ? Colors.red : theme.colorScheme.onSurface,
-        ),
+        
         title: Column(
           crossAxisAlignment: CrossAxisAlignment.end,
           children: [
