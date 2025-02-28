@@ -27,7 +27,7 @@ class _ReviewSectionState extends State<ReviewSection> {
     final theme = Theme.of(context);
     final screenSize = MediaQuery.of(context).size;
 
-    final List<int> ratings = [23, 5, 4, 2, 0];
+    final List<int> ratings = [89, 21, 13, 10, 5];
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -68,7 +68,7 @@ class _ReviewSectionState extends State<ReviewSection> {
     required List<int> ratings,
   }) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 40),
+      padding: const EdgeInsets.symmetric(horizontal: 30),
       child: SizedBox(
         width: screenSize.width,
         height: 150,

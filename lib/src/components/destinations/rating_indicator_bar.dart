@@ -23,11 +23,11 @@ class RatingIndicatorBar extends StatelessWidget {
         final percentage = percentages[index];
 
         return Padding(
-          padding: const EdgeInsets.symmetric(vertical: 8),
+          padding: const EdgeInsets.symmetric(vertical: 6),
           child: SizedBox(
             width: 100 * (percentage / 100),
             child: Container(
-              height: 8,
+              height: 10,
               decoration: BoxDecoration(
                 color: theme.colorScheme.secondary,
                 borderRadius: BorderRadius.circular(60),
