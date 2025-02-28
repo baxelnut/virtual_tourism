@@ -1,3 +1,5 @@
+ext.flutterPluginAndroidLifecycleVersion = '2.0.25'
+
 buildscript {
     ext.kotlin_version = '1.9.22'
     repositories {
