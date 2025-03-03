@@ -88,7 +88,7 @@ class _HotspotInputState extends State<HotspotInput> {
     _hotspotImages.clear();
     for (int i = 0; i < _hotspotQty; i++) {
       String? imagePath = widget.hotspotData['hotspot$i']?['imagePath'];
-      if (imagePath != null && imagePath.isNotEmpty) {
+      if (imagePath!.isNotEmpty) {
         _hotspotImages[i] = imagePath;
       }
     }

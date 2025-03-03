@@ -3,19 +3,17 @@
 import 'package:firebase_core/firebase_core.dart' show FirebaseOptions;
 import 'package:flutter/foundation.dart'
     show defaultTargetPlatform, kIsWeb, TargetPlatform;
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 /// Default [FirebaseOptions] for use with your Firebase apps.
 ///
 /// Example:
 /// ```dart
-// / import 'firebase_options.dart';
-// / // ...
-// / await Firebase.initializeApp(
-// /   options: DefaultFirebaseOptions.currentPlatform,
-// / );
-// / ```
-
+/// import 'firebase_options.dart';
+/// // ...
+/// await Firebase.initializeApp(
+///   options: DefaultFirebaseOptions.currentPlatform,
+/// );
+/// ```
 class DefaultFirebaseOptions {
   static FirebaseOptions get currentPlatform {
     if (kIsWeb) {
@@ -42,47 +40,52 @@ class DefaultFirebaseOptions {
     }
   }
 
-  static FirebaseOptions web = FirebaseOptions(
-    apiKey: dotenv.env['FIREBASE_API_KEY_WEB']!,
-    appId: dotenv.env['FIREBASE_APP_ID_WEB']!,
+  static const FirebaseOptions web = FirebaseOptions(
+    apiKey: 'AIzaSyBbhDh7JpZm2EZ2uOM44KrmaL2epNDHoWo',
+    appId: '1:12826503565:web:4ef338522d7a22102ef5c4',
     messagingSenderId: '12826503565',
-    projectId: dotenv.env['FIREBASE_PROJECT_ID']!,
+    projectId: 'virtual-tourism-7625f',
     authDomain: 'virtual-tourism-7625f.firebaseapp.com',
     storageBucket: 'virtual-tourism-7625f.appspot.com',
   );
 
-  static FirebaseOptions android = FirebaseOptions(
-    apiKey: dotenv.env['FIREBASE_API_KEY_ANDROID']!,
-    appId: dotenv.env['FIREBASE_APP_ID_ANDROID']!,
+  static const FirebaseOptions android = FirebaseOptions(
+    apiKey: 'AIzaSyACWBa7fup4vD0LRMXeIaJgKbijMKgHhdA',
+    appId: '1:12826503565:android:2759028ed589fb252ef5c4',
     messagingSenderId: '12826503565',
-    projectId: dotenv.env['FIREBASE_PROJECT_ID']!,
+    projectId: 'virtual-tourism-7625f',
     storageBucket: 'virtual-tourism-7625f.appspot.com',
   );
 
-  static FirebaseOptions ios = FirebaseOptions(
-    apiKey: dotenv.env['FIREBASE_API_KEY_IOS']!,
-    appId: dotenv.env['FIREBASE_APP_ID_IOS']!,
+  static const FirebaseOptions ios = FirebaseOptions(
+    apiKey: 'AIzaSyDDpOTavMvvSr6dF_Kb5GrZhui58lmIq9A',
+    appId: '1:12826503565:ios:e58d43f3dfcdd9152ef5c4',
     messagingSenderId: '12826503565',
-    projectId: dotenv.env['FIREBASE_PROJECT_ID']!,
+    projectId: 'virtual-tourism-7625f',
     storageBucket: 'virtual-tourism-7625f.appspot.com',
+    androidClientId: '12826503565-cvdt20g43n804cnb71qptc91q7kjmkdi.apps.googleusercontent.com',
+    iosClientId: '12826503565-qdq9p4rvqun03ve81677b7ti2h430p3s.apps.googleusercontent.com',
     iosBundleId: 'com.example.virtualTourism',
   );
 
-  static FirebaseOptions macos = FirebaseOptions(
-    apiKey: dotenv.env['FIREBASE_API_KEY_IOS']!,
-    appId: dotenv.env['FIREBASE_APP_ID_IOS']!,
+  static const FirebaseOptions macos = FirebaseOptions(
+    apiKey: 'AIzaSyDDpOTavMvvSr6dF_Kb5GrZhui58lmIq9A',
+    appId: '1:12826503565:ios:e58d43f3dfcdd9152ef5c4',
     messagingSenderId: '12826503565',
-    projectId: dotenv.env['FIREBASE_PROJECT_ID']!,
+    projectId: 'virtual-tourism-7625f',
     storageBucket: 'virtual-tourism-7625f.appspot.com',
+    androidClientId: '12826503565-cvdt20g43n804cnb71qptc91q7kjmkdi.apps.googleusercontent.com',
+    iosClientId: '12826503565-qdq9p4rvqun03ve81677b7ti2h430p3s.apps.googleusercontent.com',
     iosBundleId: 'com.example.virtualTourism',
   );
 
-  static FirebaseOptions windows = FirebaseOptions(
-    apiKey: dotenv.env['FIREBASE_API_KEY_WEB']!,
-    appId: '1:12826503565:web:8b0f065d5347f8822ef5c4', // Change this if needed
+  static const FirebaseOptions windows = FirebaseOptions(
+    apiKey: 'AIzaSyBbhDh7JpZm2EZ2uOM44KrmaL2epNDHoWo',
+    appId: '1:12826503565:web:8b0f065d5347f8822ef5c4',
     messagingSenderId: '12826503565',
-    projectId: dotenv.env['FIREBASE_PROJECT_ID']!,
+    projectId: 'virtual-tourism-7625f',
     authDomain: 'virtual-tourism-7625f.firebaseapp.com',
     storageBucket: 'virtual-tourism-7625f.appspot.com',
   );
+
 }

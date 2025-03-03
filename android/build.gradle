@@ -1,7 +1,7 @@
 ext.flutterPluginAndroidLifecycleVersion = '2.0.25'
 
 buildscript {
-    ext.kotlin_version = '1.9.22'
+    ext.kotlin_version = '1.9.24'
     repositories {
         google()
         mavenCentral()
@@ -20,8 +20,6 @@ allprojects {
     }
 }
 
-ext.kotlin_version = "1.9.22"
-
 rootProject.buildDir = '../build'
 
 subprojects {
@@ -33,8 +31,8 @@ tasks.register("clean", Delete) {
     delete rootProject.buildDir
 }
 
-apply plugin: 'com.google.gms.google-services'
-
 ext {
     flutterSdkVersion = 34
 }
+
+apply plugin: 'com.google.gms.google-services'

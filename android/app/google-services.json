@@ -14,11 +14,11 @@
       },
       "oauth_client": [
         {
-          "client_id": "12826503565-cvdt20g43n804cnb71qptc91q7kjmkdi.apps.googleusercontent.com",
+          "client_id": "12826503565-vqu7a3454sogreqqsua3l77nm970qj7n.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.example.virtual_tourism",
-            "certificate_hash": "bc2b1fa2550cee307880e4142b62a93681347b72"
+            "certificate_hash": "a2ac29690dbd8dddcdc894d18972d1f06f72d5e1"
           }
         },
         {

@@ -1,8 +1,8 @@
 plugins {
     id "com.android.application"
-    id 'com.google.gms.google-services'
     id "kotlin-android"
     id "dev.flutter.flutter-gradle-plugin"
+    id "com.google.gms.google-services"
 }
 
 def localProperties = new Properties()
@@ -19,10 +19,10 @@ def flutterVersionName = localProperties.getProperty('flutter.versionName') ?: '
 android {
     namespace "com.example.virtual_tourism"
     compileSdk 34
-    compileSdkVersion 34
-    buildToolsVersion "34.0.0"
 
-    ndkVersion flutter.ndkVersion
+    if (project.hasProperty('flutter.ndkVersion')) {
+        ndkVersion flutter.ndkVersion
+    }
 
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
@@ -47,7 +47,7 @@ android {
 
     signingConfigs {
         release {
-            // Commented for development
+            // Uncomment and configure if you need signing
             // storeFile file("virtual_tourism-release-key.jks")
             // storePassword "password"
             // keyAlias "virtual_tourism-key"
@@ -59,7 +59,7 @@ android {
         release {
             shrinkResources true 
             minifyEnabled true 
-            signingConfig signingConfigs.release
+            signingConfig null
         }
     }
 }
@@ -69,5 +69,7 @@ flutter {
 }
 
 dependencies {
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.8.22"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.9.22"
 }
+
+apply plugin: 'com.google.gms.google-services'
