@@ -47,23 +47,15 @@ class _TourPageState extends State<TourPage> {
             isLoading
                 ? const Center(child: CircularProgressIndicator())
                 : Column(
-                    children: tours0.map((tour) {
-                      String? thumbnailPath = tour['thumbnailPath'];
-                      String? fallbackThumbnailPath =
-                          tour['hotspotData']?['hotspot0']?['thumbnailPath'];
-
+                    children: tours0.map((destinationData) {
                       return FutureBuilder<Map<String, dynamic>?>(
-                        future: firebaseApi.getUserData(tour['userId']),
+                        future:
+                            firebaseApi.getUserData(destinationData['userId']),
                         builder: (context, snapshot) {
                           if (snapshot.hasError) {
                             return TourCard(
                               userProfile: '',
-                              author: tour['userName'] ?? 'Unknown',
-                              title: tour['destinationName'] ?? 'No Title',
-                              thumbnailUrl: (thumbnailPath == null ||
-                                      thumbnailPath.isEmpty)
-                                  ? (fallbackThumbnailPath ?? '')
-                                  : thumbnailPath,
+                              destinationData: destinationData,
                             );
                           }
 
@@ -72,12 +64,7 @@ class _TourPageState extends State<TourPage> {
 
                           return TourCard(
                             userProfile: userProfile,
-                            author: tour['userName'] ?? 'Unknown',
-                            title: tour['destinationName'] ?? 'No Title',
-                            thumbnailUrl:
-                                (thumbnailPath == null || thumbnailPath.isEmpty)
-                                    ? (fallbackThumbnailPath ?? '')
-                                    : thumbnailPath,
+                            destinationData: destinationData,
                           );
                         },
                       );

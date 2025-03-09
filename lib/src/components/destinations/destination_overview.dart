@@ -182,9 +182,12 @@ class DestinationOverviewState extends State<DestinationOverview> {
                     theme: theme,
                     screenSize: screenSize,
                   ),
-                  ReviewSection(
-                    destinationData: widget.destinationData,
-                  ),
+                  if (widget.destinationData
+                      .toString()
+                      .contains("verified_user_uploads"))
+                    ReviewSection(
+                      destinationData: widget.destinationData,
+                    ),
                   SizedBox(height: screenSize.width / 3),
                   if (_isLoading)
                     const Center(
