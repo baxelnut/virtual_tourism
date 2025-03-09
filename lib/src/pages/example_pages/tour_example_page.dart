@@ -31,25 +31,21 @@ class _TourExamplePageState extends State<TourExamplePage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            caseStudyDestinations(context),
-            caseStudyDestinations(context),
-            caseStudyDestinations(context),
-            const SizedBox(height: 100),
-          ],
-        ),
+    return SingleChildScrollView(
+      child: Column(
+        children: [
+          caseStudyDestinations(context),
+          const SizedBox(height: 100),
+        ],
       ),
     );
   }
 
   Widget caseStudyDestinations(BuildContext context) {
     final double cardSize = MediaQuery.of(context).size.width / 2;
-    
+
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 25),
+      padding: const EdgeInsets.only(top: 25),
       child: Column(
         children: [
           const CardsHeader(

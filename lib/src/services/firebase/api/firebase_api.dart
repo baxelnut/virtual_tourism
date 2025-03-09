@@ -335,24 +335,36 @@ class FirebaseApi with ChangeNotifier {
     return null;
   }
 
+  // Future<List<Map<String, dynamic>>> fetchDestinations({
+  //   final String? destinationId,
+  //   required final String parentPath,
+  // }) async {
+  //   final List<Map<String, dynamic>> destinations = [];
+  //   final List<String> destinationIds = ['destinationId1', 'destinationId2'];
+
+  //   for (final destinationId in destinationIds) {
+  //     final destinationData = await FirebaseApi().getDestinationData(
+  //       parentPath: parentPath,
+  //       destinationId: destinationId,
+  //     );
+  //     if (destinationData != null) {
+  //       destinations.add(destinationData);
+  //     }
+  //   }
+
+  //   return destinations;
+  // }
+
   Future<List<Map<String, dynamic>>> fetchDestinations({
-    final String? destinationId,
-    required final String parentPath,
+    required final String collection,
   }) async {
-    final List<Map<String, dynamic>> destinations = [];
-    final List<String> destinationIds = ['destinationId1', 'destinationId2'];
-
-    for (final destinationId in destinationIds) {
-      final destinationData = await FirebaseApi().getDestinationData(
-        parentPath: parentPath,
-        destinationId: destinationId,
-      );
-      if (destinationData != null) {
-        destinations.add(destinationData);
-      }
+    try {
+      final querySnapshot = await _firestore.collection(collection).get();
+      return querySnapshot.docs.map((doc) => doc.data()).toList();
+    } catch (e) {
+      print('Error fetching destinations: $e');
+      return [];
     }
-
-    return destinations;
   }
 
   Future<Map<String, dynamic>?> getDestinationData({
@@ -512,12 +524,10 @@ class FirebaseApi with ChangeNotifier {
     }
   }
 
-  Future<List<Map<String, dynamic>>> getDestinationReviews(
-      {
-        required String collectionId,
-        required String destinationId,
-
-      }) async {
+  Future<List<Map<String, dynamic>>> getDestinationReviews({
+    required String collectionId,
+    required String destinationId,
+  }) async {
     try {
       QuerySnapshot reviewsSnapshot = await _firestore
           .collection(collectionId)
