@@ -2,16 +2,17 @@ import 'package:flutter/material.dart';
 
 class RatingAverage extends StatelessWidget {
   final List<int> ratings;
+  final int totalRatings;
   const RatingAverage({
     super.key,
     required this.ratings,
+    required this.totalRatings,
   });
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
+    final ThemeData theme = Theme.of(context);
 
-    final totalRatings = ratings.reduce((a, b) => a + b);
     final starMap = {0: 5, 1: 4, 2: 3, 3: 2, 4: 1};
     int weightedSum = 0;
 
