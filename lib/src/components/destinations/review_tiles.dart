@@ -22,7 +22,7 @@ class ReviewTiles extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8),
       child: ListTile(
-        dense: true,
+        dense: false,
         title: Column(
           crossAxisAlignment: CrossAxisAlignment.end,
           children: [
@@ -47,6 +47,7 @@ class ReviewTiles extends StatelessWidget {
         subtitle: Column(
           crossAxisAlignment: CrossAxisAlignment.end,
           children: [
+            const SizedBox(height: 16),
             Text(
               userComment,
               style: theme.textTheme.labelMedium,
