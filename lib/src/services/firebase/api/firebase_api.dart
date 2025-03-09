@@ -335,26 +335,6 @@ class FirebaseApi with ChangeNotifier {
     return null;
   }
 
-  // Future<List<Map<String, dynamic>>> fetchDestinations({
-  //   final String? destinationId,
-  //   required final String parentPath,
-  // }) async {
-  //   final List<Map<String, dynamic>> destinations = [];
-  //   final List<String> destinationIds = ['destinationId1', 'destinationId2'];
-
-  //   for (final destinationId in destinationIds) {
-  //     final destinationData = await FirebaseApi().getDestinationData(
-  //       parentPath: parentPath,
-  //       destinationId: destinationId,
-  //     );
-  //     if (destinationData != null) {
-  //       destinations.add(destinationData);
-  //     }
-  //   }
-
-  //   return destinations;
-  // }
-
   Future<List<Map<String, dynamic>>> fetchDestinations({
     required String collection,
   }) async {
@@ -477,12 +457,14 @@ class FirebaseApi with ChangeNotifier {
     required String userName,
     required double ratingStars,
     String? reviewComment,
+    String? photoUrl,
   }) async {
     final reviewData = {
       'userName': userName,
       'ratingStars': ratingStars,
       'reviewComment': reviewComment ?? '',
       'timestamp': FieldValue.serverTimestamp(),
+      'photoUrl': photoUrl,
     };
 
     final docRef =

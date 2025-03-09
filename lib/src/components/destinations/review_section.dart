@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+// import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 // import 'package:virtual_tourism/src/services/firebase/api/firebase_api.dart';
@@ -309,14 +310,29 @@ class _ReviewSectionState extends State<ReviewSection> {
 
         Map<String, String> userImageMap = {
           for (var doc in snapshot.data!.docs)
-            doc.id: (doc.data() as Map<String, dynamic>?)?['imageUrl'] ?? ''
+            doc.id: ((doc.data() as Map<String, dynamic>?)?['imageUrl']
+                            as String?)
+                        ?.trim()
+                        .isNotEmpty ==
+                    true
+                ? (doc.data() as Map<String, dynamic>)['imageUrl']
+                : 'https://firebasestorage.googleapis.com/v0/b/virtual-tourism-7625f.appspot.com/o/users%2F.default%2Fprofile.png?alt=media&token=3471ca29-03b2-4bd7-a3fe-20dcc1810559'
         };
+
+        // final User? user = FirebaseAuth.instance.currentUser;
+        // print(user);
 
         return Column(
           children: reviews.map((review) {
-            final userImageUrl = userImageMap[review['userUid']] ?? '';
+            final userImageUrl = (userImageMap[review['userUid']]
+                        ?.trim()
+                        .isNotEmpty ==
+                    true)
+                ? userImageMap[review['userUid']]
+                : 'https://firebasestorage.googleapis.com/v0/b/virtual-tourism-7625f.appspot.com/o/users%2F.default%2Fprofile.png?alt=media&token=3471ca29-03b2-4bd7-a3fe-20dcc1810559';
+            // print('INPO: ${review['photoUrl']}');
             return ReviewTiles(
-              userProfile: userImageUrl,
+              userProfile: review['photoUrl'] ?? userImageUrl,
               userName: review['userName'] ?? 'Anonymous',
               userRating: (review['ratingStars'] ?? 5).toInt(),
               userComment: review['reviewComment'] ?? '',

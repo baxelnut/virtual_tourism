@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import '../../services/firebase/api/firebase_api.dart';
 
@@ -15,6 +16,7 @@ class ButtonWriteReview extends StatefulWidget {
 }
 
 class _ButtonWriteReviewState extends State<ButtonWriteReview> {
+  final User? user = FirebaseAuth.instance.currentUser;
   final TextEditingController reviewController = TextEditingController();
   double ratingStars = 0.0;
 
@@ -109,10 +111,11 @@ class _ButtonWriteReviewState extends State<ButtonWriteReview> {
                         firebaseApi.addReview(
                           collectionId: "verified_user_uploads",
                           destinationId: widget.theId,
-                          userId: widget.destinationData['userId'],
-                          userName: widget.destinationData['userName'],
+                          userId: user!.uid,
+                          userName: user!.displayName!,
                           ratingStars: localRatingStars,
                           reviewComment: localReviewController.text,
+                          photoUrl: user!.photoURL,
                         );
 
                         Navigator.pop(context);
