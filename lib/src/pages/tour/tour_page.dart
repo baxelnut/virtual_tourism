@@ -49,13 +49,14 @@ class _TourPageState extends State<TourPage> {
                 : Column(
                     children: tours0.map((destinationData) {
                       return FutureBuilder<Map<String, dynamic>?>(
-                        future:
-                            firebaseApi.getUserData(destinationData['userId']),
+                        future: firebaseApi
+                            .getUserData(destinationData['userId'] ?? ''),
                         builder: (context, snapshot) {
                           if (snapshot.hasError) {
                             return TourCard(
                               userProfile: '',
                               destinationData: destinationData,
+                              theId: destinationData['id'],
                             );
                           }
 
@@ -65,6 +66,7 @@ class _TourPageState extends State<TourPage> {
                           return TourCard(
                             userProfile: userProfile,
                             destinationData: destinationData,
+                            theId: destinationData['id'],
                           );
                         },
                       );

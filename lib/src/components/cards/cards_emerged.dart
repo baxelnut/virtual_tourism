@@ -5,9 +5,11 @@ import '../destinations/destination_overview.dart';
 
 class CardsEmerged extends StatelessWidget {
   final Map<String, dynamic> destinationData;
+  final String? theId;
   const CardsEmerged({
     super.key,
     required this.destinationData,
+    this.theId,
   });
 
   @override
@@ -118,6 +120,7 @@ class CardsEmerged extends StatelessWidget {
                             MaterialPageRoute(
                               builder: (context) => DestinationOverview(
                                 destinationData: destinationData,
+                                theId: theId.toString(), // example
                               ),
                             ),
                           );

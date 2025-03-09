@@ -5,9 +5,11 @@ import '../../components/content/load_image.dart';
 
 class ContentTiles extends StatelessWidget {
   final Map<String, dynamic> destinationData;
+  final String theId;
   const ContentTiles({
     super.key,
     required this.destinationData,
+    required this.theId,
   });
 
   String getImagePath(
@@ -37,6 +39,7 @@ class ContentTiles extends StatelessWidget {
             MaterialPageRoute(
               builder: (context) => DestinationOverview(
                 destinationData: destinationData,
+                theId: theId,
               ),
             ),
           );
