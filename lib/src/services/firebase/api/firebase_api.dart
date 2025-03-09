@@ -356,15 +356,15 @@ class FirebaseApi with ChangeNotifier {
   // }
 
   Future<List<Map<String, dynamic>>> fetchDestinations({
-    required final String collection,
+    required String collection,
   }) async {
-    try {
-      final querySnapshot = await _firestore.collection(collection).get();
-      return querySnapshot.docs.map((doc) => doc.data()).toList();
-    } catch (e) {
-      print('Error fetching destinations: $e');
-      return [];
-    }
+    var snapshot = await _firestore.collection(collection).get();
+
+    return snapshot.docs.map((doc) {
+      var data = doc.data();
+      data['id'] = doc.id;
+      return data;
+    }).toList();
   }
 
   Future<Map<String, dynamic>?> getDestinationData({
@@ -542,5 +542,42 @@ class FirebaseApi with ChangeNotifier {
       print('Error fetching reviews: $e');
       return [];
     }
+  }
+
+  Future<List<int>> fetchRatings(String destinationId) async {
+    if (destinationId.isEmpty) {
+      print("💀 ERROR: destinationId is empty!");
+      return [];
+    }
+
+    final snapshot = await FirebaseFirestore.instance
+        .collection('verified_user_uploads')
+        .doc(destinationId) // Each destination has its own document
+        .get();
+
+    if (!snapshot.exists) {
+      print("💀 No document found for destination: $destinationId");
+      return [];
+    }
+
+    final data = snapshot.data();
+    print("🔥 Fetched data: $data");
+
+    if (data == null || !data.containsKey('ratings')) {
+      print("💀 Ratings key missing.");
+      return [];
+    }
+
+    final rawRatings = data['ratings'];
+
+    List<int> ratings = [];
+    if (rawRatings is Map) {
+      ratings = rawRatings.values
+          .map((review) => (review['ratingStars'] as num?)?.toInt() ?? 0)
+          .toList();
+    }
+
+    print("✅ Processed ratings: $ratings");
+    return ratings;
   }
 }

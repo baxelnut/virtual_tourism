@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+// import 'package:virtual_tourism/src/services/firebase/api/firebase_api.dart';
 
 import 'button_donate.dart';
 import 'button_share.dart';
@@ -14,9 +15,11 @@ import 'review_tiles.dart';
 
 class ReviewSection extends StatefulWidget {
   final Map<String, dynamic> destinationData;
+  final String theId;
   const ReviewSection({
     super.key,
     required this.destinationData,
+    required this.theId,
   });
 
   @override
@@ -24,6 +27,26 @@ class ReviewSection extends StatefulWidget {
 }
 
 class _ReviewSectionState extends State<ReviewSection> {
+  @override
+  void initState() {
+    super.initState();
+    processRatings();
+  }
+
+  List<int> processRatings() {
+    Map<String, dynamic> rawRatings = widget.destinationData['ratings'] ?? {};
+    List<int> ratings = List.generate(5, (_) => 0);
+    for (var ratingData in rawRatings.values) {
+      if (ratingData is Map && ratingData.containsKey('ratingStars')) {
+        int star = (ratingData['ratingStars'] as num).toInt();
+        if (star >= 1 && star <= 5) {
+          ratings[5 - star]++;
+        }
+      }
+    }
+    return ratings;
+  }
+
   String _formatTimestamp(dynamic timestamp) {
     if (timestamp is! Timestamp) return '-';
 
@@ -43,7 +66,8 @@ class _ReviewSectionState extends State<ReviewSection> {
     final ThemeData theme = Theme.of(context);
     final Size screenSize = MediaQuery.of(context).size;
 
-    final List<int> ratings = [89, 21, 13, 10, 5];
+    List<int> ratings = processRatings();
+    int totalRatings = ratings.fold(0, (acc, value) => acc + value);
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -64,6 +88,7 @@ class _ReviewSectionState extends State<ReviewSection> {
           screenSize: screenSize,
           theme: theme,
           ratings: ratings,
+          totalRatings: totalRatings,
         ),
         _actionButtons(
           theme: theme,
@@ -81,6 +106,7 @@ class _ReviewSectionState extends State<ReviewSection> {
     required Size screenSize,
     required ThemeData theme,
     required List<int> ratings,
+    required int totalRatings,
   }) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 30),
@@ -92,6 +118,7 @@ class _ReviewSectionState extends State<ReviewSection> {
           children: [
             RatingAverage(
               ratings: ratings,
+              totalRatings: totalRatings,
             ),
             Row(
               children: [
@@ -99,6 +126,7 @@ class _ReviewSectionState extends State<ReviewSection> {
                 const SizedBox(width: 8),
                 RatingIndicatorBar(
                   ratings: ratings,
+                  totalRatings: totalRatings,
                 ),
               ],
             ),
@@ -125,6 +153,7 @@ class _ReviewSectionState extends State<ReviewSection> {
             const SizedBox(width: 30),
             ButtonWriteReview(
               destinationData: widget.destinationData,
+              theId: widget.theId,
             ),
             ButtonShare(
               destinationData: widget.destinationData,
