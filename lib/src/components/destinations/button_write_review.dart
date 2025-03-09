@@ -3,9 +3,11 @@ import '../../services/firebase/api/firebase_api.dart';
 
 class ButtonWriteReview extends StatefulWidget {
   final dynamic destinationData;
+  final String theId;
   const ButtonWriteReview({
     super.key,
     this.destinationData,
+    required this.theId,
   });
 
   @override
@@ -106,7 +108,7 @@ class _ButtonWriteReviewState extends State<ButtonWriteReview> {
 
                         firebaseApi.addReview(
                           collectionId: "verified_user_uploads",
-                          destinationId: widget.destinationData['id'],
+                          destinationId: widget.theId,
                           userId: widget.destinationData['userId'],
                           userName: widget.destinationData['userName'],
                           ratingStars: localRatingStars,
