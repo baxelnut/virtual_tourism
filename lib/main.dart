@@ -1,14 +1,14 @@
 import 'package:firebase_app_check/firebase_app_check.dart';
-import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:provider/provider.dart';
 
-import 'src/app.dart';
-import 'src/services/firebase/api/firebase_api.dart';
-import 'src/services/firebase/firebase_options.dart';
-import 'src/services/firebase/storage/storage_service.dart';
-import 'src/services/theme/theme_provider.dart';
+import 'app.dart';
+import 'core/theme/theme_provider.dart';
+import 'services/firebase/api/firebase_api.dart';
+import 'services/firebase/firebase_options.dart';
+import 'services/firebase/storage/storage_service.dart';
 
 void main() async {
   Provider.debugCheckInvalidValueType = null;
