@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../services/firebase/api/firebase_api.dart';
-import '../example_pages/tour_example_page.dart';
+import 'tour_collections.dart';
 import 'tour_card.dart';
 
 class TourPage extends StatefulWidget {
@@ -34,6 +34,8 @@ class _TourPageState extends State<TourPage> {
 
   @override
   Widget build(BuildContext context) {
+    final ThemeData theme = Theme.of(context);
+
     return Scaffold(
       appBar: AppBar(
         title: const Center(
@@ -43,7 +45,14 @@ class _TourPageState extends State<TourPage> {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            const TourExamplePage(),
+            const TourCollections(),
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 50),
+              child: Text(
+                'Public',
+                style: theme.textTheme.headlineSmall,
+              ),
+            ),
             isLoading
                 ? const Center(child: CircularProgressIndicator())
                 : Column(

@@ -27,7 +27,9 @@ class TourCard extends StatelessWidget {
         ? (fallbackThumbnailPath ?? '')
         : destinationData['thumbnailPath'];
     String title = destinationData['destinationName'] ?? 'Unknown';
-    String subtitle = destinationData['userName'] ?? 'Unknown';
+    String subtitle = (destinationData['userName'] != null)
+        ? destinationData['userName']
+        : "basilius tengang";
 
     return GestureDetector(
       onTap: () {

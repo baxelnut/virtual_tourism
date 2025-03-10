@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 
+import '../full_view_list.dart';
+
 class CardsHeader extends StatelessWidget {
   final String cardsTitle;
-  final Map<String, dynamic>? destinationData;
+  final List<Map<String, dynamic>>? destinationData;
   const CardsHeader({
     super.key,
     required this.cardsTitle,
@@ -11,7 +13,7 @@ class CardsHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
+    final ThemeData theme = Theme.of(context);
 
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 20),
@@ -38,16 +40,24 @@ class CardsHeader extends StatelessWidget {
           ),
           GestureDetector(
             onTap: () {
-              showDialog(
-                  context: context,
-                  builder: (_) {
-                    print('navigate to full item list...bruh.');
-                    return AlertDialog(
-                      title: Text(
-                        cardsTitle,
-                      ),
-                    );
-                  });
+              // showDialog(
+              //     context: context,
+              //     builder: (_) {
+              //       print('navigate to full item list...bruh.');
+              //       return AlertDialog(
+              //         title: Text(
+              //           cardsTitle,
+              //         ),
+              //       );
+              //     });
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => FullViewList(
+                    cardsTitle: cardsTitle,
+                    destinationData: destinationData,
+                  ),
+                ),
+              );
             },
             child: Text(
               'See All',
