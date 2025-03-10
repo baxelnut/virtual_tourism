@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 
+import '../../../core/global_values.dart';
+
 class ProductDetails extends StatelessWidget {
   final String productImage;
   final String productName;
   final String productPrice;
   final String? productDescription;
-
   const ProductDetails({
     super.key,
     required this.productImage,
@@ -16,8 +17,8 @@ class ProductDetails extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final screenSize = MediaQuery.of(context).size;
+    final ThemeData theme = GlobalValues.theme(context);
+    final Size screenSize = GlobalValues.screenSize(context);
 
     return Scaffold(
       body: CustomScrollView(
