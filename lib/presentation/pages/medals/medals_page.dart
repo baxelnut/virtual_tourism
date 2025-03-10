@@ -3,7 +3,7 @@ import 'package:provider/provider.dart';
 
 import '../../../core/global_values.dart';
 import '../../../services/firebase/api/firebase_api.dart';
-import '../../widgets/cards/medals_cards.dart';
+import 'medals_cards.dart';
 
 class MedalsPage extends StatefulWidget {
   const MedalsPage({super.key});

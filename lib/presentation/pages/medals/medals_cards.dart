@@ -8,7 +8,6 @@ import '../../pages/medals/full_country_list_page.dart';
 class MedalsCards extends StatefulWidget {
   final String title;
   final Map<String, bool> countries;
-
   const MedalsCards({
     super.key,
     required this.title,
@@ -29,16 +28,15 @@ class MedalsCardsState extends State<MedalsCards> {
   }
 
   int get visitedCount => countries.values.where((visited) => visited).length;
-
   int get totalCount => countries.length;
 
   void toggleCountryVisited(String countryName) async {
     final firebaseApi = Provider.of<FirebaseApi>(context, listen: false);
     final newVisited = !countries[countryName]!;
+
     setState(() {
       countries[countryName] = newVisited;
     });
-
     try {
       await firebaseApi.updatePassportStatus(countryName, newVisited);
     } catch (e) {
@@ -47,7 +45,11 @@ class MedalsCardsState extends State<MedalsCards> {
       });
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Error updating state: $e')),
+          SnackBar(
+            content: Text(
+              'Error updating state: $e',
+            ),
+          ),
         );
       }
     }
@@ -87,7 +89,9 @@ class MedalsCardsState extends State<MedalsCards> {
       onTap: () {
         Navigator.of(context).push(
           MaterialPageRoute(
-            builder: (context) => FullCountryListPage(countries: countries),
+            builder: (context) => FullCountryListPage(
+              countries: countries,
+            ),
           ),
         );
       },
@@ -106,7 +110,9 @@ class MedalsCardsState extends State<MedalsCards> {
               progress,
               style: theme.textTheme.bodyLarge,
             ),
-            const Icon(Icons.keyboard_arrow_right_rounded),
+            const Icon(
+              Icons.keyboard_arrow_right_rounded,
+            ),
           ],
         ),
       ),
