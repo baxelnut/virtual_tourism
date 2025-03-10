@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../core/global_values.dart';
 import '../utils/full_view_list.dart';
 
 class CardsHeader extends StatelessWidget {
@@ -13,7 +14,7 @@ class CardsHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final ThemeData theme = Theme.of(context);
+    final ThemeData theme = GlobalValues.theme(context);
 
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 20),

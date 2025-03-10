@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../core/global_values.dart';
 import '../content/photographic_screen.dart';
 
 class CardsCurved extends StatelessWidget {
@@ -11,10 +12,9 @@ class CardsCurved extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final screenSize = MediaQuery.of(context).size;
-    const String placeholderPath =
-        'https://hellenic.org/wp-content/plugins/elementor/assets/images/placeholder.png';
+    final ThemeData theme = GlobalValues.theme(context);
+    final Size screenSize = GlobalValues.screenSize(context);
+    const String placeholderPath = GlobalValues.placeholderPath;
 
     return Padding(
       padding: const EdgeInsets.only(left: 5),

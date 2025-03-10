@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../core/global_values.dart';
 import '../content/load_image.dart';
 import '../destinations/destination_overview.dart';
 import 'more_button.dart';
@@ -20,11 +21,10 @@ class FitWidthCard extends StatefulWidget {
 class _FitWidthCardState extends State<FitWidthCard> {
   @override
   Widget build(BuildContext context) {
-    final ThemeData theme = Theme.of(context);
-    final Size screenSize = MediaQuery.of(context).size;
+    final ThemeData theme = GlobalValues.theme(context);
+    final Size screenSize = GlobalValues.screenSize(context);
+    const String placeholderPath = GlobalValues.placeholderPath;
 
-    const String placeholderPath =
-        'https://hellenic.org/wp-content/plugins/elementor/assets/images/placeholder.png';
     String? fallbackThumbnailPath =
         widget.destinationData['hotspotData']?['hotspot0']?['thumbnailPath'];
     String thumbnailUrl = (widget.destinationData['thumbnailPath'] == null ||

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../../core/global_values.dart';
+
 class BookmarksCards extends StatelessWidget {
   // final Map<String, dynamic> destinationData;
   const BookmarksCards({
@@ -9,10 +11,9 @@ class BookmarksCards extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final ThemeData theme = Theme.of(context);
-    final Size screenSize = MediaQuery.of(context).size;
-    const String placeholderPath =
-        'https://hellenic.org/wp-content/plugins/elementor/assets/images/placeholder.png';
+    final ThemeData theme = GlobalValues.theme(context);
+    final Size screenSize = GlobalValues.screenSize(context);
+    const String placeholderPath = GlobalValues.placeholderPath;
 
     return Padding(
       padding: const EdgeInsets.only(left: 6, top: 12),

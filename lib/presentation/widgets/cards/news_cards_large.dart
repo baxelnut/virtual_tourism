@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../core/global_values.dart';
 import '../../pages/home/news_detail.dart';
 import '../content/load_image.dart';
 
@@ -23,8 +24,8 @@ class NewsCardsLarge extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final screenSize = MediaQuery.of(context).size;
+    final ThemeData theme = GlobalValues.theme(context);
+    final Size screenSize = GlobalValues.screenSize(context);
 
     return Padding(
       padding: const EdgeInsets.only(left: 6, top: 12),

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:popover/popover.dart';
 
+import '../../../core/global_values.dart';
+
 class MoreButton extends StatelessWidget {
   final bool isAdmin;
   const MoreButton({
@@ -10,7 +12,7 @@ class MoreButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
+    final ThemeData theme = GlobalValues.theme(context);
 
     return IconButton(
       icon: const Icon(Icons.more_vert_rounded),

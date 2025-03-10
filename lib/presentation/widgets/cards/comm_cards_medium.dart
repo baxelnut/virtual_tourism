@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../core/global_values.dart';
 import '../content/load_image.dart';
 
 class CommCardsMedium extends StatelessWidget {
@@ -15,8 +16,8 @@ class CommCardsMedium extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final ThemeData theme = Theme.of(context);
-    final Size screenSize = MediaQuery.of(context).size;
+    final ThemeData theme = GlobalValues.theme(context);
+    final Size screenSize = GlobalValues.screenSize(context);
 
     return Padding(
       padding: const EdgeInsets.only(left: 6, bottom: 6),

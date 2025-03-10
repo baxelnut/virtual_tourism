@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../core/global_values.dart';
 import '../../pages/home/news_detail.dart';
 import '../content/load_image.dart';
 
@@ -24,7 +25,7 @@ class NewsTiles extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final ThemeData theme = Theme.of(context);
+    final ThemeData theme = GlobalValues.theme(context);
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 30),
