@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
+import '../../../core/global_values.dart';
 import '../admin/content_tiles.dart';
 
 class ExplorePage extends StatefulWidget {
@@ -117,7 +118,8 @@ class _ExplorePageState extends State<ExplorePage> {
   }
 
   void showAlertDialog(String message) {
-    final theme = Theme.of(context);
+    final ThemeData theme = GlobalValues.theme(context);
+
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -129,10 +131,7 @@ class _ExplorePageState extends State<ExplorePage> {
               onPressed: () {
                 Navigator.of(context).pop();
               },
-              child: Text(
-                "OK",
-                style: theme.textTheme.titleMedium,
-              ),
+              child: Text("OK", style: theme.textTheme.titleMedium),
             ),
           ],
         );
@@ -142,8 +141,8 @@ class _ExplorePageState extends State<ExplorePage> {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final screenSize = MediaQuery.of(context).size;
+    final ThemeData theme = GlobalValues.theme(context);
+    final Size screenSize = GlobalValues.screenSize(context);
 
     return Scaffold(
       body: CustomScrollView(
