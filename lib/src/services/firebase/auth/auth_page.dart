@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../app.dart';
-import '../../../components/input_section.dart';
+import '../../../components/util/input_section.dart';
 import 'auth.dart';
 import 'components/additional_action.dart';
 import 'components/alternative_methods.dart';

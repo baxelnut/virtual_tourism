@@ -1,8 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
-import '../../components/input_dropdown.dart';
-import '../../components/input_section.dart';
+import '../../components/util/input_dropdown.dart';
+import '../../components/util/input_section.dart';
 import '../../services/firebase/api/firebase_api.dart';
 import 'hotspot_input.dart';
 
@@ -39,21 +39,6 @@ class _CreateContentPageState extends State<CreateContentPage> {
       isConfirmedEnabled = value;
     });
   }
-
-  // void _updateHotspotQty(int qty) {
-  //   setState(() {
-  //     hotspotQty = qty;
-  //   });
-  // }
-
-  // void checkConfirmState() {
-  //   int uploadedPictures = _hotspotData.length;
-  //   int requiredPictures = hotspotQty;
-
-  //   setState(() {
-  //     isConfirmedEnabled = uploadedPictures == requiredPictures;
-  //   });
-  // }
 
   @override
   void initState() {
@@ -183,7 +168,6 @@ class _CreateContentPageState extends State<CreateContentPage> {
                     WidgetsBinding.instance.addPostFrameCallback((_) {
                       setState(() {
                         _hotspotData = data;
-                        // checkConfirmState();
                       });
                     });
                   },
@@ -199,12 +183,8 @@ class _CreateContentPageState extends State<CreateContentPage> {
                   country: _selectedCountry ?? '',
                   hotspotData: _hotspotData,
                   onConfirmChanged: updateConfirmState,
-                  // onHotspotQtyChanged: _updateHotspotQty,
                 ),
               ),
-              // Text(isConfirmedEnabled.toString()),
-              // Text(_hotspotData.length.toString()),
-              // Text(hotspotQty.toString()),
               (_selectedType == "Tour" && isConfirmedEnabled) ||
                       _selectedType == "Photographic"
                   ? _buildSubmitButton(

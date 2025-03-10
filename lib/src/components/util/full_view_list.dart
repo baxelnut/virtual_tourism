@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../pages/tour/tour_card.dart';
+import '../../pages/tour/tour_card.dart';
 
 class FullViewList extends StatefulWidget {
   final String cardsTitle;

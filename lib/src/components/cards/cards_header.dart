@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
-import '../full_view_list.dart';
+import '../util/full_view_list.dart';
+
 
 class CardsHeader extends StatelessWidget {
   final String cardsTitle;

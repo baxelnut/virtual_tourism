@@ -2,8 +2,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../../components/chips_component.dart';
-import '../../components/user_overview.dart';
+import '../../components/util/chips_component.dart';
+import '../../components/util/user_overview.dart';
 import 'community_content.dart';
 import 'news_content.dart';
 import 'places_content.dart';
