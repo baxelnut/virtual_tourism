@@ -5,12 +5,10 @@ import '../../components/destinations/destination_overview.dart';
 class TourCard extends StatelessWidget {
   final String userProfile;
   final Map<String, dynamic> destinationData;
-  final String theId;
   const TourCard({
     super.key,
     required this.userProfile,
     required this.destinationData,
-    required this.theId,
   });
 
   @override
@@ -37,7 +35,6 @@ class TourCard extends StatelessWidget {
           MaterialPageRoute(
             builder: (context) => DestinationOverview(
               destinationData: destinationData,
-              theId: theId,
             ),
           ),
         );

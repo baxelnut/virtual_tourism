@@ -125,7 +125,6 @@ class _TourCollectionsState extends State<TourCollections> {
                     quarterTurns: 1,
                     child: CardsEmerged(
                       destinationData: item,
-                      theId: item['destinationId'],
                     ),
                   );
                 }).toList(),

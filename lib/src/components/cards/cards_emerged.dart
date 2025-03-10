@@ -5,11 +5,9 @@ import '../destinations/destination_overview.dart';
 
 class CardsEmerged extends StatelessWidget {
   final Map<String, dynamic> destinationData;
-  final String? theId;
   const CardsEmerged({
     super.key,
     required this.destinationData,
-    this.theId,
   });
 
   @override
@@ -18,8 +16,6 @@ class CardsEmerged extends StatelessWidget {
     final screenSize = MediaQuery.of(context).size;
     const placeholderPath =
         'https://hellenic.org/wp-content/plugins/elementor/assets/images/placeholder.png';
-
-    const String caseStudyCountry = 'Chile';
 
     return Padding(
       padding: const EdgeInsets.only(left: 5),
@@ -75,8 +71,7 @@ class CardsEmerged extends StatelessWidget {
                         ),
                       ),
                       Text(
-                        destinationData['country'] ?? caseStudyCountry,
-                        // destinationData['country'] ?? 'Unknown Country',
+                        destinationData['country'] ?? 'Unknown Country',
                         overflow: TextOverflow.visible,
                         maxLines: 2,
                         style: theme.textTheme.labelMedium?.copyWith(
@@ -120,7 +115,6 @@ class CardsEmerged extends StatelessWidget {
                             MaterialPageRoute(
                               builder: (context) => DestinationOverview(
                                 destinationData: destinationData,
-                                theId: theId.toString(), // example
                               ),
                             ),
                           );

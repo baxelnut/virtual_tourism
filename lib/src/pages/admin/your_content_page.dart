@@ -177,7 +177,6 @@ class _YourContentPageState extends State<YourContentPage> {
 
                           return ContentTiles(
                             destinationData: destination,
-                            theId: destination['id'],
                           );
                         },
                       );

@@ -48,7 +48,6 @@ class _FullViewListState extends State<FullViewList> {
                 (data) => TourCard(
                   userProfile: photoUrlPlaceholder,
                   destinationData: data,
-                  theId: data['destinationId'] ?? data['docId'],
                 ),
               ),
           ],

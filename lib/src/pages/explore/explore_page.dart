@@ -187,7 +187,6 @@ class _ExplorePageState extends State<ExplorePage> {
                   delegate: SliverChildBuilderDelegate(
                     (context, index) {
                       var data = _searchResults[index];
-                      print("THIS IS THE DATA IS: ${data['id']}");
                       return Column(
                         children: [
                           Padding(
@@ -195,7 +194,6 @@ class _ExplorePageState extends State<ExplorePage> {
                                 horizontal: 30, vertical: 10),
                             child: ContentTiles(
                               destinationData: data,
-                              theId: data['id'],
                             ),
                           ),
                           if (index == _searchResults.length - 1)

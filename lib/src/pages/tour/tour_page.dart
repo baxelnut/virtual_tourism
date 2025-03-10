@@ -65,7 +65,6 @@ class _TourPageState extends State<TourPage> {
                             return TourCard(
                               userProfile: '',
                               destinationData: destinationData,
-                              theId: destinationData['id'],
                             );
                           }
 
@@ -75,7 +74,6 @@ class _TourPageState extends State<TourPage> {
                           return TourCard(
                             userProfile: userProfile,
                             destinationData: destinationData,
-                            theId: destinationData['id'],
                           );
                         },
                       );

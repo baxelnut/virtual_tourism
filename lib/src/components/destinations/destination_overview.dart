@@ -12,11 +12,9 @@ import 'review_section.dart';
 
 class DestinationOverview extends StatefulWidget {
   final Map<String, dynamic> destinationData;
-  final String theId;
   const DestinationOverview({
     super.key,
     required this.destinationData,
-    required this.theId,
   });
 
   @override
@@ -55,11 +53,6 @@ class DestinationOverviewState extends State<DestinationOverview> {
     try {
       DocumentSnapshot userDoc =
           await FirebaseFirestore.instance.collection('users').doc(uid).get();
-
-      if (!userDoc.exists) {
-        print("User not found.");
-        return;
-      }
 
       String userName = userDoc['username'] ?? 'No Name';
       String userImageUrl = (userDoc['imageUrl'] as String?) ?? '';
@@ -189,7 +182,9 @@ class DestinationOverviewState extends State<DestinationOverview> {
                       .contains("verified_user_uploads"))
                     ReviewSection(
                       destinationData: widget.destinationData,
-                      theId: widget.theId,
+                      theId: widget.destinationData['docId'] ??
+                          widget.destinationData['destinationId'] ??
+                          "something's wrong with the id thing",
                     ),
                   SizedBox(height: screenSize.width / 3),
                   if (_isLoading)
