@@ -242,7 +242,7 @@ class _UserOverviewState extends State<UserOverview> {
             ),
             GestureDetector(
               onTap: () {
-                handleBookmarks();
+                // handleBookmarks();
               },
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 15),
