@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../../core/global_values.dart';
 import '../cards/fit_width_card.dart';
 
 class FullViewList extends StatefulWidget {
@@ -18,9 +19,8 @@ class FullViewList extends StatefulWidget {
 class _FullViewListState extends State<FullViewList> {
   @override
   Widget build(BuildContext context) {
-    final ThemeData theme = Theme.of(context);
-    final String photoUrlPlaceholder =
-        'https://firebasestorage.googleapis.com/v0/b/virtual-tourism-7625f.appspot.com/o/users%2Fprofile%2FSEBcLELFH0NJpknkR1sygVD65rT2.jpg?alt=media&token=ecb1c829-52bb-4d3a-8675-b99c2c1f38f0';
+    final ThemeData theme = GlobalValues.theme(context);
+    final String bazelPath = GlobalValues.bazelPath;
 
     return Scaffold(
       body: CustomScrollView(
@@ -46,7 +46,7 @@ class _FullViewListState extends State<FullViewList> {
                   delegate: SliverChildBuilderDelegate(
                     (context, index) {
                       return FitWidthCard(
-                        userProfile: photoUrlPlaceholder,
+                        userProfile: bazelPath,
                         destinationData: widget.destinationData![index],
                       );
                     },

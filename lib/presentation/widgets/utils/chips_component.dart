@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../../core/global_values.dart';
+
 class ChipsComponent extends StatefulWidget {
   final List<String> listOfThangz;
   final Function(int) onTabChange;
@@ -37,7 +39,7 @@ class _ChipsComponentState extends State<ChipsComponent> {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
+    final ThemeData theme = GlobalValues.theme(context);
 
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 20),

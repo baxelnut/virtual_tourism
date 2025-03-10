@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../../core/global_values.dart';
 import '../../../core/theme/theme.dart';
 import '../../../core/theme/theme_provider.dart';
 import '../../../services/firebase/api/firebase_api.dart';
@@ -25,11 +26,10 @@ class UserOverview extends StatefulWidget {
 }
 
 class _UserOverviewState extends State<UserOverview> {
-  final User? user = FirebaseAuth.instance.currentUser;
   bool isAdmin = false;
 
-  final String defaultProfile =
-      'https://firebasestorage.googleapis.com/v0/b/virtual-tourism-7625f.appspot.com/o/users%2F.default%2Fprofile.png?alt=media&token=3471ca29-03b2-4bd7-a3fe-20dcc1810559';
+  final User? user = GlobalValues.user;
+  final String defaultProfile = GlobalValues.defaultProfile;
 
   handleShowPict() {
     return showDialog(
@@ -93,7 +93,8 @@ class _UserOverviewState extends State<UserOverview> {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
+    final ThemeData theme = GlobalValues.theme(context);
+
     final bool isDark =
         Provider.of<ThemeProvider>(context).themeData == darkMode;
 
