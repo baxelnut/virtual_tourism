@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../../core/global_values.dart';
+
 class SettingsTiles extends StatelessWidget {
   final String heading;
   final List<IconData> leadingIcon;
@@ -18,7 +20,7 @@ class SettingsTiles extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
+    final ThemeData theme = GlobalValues.theme(context);
     int quantity = title.length;
 
     return Column(
@@ -32,7 +34,10 @@ class SettingsTiles extends StatelessWidget {
           ListTile(
             tileColor: theme.colorScheme.onSurface.withOpacity(0.1),
             shape: RoundedRectangleBorder(
-              side: BorderSide(color: theme.colorScheme.onSurface, width: 0.15),
+              side: BorderSide(
+                color: theme.colorScheme.onSurface,
+                width: 0.15,
+              ),
               borderRadius: BorderRadius.only(
                 topLeft: Radius.circular(i == 0 ? 25 : 0),
                 topRight: Radius.circular(i == 0 ? 25 : 0),
@@ -52,14 +57,14 @@ class SettingsTiles extends StatelessWidget {
                 child: Icon(
                   leadingIcon[i],
                   size: 25,
-                  color: title[i] == 'Logout' ? Colors.red : null,
+                  color: title[i] == 'Logout' ? theme.colorScheme.error : null,
                 ),
               ),
             ),
             title: Text(
               title[i],
               style: theme.textTheme.bodyLarge?.copyWith(
-                color: title[i] == 'Logout' ? Colors.red : null,
+                color: title[i] == 'Logout' ? theme.colorScheme.error : null,
               ),
             ),
             trailing: trailingWidget[i],

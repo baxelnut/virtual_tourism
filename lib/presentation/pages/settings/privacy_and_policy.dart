@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 
+import '../../../core/global_values.dart';
+
 class PrivacyAndPolicy extends StatelessWidget {
   const PrivacyAndPolicy({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final ThemeData theme = Theme.of(context);
-    final Size screenSize = MediaQuery.of(context).size;
+    final ThemeData theme = GlobalValues.theme(context);
+    final Size screenSize = GlobalValues.screenSize(context);
 
     return Scaffold(
       appBar: AppBar(
@@ -26,31 +28,31 @@ class PrivacyAndPolicy extends StatelessWidget {
               ),
               const SizedBox(height: 16),
               _buildSection(
-                theme,
+                theme: theme,
                 title: 'Information We Collect',
                 content:
                     'We may collect information such as your name, email address, and device data to enhance your experience.',
               ),
               _buildSection(
-                theme,
+                theme: theme,
                 title: 'How We Use Your Information',
                 content:
                     'We use collected data to improve app functionality, provide customer support, and enhance security.',
               ),
               _buildSection(
-                theme,
+                theme: theme,
                 title: 'Third-Party Services',
                 content:
                     'We may use third-party services for analytics and advertising. These services have their own privacy policies.',
               ),
               _buildSection(
-                theme,
+                theme: theme,
                 title: 'Your Rights',
                 content:
                     'You have the right to access, modify, or delete your personal data. Contact us for assistance.',
               ),
               _buildSection(
-                theme,
+                theme: theme,
                 title: 'Contact Us',
                 content:
                     'If you have any questions about this policy, please contact us at support@virtualtourism.com.',
@@ -85,8 +87,8 @@ class PrivacyAndPolicy extends StatelessWidget {
     );
   }
 
-  Widget _buildSection(
-    ThemeData theme, {
+  Widget _buildSection({
+    required ThemeData theme,
     required String title,
     required String content,
   }) {

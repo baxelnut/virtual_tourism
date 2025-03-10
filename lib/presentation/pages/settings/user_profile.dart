@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
+import '../../../core/global_values.dart';
 import '../../../services/firebase/api/firebase_api.dart';
 
 class UserProfile extends StatefulWidget {
@@ -16,17 +17,18 @@ class UserProfile extends StatefulWidget {
 }
 
 class UserProfileState extends State<UserProfile> {
-  final User? user = FirebaseAuth.instance.currentUser;
+  final User? user = GlobalValues.user;
+
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _phoneNumberController = TextEditingController();
   final TextEditingController _birthdayController = TextEditingController();
+
   final FirebaseApi firebaseApi = FirebaseApi();
   final FirebaseFirestore firestore = FirebaseFirestore.instance;
 
   bool isUploading = false;
   String _selectedGender = 'Prefer not to say';
-
   DateTime? _selectedBirthday;
 
   @override
@@ -251,9 +253,7 @@ class UserProfileState extends State<UserProfile> {
           content: Text(message),
           actions: [
             TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
+              onPressed: () => Navigator.of(context).pop(),
               child: const Text("OK"),
             ),
           ],
@@ -264,22 +264,18 @@ class UserProfileState extends State<UserProfile> {
 
   @override
   Widget build(BuildContext context) {
-    final ThemeData theme = Theme.of(context);
-    final Size screenSize = MediaQuery.of(context).size;
+    final ThemeData theme = GlobalValues.theme(context);
+    final Size screenSize = GlobalValues.screenSize(context);
 
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
-        title: const Text(
-          'Edit Profile',
-        ),
+        title: const Text('Edit Profile'),
       ),
       body: LayoutBuilder(
         builder: (context, constraints) {
           return ConstrainedBox(
-            constraints: BoxConstraints(
-              minHeight: constraints.maxHeight,
-            ),
+            constraints: BoxConstraints(minHeight: constraints.maxHeight),
             child: Center(
               child: Padding(
                 padding: const EdgeInsets.symmetric(
@@ -373,10 +369,18 @@ class UserProfileState extends State<UserProfile> {
           labelStyle: theme.textTheme.bodyLarge,
         ),
         items: const [
-          DropdownMenuItem(value: 'Male', child: Text('Male')),
-          DropdownMenuItem(value: 'Female', child: Text('Female')),
           DropdownMenuItem(
-              value: 'Prefer not to say', child: Text('Prefer not to say')),
+            value: 'Male',
+            child: Text('Male'),
+          ),
+          DropdownMenuItem(
+            value: 'Female',
+            child: Text('Female'),
+          ),
+          DropdownMenuItem(
+            value: 'Prefer not to say',
+            child: Text('Prefer not to say'),
+          ),
         ],
         onChanged: (value) {
           setState(() {
@@ -406,7 +410,10 @@ class UserProfileState extends State<UserProfile> {
             borderRadius: BorderRadius.circular(10),
             borderSide: const BorderSide(width: 0.5),
           ),
-          label: Text(label, style: theme.textTheme.bodyLarge),
+          label: Text(
+            label,
+            style: theme.textTheme.bodyLarge,
+          ),
         ),
       ),
     );

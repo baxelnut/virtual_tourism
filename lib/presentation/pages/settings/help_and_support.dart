@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 
+import '../../../core/global_values.dart';
+
 class HelpAndSupport extends StatelessWidget {
   const HelpAndSupport({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final ThemeData theme = Theme.of(context);
-    final Size screenSize = MediaQuery.of(context).size;
+    final ThemeData theme = GlobalValues.theme(context);
+    final Size screenSize = GlobalValues.screenSize(context);
 
     return Scaffold(
       appBar: AppBar(
@@ -26,25 +28,25 @@ class HelpAndSupport extends StatelessWidget {
               ),
               const SizedBox(height: 16),
               _buildSection(
-                theme,
+                theme: theme,
                 title: 'Frequently Asked Questions',
                 content:
                     'Check our FAQ section for quick solutions to common issues and questions.',
               ),
               _buildSection(
-                theme,
+                theme: theme,
                 title: 'Contact Support',
                 content:
                     'If you need further assistance, contact our support team at support@virtualtourism.com.',
               ),
               _buildSection(
-                theme,
+                theme: theme,
                 title: 'Report a Problem',
                 content:
                     'Encountering an issue? Let us know by reporting it through the app or via email.',
               ),
               _buildSection(
-                theme,
+                theme: theme,
                 title: 'Community & Feedback',
                 content:
                     'Join our community and share your feedback to help us improve your experience.',
@@ -79,8 +81,8 @@ class HelpAndSupport extends StatelessWidget {
     );
   }
 
-  Widget _buildSection(
-    ThemeData theme, {
+  Widget _buildSection({
+    required ThemeData theme,
     required String title,
     required String content,
   }) {

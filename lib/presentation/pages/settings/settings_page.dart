@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../../core/global_values.dart';
 import '../../../core/theme/theme.dart';
 import '../../../core/theme/theme_provider.dart';
 import '../../../services/firebase/auth/auth.dart';
@@ -18,13 +19,14 @@ class SettingsPage extends StatefulWidget {
 }
 
 class _SettingsPageState extends State<SettingsPage> {
+  final Auth _auth = Auth();
   bool notifAllowed = false;
 
-  final Auth _auth = Auth();
-  final user = FirebaseAuth.instance.currentUser;
+  final User? user = GlobalValues.user;
 
   void showAlertDialog(String title, String message) {
-    final theme = Theme.of(context);
+    final ThemeData theme = GlobalValues.theme(context);
+
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -36,10 +38,7 @@ class _SettingsPageState extends State<SettingsPage> {
               onPressed: () {
                 Navigator.of(context).pop();
               },
-              child: Text(
-                "OK",
-                style: theme.textTheme.titleMedium,
-              ),
+              child: Text("OK", style: theme.textTheme.titleMedium),
             ),
           ],
         );
@@ -198,7 +197,7 @@ class _SettingsPageState extends State<SettingsPage> {
     required bool value,
     required ValueChanged<bool> onChanged,
   }) {
-    final theme = Theme.of(context);
+    final ThemeData theme = GlobalValues.theme(context);
     return Switch(
       thumbColor: WidgetStatePropertyAll(
         value ? const Color(0xffEFFFFB) : theme.colorScheme.onSurface,
