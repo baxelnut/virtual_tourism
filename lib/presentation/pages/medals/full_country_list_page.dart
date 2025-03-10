@@ -54,7 +54,7 @@ class FullCountryListPageState extends State<FullCountryListPage> {
                 padding: const EdgeInsets.only(right: 40),
                 child: Text(
                   '$visitedCount/${countries.length}',
-                  style: theme.textTheme.bodyLarge,
+                  style: theme.textTheme.bodyMedium,
                 ),
               ),
             ],

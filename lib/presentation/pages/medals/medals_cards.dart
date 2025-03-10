@@ -108,7 +108,7 @@ class MedalsCardsState extends State<MedalsCards> {
             ),
             Text(
               progress,
-              style: theme.textTheme.bodyLarge,
+              style: theme.textTheme.bodyMedium,
             ),
             const Icon(
               Icons.keyboard_arrow_right_rounded,
