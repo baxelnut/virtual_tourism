@@ -78,7 +78,7 @@ class _MedalsPageState extends State<MedalsPage> {
                     countries: countries,
                   ),
                   MedalsCards(
-                    title: 'Medals TEst',
+                    title: 'Medals Test',
                     countries: countries,
                   ),
                   const SizedBox(height: 100),

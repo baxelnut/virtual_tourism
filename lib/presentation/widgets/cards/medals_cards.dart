@@ -153,7 +153,8 @@ class MedalsCardsState extends State<MedalsCards> {
       height: 110,
       width: 110,
       decoration: BoxDecoration(
-        color: visited ? Colors.green : Colors.amber[900],
+        color:
+            visited ? theme.colorScheme.primary : theme.colorScheme.secondary,
         borderRadius: BorderRadius.circular(12),
       ),
       child: Center(
