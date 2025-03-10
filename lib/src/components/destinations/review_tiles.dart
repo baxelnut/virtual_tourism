@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-class ReviewTiles extends StatelessWidget {
-  final String userProfile;
+class ReviewTiles extends StatefulWidget {
+  final String? userProfile;
   final String userName;
   final int userRating;
   final String userComment;
@@ -16,6 +16,31 @@ class ReviewTiles extends StatelessWidget {
   });
 
   @override
+  State<ReviewTiles> createState() => _ReviewTilesState();
+}
+
+class _ReviewTilesState extends State<ReviewTiles> {
+  final String defaultProfile =
+      'https://firebasestorage.googleapis.com/v0/b/virtual-tourism-7625f.appspot.com/o/users%2F.default%2Fprofile.png?alt=media&token=3471ca29-03b2-4bd7-a3fe-20dcc1810559';
+
+  handleShowPict() {
+    return showDialog(
+      context: context,
+      builder: (_) {
+        return AlertDialog(
+          backgroundColor: Colors.transparent,
+          content: CircleAvatar(
+            radius: 125,
+            backgroundImage: NetworkImage(
+              widget.userProfile ?? defaultProfile,
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  @override
   Widget build(BuildContext context) {
     final ThemeData theme = Theme.of(context);
 
@@ -27,14 +52,14 @@ class ReviewTiles extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.end,
           children: [
             Text(
-              userName,
+              widget.userName,
               style: theme.textTheme.titleMedium,
               textAlign: TextAlign.end,
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: List.generate(
-                userRating,
+                widget.userRating,
                 (index) => const Icon(
                   Icons.star_rate,
                   size: 18,
@@ -49,7 +74,7 @@ class ReviewTiles extends StatelessWidget {
           children: [
             const SizedBox(height: 16),
             Text(
-              userComment,
+              widget.userComment,
               style: theme.textTheme.labelMedium,
               textAlign: TextAlign.end,
               maxLines: 69,
@@ -57,7 +82,7 @@ class ReviewTiles extends StatelessWidget {
             ),
             const SizedBox(height: 8),
             Text(
-              datePosted,
+              widget.datePosted,
               style: theme.textTheme.labelSmall?.copyWith(
                 color: theme.colorScheme.onSurface.withOpacity(0.6),
               ),
@@ -69,9 +94,14 @@ class ReviewTiles extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              CircleAvatar(
-                radius: 16,
-                backgroundImage: NetworkImage(userProfile),
+              GestureDetector(
+                onTap: () => handleShowPict(),
+                child: CircleAvatar(
+                  radius: 16,
+                  backgroundImage: NetworkImage(
+                    widget.userProfile ?? defaultProfile,
+                  ),
+                ),
               ),
               const SizedBox(height: 8),
             ],

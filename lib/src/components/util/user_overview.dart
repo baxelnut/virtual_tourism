@@ -28,23 +28,20 @@ class _UserOverviewState extends State<UserOverview> {
   final User? user = FirebaseAuth.instance.currentUser;
   bool isAdmin = false;
 
+  final String defaultProfile =
+      'https://firebasestorage.googleapis.com/v0/b/virtual-tourism-7625f.appspot.com/o/users%2F.default%2Fprofile.png?alt=media&token=3471ca29-03b2-4bd7-a3fe-20dcc1810559';
+
   handleShowPict() {
-    final theme = Theme.of(context);
     return showDialog(
       context: context,
       builder: (_) {
         return AlertDialog(
-          title: AspectRatio(
-            aspectRatio: 1.0,
-            child: Image(
-              image: _getImageProvider(),
-              fit: BoxFit.cover,
+          backgroundColor: Colors.transparent,
+          content: CircleAvatar(
+            radius: 125,
+            backgroundImage: NetworkImage(
+              user?.photoURL ?? defaultProfile,
             ),
-          ),
-          content: Text(
-            'This is your profile picture',
-            style: theme.textTheme.bodyLarge,
-            textAlign: TextAlign.center,
           ),
         );
       },
@@ -67,21 +64,6 @@ class _UserOverviewState extends State<UserOverview> {
         builder: (context) => const BookmarksPage(),
       ),
     );
-  }
-
-  _getImageProvider() {
-    const invalidPhotoURLs = {
-      'assets/profile.png',
-      'not provided',
-      'gs://virtual-tourism-7625f.appspot.com/users/.default/profile.png',
-      'users/.default/profile.png',
-    };
-
-    if (user?.photoURL != null && !invalidPhotoURLs.contains(user?.photoURL)) {
-      return NetworkImage(user!.photoURL!);
-    } else {
-      return const AssetImage('assets/profile.png');
-    }
   }
 
   @override
@@ -127,8 +109,10 @@ class _UserOverviewState extends State<UserOverview> {
                   handleShowPict();
                 },
                 child: CircleAvatar(
-                  radius: 50,
-                  backgroundImage: _getImageProvider(),
+                  radius: 60,
+                  backgroundImage: NetworkImage(
+                    user?.photoURL ?? defaultProfile,
+                  ),
                 ),
               ),
             ),
@@ -258,7 +242,9 @@ class _UserOverviewState extends State<UserOverview> {
               child: Stack(
                 children: [
                   CircleAvatar(
-                    backgroundImage: _getImageProvider(),
+                    backgroundImage: NetworkImage(
+                      user?.photoURL ?? defaultProfile,
+                    ),
                   ),
                   if (isAdmin)
                     const Positioned(
