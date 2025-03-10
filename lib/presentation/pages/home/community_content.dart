@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../core/global_values.dart';
 import '../../widgets/cards/cards_header.dart';
 import '../../widgets/cards/comm_cards_large.dart';
 import '../../widgets/cards/comm_cards_medium.dart';
@@ -11,7 +12,7 @@ class CommunityContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final ThemeData theme = Theme.of(context);
+    final ThemeData theme = GlobalValues.theme(context);
 
     return Column(
       children: [
@@ -37,7 +38,7 @@ class CommunityContent extends StatelessWidget {
         const SizedBox(height: 20),
         topCommunity(),
         const SizedBox(height: 20),
-        yourFavourite(theme: theme),
+        yourFavourite(theme),
         const SizedBox(height: 80),
       ],
     );
@@ -152,9 +153,7 @@ class CommunityContent extends StatelessWidget {
     );
   }
 
-  Widget yourFavourite({
-    required ThemeData theme,
-  }) {
+  Widget yourFavourite(ThemeData theme) {
     return Column(
       children: [
         const SizedBox(height: 20),

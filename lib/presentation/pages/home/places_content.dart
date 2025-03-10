@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../core/global_values.dart';
 import '../../../data/destination_data.dart';
 import '../../widgets/cards/cards_emerged.dart';
 import '../../widgets/cards/cards_header.dart';
@@ -11,7 +12,8 @@ class PlacesContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final ThemeData theme = Theme.of(context);
+    final ThemeData theme = GlobalValues.theme(context);
+    final Size screenSize = GlobalValues.screenSize(context);
 
     return Column(
       children: [
@@ -34,21 +36,14 @@ class PlacesContent extends StatelessWidget {
           ),
         ),
         // TopPicks(),
-        topCountries(
-          theme: theme,
-        ),
-        popularDestionation(
-          theme: theme,
-          context: context,
-        ),
+        topCountries(theme),
+        popularDestionation(theme, screenSize),
         const SizedBox(height: 50),
       ],
     );
   }
 
-  Widget topCountries({
-    required ThemeData theme,
-  }) {
+  Widget topCountries(ThemeData theme) {
     return Column(
       children: [
         const SizedBox(height: 20),
@@ -83,11 +78,8 @@ class PlacesContent extends StatelessWidget {
     );
   }
 
-  Widget popularDestionation({
-    required ThemeData theme,
-    required context,
-  }) {
-    final double cardSize = MediaQuery.of(context).size.width / 2;
+  Widget popularDestionation(ThemeData theme, Size screenSize) {
+    final double cardSize = screenSize.width / 2;
 
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 25),

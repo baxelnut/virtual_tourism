@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../../core/global_values.dart';
 import '../../widgets/utils/chips_component.dart';
 import '../../widgets/utils/user_overview.dart';
 import 'community_content.dart';
@@ -10,14 +11,17 @@ import 'places_content.dart';
 
 class HomePage extends StatefulWidget {
   final Function(int) onPageChange;
-  const HomePage({super.key, required this.onPageChange});
+  const HomePage({
+    super.key,
+    required this.onPageChange,
+  });
 
   @override
   State<HomePage> createState() => _HomePageState();
 }
 
 class _HomePageState extends State<HomePage> {
-  final user = FirebaseAuth.instance.currentUser;
+  final User? user = GlobalValues.user;
 
   int _selectedTab = 0;
 
