@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
+import '../../../core/global_values.dart';
 import 'photographic_screen.dart';
 
 class Thumbnail extends StatelessWidget {
@@ -14,7 +15,8 @@ class Thumbnail extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final screenWidth = MediaQuery.of(context).size.width;
+    final double screenWidth = GlobalValues.screenSize(context).width;
+
     double thumbWidth = screenWidth;
     if (kIsWeb) {
       thumbWidth = 300;

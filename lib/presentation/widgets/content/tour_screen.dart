@@ -92,8 +92,11 @@ class _TourScreenState extends State<TourScreen> {
     );
   }
 
-  Widget hotspotButton(
-      {String? text, IconData? icon, VoidCallback? onPressed}) {
+  Widget hotspotButton({
+    String? text,
+    IconData? icon,
+    VoidCallback? onPressed,
+  }) {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:panorama_viewer/panorama_viewer.dart';
 
+import '../../../core/global_values.dart';
+
 class PinPointCoords extends StatefulWidget {
   final Image image;
   final Function(double, double) onCoordinatesSelected;
@@ -27,8 +29,8 @@ class _PinPointCoordsState extends State<PinPointCoords> {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final Size screenSize = MediaQuery.of(context).size;
+    final ThemeData theme = GlobalValues.theme(context);
+    final Size screenSize = GlobalValues.screenSize(context);
 
     return Scaffold(
       body: Stack(
