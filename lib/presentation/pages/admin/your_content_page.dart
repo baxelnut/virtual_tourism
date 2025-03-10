@@ -155,16 +155,7 @@ class _YourContentPageState extends State<YourContentPage> {
                           typeShi: typeShi,
                         ),
                         builder: (context, imageSnapshot) {
-                          if (imageSnapshot.connectionState ==
-                              ConnectionState.waiting) {
-                            return const SizedBox(
-                              height: 50,
-                              width: 50,
-                              child: Center(
-                                child: CircularProgressIndicator(),
-                              ),
-                            );
-                          } else if (imageSnapshot.hasError) {
+                          if (imageSnapshot.hasError) {
                             return ListTile(
                               leading: Text(destination['country']),
                               title: Text(destination['destinationName']),
@@ -174,7 +165,6 @@ class _YourContentPageState extends State<YourContentPage> {
                               ),
                             );
                           }
-
                           return ContentTiles(
                             destinationData: destination,
                           );

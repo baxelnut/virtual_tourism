@@ -11,18 +11,26 @@ class ContentTiles extends StatelessWidget {
     required this.destinationData,
   });
 
-  String getImagePath(String placeholderPath) {
-    return destinationData["thumbnailPath"] ??
-        destinationData["hotspotData"]?["hotspot0"]?["imagePath"] ??
-        placeholderPath;
+  String getImagePath() {
+    final String? mainThumbnail = destinationData['thumbnailPath'];
+    final String? hotspotThumbnail =
+        destinationData['hotspotData']?['hotspot0']?['thumbnailPath'];
+    const String placeholderPath =
+        'https://hellenic.org/wp-content/plugins/elementor/assets/images/placeholder.png';
+
+    if (mainThumbnail != null && mainThumbnail.isNotEmpty) {
+      return mainThumbnail;
+    } else if (hotspotThumbnail != null && hotspotThumbnail.isNotEmpty) {
+      return hotspotThumbnail;
+    } else {
+      return placeholderPath;
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     final ThemeData theme = Theme.of(context);
     final Size screenSize = MediaQuery.of(context).size;
-    const String placeholderPath =
-        'https://hellenic.org/wp-content/plugins/elementor/assets/images/placeholder.png';
 
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 4),
@@ -39,9 +47,14 @@ class ContentTiles extends StatelessWidget {
           width: screenSize.width,
           child: Row(
             children: [
-              _buildImage(getImagePath(placeholderPath)),
+              _buildImage(
+                getImagePath(),
+              ),
               const SizedBox(width: 14),
-              _buildTextContent(theme, screenSize),
+              _buildTextContent(
+                theme,
+                screenSize,
+              ),
             ],
           ),
         ),
