@@ -12,8 +12,8 @@ ThemeData lightMode = ThemeData(
     onSecondary: Color(0xffEFFFFB),
     surface: Color(0xffEFFFFB),
     onSurface: Color(0xff151515),
-    // error: Color(0xffFF5539),
-    // onError: Color(0xffEFFFFB),
+    error: Color(0xffFF5539),
+    onError: Color(0xffEFFFFB),
   ),
   textTheme: TextTheme(
     displayLarge: GoogleFonts.outfit(
@@ -76,8 +76,8 @@ ThemeData darkMode = ThemeData(
     onSecondary: Color(0xffEFFFFB),
     surface: Color(0xff121212),
     onSurface: Color(0xffEFFFFB),
-    // error: Color(0xffF12200),
-    // onError: Color(0xffEFFFFB),
+    error: Color(0xffD72323),
+    onError: Color(0xffEFFFFB),
   ),
   textTheme: TextTheme(
     displayLarge: GoogleFonts.outfit(

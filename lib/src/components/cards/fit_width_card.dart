@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+
 import '../../components/content/load_image.dart';
 import '../../components/destinations/destination_overview.dart';
+import 'more_button.dart';
 
-class FitWidthCard extends StatelessWidget {
+class FitWidthCard extends StatefulWidget {
   final String userProfile;
   final Map<String, dynamic> destinationData;
   const FitWidthCard({
@@ -12,6 +14,11 @@ class FitWidthCard extends StatelessWidget {
   });
 
   @override
+  State<FitWidthCard> createState() => _FitWidthCardState();
+}
+
+class _FitWidthCardState extends State<FitWidthCard> {
+  @override
   Widget build(BuildContext context) {
     final ThemeData theme = Theme.of(context);
     final Size screenSize = MediaQuery.of(context).size;
@@ -19,14 +26,14 @@ class FitWidthCard extends StatelessWidget {
     const String placeholderPath =
         'https://hellenic.org/wp-content/plugins/elementor/assets/images/placeholder.png';
     String? fallbackThumbnailPath =
-        destinationData['hotspotData']?['hotspot0']?['thumbnailPath'];
-    String thumbnailUrl = (destinationData['thumbnailPath'] == null ||
-            destinationData['thumbnailPath'].isEmpty)
+        widget.destinationData['hotspotData']?['hotspot0']?['thumbnailPath'];
+    String thumbnailUrl = (widget.destinationData['thumbnailPath'] == null ||
+            widget.destinationData['thumbnailPath'].isEmpty)
         ? (fallbackThumbnailPath ?? '')
-        : destinationData['thumbnailPath'];
-    String title = destinationData['destinationName'] ?? 'Unknown';
-    String subtitle = (destinationData['userName'] != null)
-        ? destinationData['userName']
+        : widget.destinationData['thumbnailPath'];
+    String title = widget.destinationData['destinationName'] ?? 'Unknown';
+    String subtitle = (widget.destinationData['userName'] != null)
+        ? widget.destinationData['userName']
         : "basilius tengang";
 
     return GestureDetector(
@@ -34,40 +41,52 @@ class FitWidthCard extends StatelessWidget {
         Navigator.of(context).push(
           MaterialPageRoute(
             builder: (context) => DestinationOverview(
-              destinationData: destinationData,
+              destinationData: widget.destinationData,
             ),
           ),
         );
       },
       child: SizedBox(
-        height: 300,
         width: screenSize.width,
         child: Column(
           children: [
             LoadImage(
               imagePath: thumbnailUrl == "" ? placeholderPath : thumbnailUrl,
               width: screenSize.width,
-              height: 200,
+              height: 225,
             ),
             ListTile(
               leading: CircleAvatar(
+                maxRadius: 20,
                 backgroundImage: NetworkImage(
-                  userProfile == "" ? placeholderPath : userProfile,
+                  widget.userProfile == ""
+                      ? placeholderPath
+                      : widget.userProfile,
                 ),
               ),
               title: Text(
                 title,
-                style: theme.textTheme.headlineSmall,
-                maxLines: 1,
+                style: theme.textTheme.headlineSmall?.copyWith(
+                  fontSize: 18,
+                ),
+                maxLines: 2,
                 overflow: TextOverflow.ellipsis,
               ),
-              subtitle: Text(
-                subtitle,
-                style: theme.textTheme.bodyMedium,
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
+              subtitle: Padding(
+                padding: const EdgeInsets.symmetric(vertical: 8),
+                child: Text(
+                  subtitle,
+                  style: theme.textTheme.labelMedium?.copyWith(
+                    color: theme.colorScheme.onSurface.withOpacity(0.7),
+                  ),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
               ),
-              trailing: Icon(Icons.more_vert_rounded),
+              trailing: MoreButton(
+                isAdmin: false,
+              ),
+              contentPadding: EdgeInsets.only(left: 24, right: 6),
             ),
           ],
         ),
