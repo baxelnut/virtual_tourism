@@ -16,8 +16,8 @@ class ShopPage extends StatefulWidget {
 class _ShopPageState extends State<ShopPage> {
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final screenSize = MediaQuery.of(context).size;
+    final ThemeData theme = Theme.of(context);
+    final Size screenSize = MediaQuery.of(context).size;
 
     // temporary
     const String loremIpsum =
