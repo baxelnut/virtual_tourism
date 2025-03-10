@@ -38,49 +38,55 @@ class _TourPageState extends State<TourPage> {
     final ThemeData theme = GlobalValues.theme(context);
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Center(
-          child: Text('Tour'),
-        ),
-      ),
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            const TourCollections(),
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 50),
-              child: Text(
-                'Public',
-                style: theme.textTheme.headlineSmall,
-              ),
-            ),
-            Column(
-              children: tours0.map((destinationData) {
-                return FutureBuilder<Map<String, dynamic>?>(
-                  future:
-                      firebaseApi.getUserData(destinationData['userId'] ?? ''),
-                  builder: (context, snapshot) {
-                    if (snapshot.hasError) {
-                      return FitWidthCard(
-                        userProfile: '',
-                        destinationData: destinationData,
-                      );
-                    }
+      body: CustomScrollView(
+        slivers: [
+          SliverAppBar(
+            floating: true,
+            snap: true,
+            title: const Text('Tour'),
+            centerTitle: true,
+          ),
+          SliverToBoxAdapter(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const TourCollections(),
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 50),
+                  child: Text(
+                    'Public',
+                    style: theme.textTheme.headlineSmall,
+                  ),
+                ),
+                Column(
+                  children: tours0.map((destinationData) {
+                    return FutureBuilder<Map<String, dynamic>?>(
+                      future: firebaseApi
+                          .getUserData(destinationData['userId'] ?? ''),
+                      builder: (context, snapshot) {
+                        if (snapshot.hasError) {
+                          return FitWidthCard(
+                            userProfile: '',
+                            destinationData: destinationData,
+                          );
+                        }
 
-                    final userData = snapshot.data;
-                    final userProfile = userData?['imageUrl'] ?? '';
+                        final userData = snapshot.data;
+                        final userProfile = userData?['imageUrl'] ?? '';
 
-                    return FitWidthCard(
-                      userProfile: userProfile,
-                      destinationData: destinationData,
+                        return FitWidthCard(
+                          userProfile: userProfile,
+                          destinationData: destinationData,
+                        );
+                      },
                     );
-                  },
-                );
-              }).toList(),
+                  }).toList(),
+                ),
+                SizedBox(height: MediaQuery.of(context).size.width / 3),
+              ],
             ),
-            const SizedBox(height: 100),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
