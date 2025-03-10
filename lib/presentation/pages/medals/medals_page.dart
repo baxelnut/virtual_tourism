@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../../core/global_values.dart';
 import '../../../services/firebase/api/firebase_api.dart';
 import '../../widgets/cards/medals_cards.dart';
 
@@ -34,25 +35,38 @@ class _MedalsPageState extends State<MedalsPage> {
 
   @override
   Widget build(BuildContext context) {
+    final Size screenSize = GlobalValues.screenSize(context);
+
     return Scaffold(
       appBar: AppBar(
-        title: const Center(child: Text('Medals')),
+        title: const Center(
+          child: Text('Medals'),
+        ),
       ),
       body: SingleChildScrollView(
         child: FutureBuilder<Map<String, bool>>(
           future: countriesFuture,
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
-              return const Center(
-                child: CircularProgressIndicator(),
+              return SizedBox(
+                height: screenSize.height - 120,
+                child: Center(
+                  child: CircularProgressIndicator(),
+                ),
               );
             } else if (snapshot.hasError) {
-              return Center(
-                child: Text('Error: ${snapshot.error}'),
+              return SizedBox(
+                height: screenSize.height - 120,
+                child: Center(
+                  child: Text('Error: ${snapshot.error}'),
+                ),
               );
             } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-              return const Center(
-                child: Text('No data available.'),
+              return SizedBox(
+                height: screenSize.height - 120,
+                child: Center(
+                  child: Text('No data available.'),
+                ),
               );
             } else {
               final countries = snapshot.data!;

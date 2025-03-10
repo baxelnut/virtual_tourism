@@ -1,12 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../../core/global_values.dart';
 import '../../../services/firebase/api/firebase_api.dart';
 
 class FullCountryListPage extends StatefulWidget {
   final Map<String, bool> countries;
 
-  const FullCountryListPage({super.key, required this.countries});
+  const FullCountryListPage({
+    super.key,
+    required this.countries,
+  });
 
   @override
   FullCountryListPageState createState() => FullCountryListPageState();
@@ -34,10 +38,10 @@ class FullCountryListPageState extends State<FullCountryListPage> {
 
   @override
   Widget build(BuildContext context) {
+    final ThemeData theme = GlobalValues.theme(context);
+
     final sortedCountries = countries.entries.toList()
       ..sort((a, b) => a.key.compareTo(b.key));
-
-    final ThemeData theme = Theme.of(context);
 
     return Scaffold(
       appBar: AppBar(
@@ -123,14 +127,16 @@ class CountryBoxState extends State<CountryBox> {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
+    final ThemeData theme = GlobalValues.theme(context);
+
     return GestureDetector(
       onTap: toggleVisited,
       child: Container(
         height: 110,
         width: 110,
         decoration: BoxDecoration(
-          color: visited ? Colors.green : Colors.amber[900],
+          color:
+              visited ? theme.colorScheme.primary : theme.colorScheme.secondary,
           borderRadius: BorderRadius.circular(12),
         ),
         child: Center(
