@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
+import '../../../core/global_values.dart';
 import '../../../services/firebase/api/firebase_api.dart';
 
 class ButtonWriteReview extends StatefulWidget {
@@ -17,14 +18,14 @@ class ButtonWriteReview extends StatefulWidget {
 }
 
 class _ButtonWriteReviewState extends State<ButtonWriteReview> {
-  final User? user = FirebaseAuth.instance.currentUser;
+  final User? user = GlobalValues.user;
   final TextEditingController reviewController = TextEditingController();
   double ratingStars = 0.0;
 
   void showReviewModal(BuildContext context) {
     FirebaseApi firebaseApi = FirebaseApi();
-    final ThemeData theme = Theme.of(context);
-    final Size screenSize = MediaQuery.of(context).size;
+    final ThemeData theme = GlobalValues.theme(context);
+    final Size screenSize = GlobalValues.screenSize(context);
 
     showModalBottomSheet(
       context: context,
@@ -145,7 +146,7 @@ class _ButtonWriteReviewState extends State<ButtonWriteReview> {
 
   @override
   Widget build(BuildContext context) {
-    final ThemeData theme = Theme.of(context);
+    final ThemeData theme = GlobalValues.theme(context);
 
     return Padding(
       padding: const EdgeInsets.only(right: 20, top: 8, bottom: 12),

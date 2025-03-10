@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import '../../../core/global_values.dart';
 import '../content/load_image.dart';
 import '../content/photographic_screen.dart';
 import '../content/tour_screen.dart';
@@ -117,10 +118,9 @@ class DestinationOverviewState extends State<DestinationOverview> {
 
   @override
   Widget build(BuildContext context) {
-    final ThemeData theme = Theme.of(context);
-    final Size screenSize = MediaQuery.of(context).size;
-    const String placeholderPath =
-        'https://hellenic.org/wp-content/plugins/elementor/assets/images/placeholder.png';
+    final ThemeData theme = GlobalValues.theme(context);
+    final Size screenSize = GlobalValues.screenSize(context);
+    const String placeholderPath = GlobalValues.placeholderPath;
 
     return Scaffold(
       body: CustomScrollView(

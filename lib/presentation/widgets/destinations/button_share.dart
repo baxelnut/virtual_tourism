@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:share_plus/share_plus.dart';
 
+import '../../../core/global_values.dart';
+
 class ButtonShare extends StatelessWidget {
   final Map<String, dynamic> destinationData;
   const ButtonShare({
@@ -10,7 +12,7 @@ class ButtonShare extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
+    final ThemeData theme = GlobalValues.theme(context);
 
     return Padding(
       padding: const EdgeInsets.only(right: 20, top: 8, bottom: 12),

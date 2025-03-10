@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../core/global_values.dart';
 import '../../pages/shop/shop_page.dart';
 
 class ButtonShop extends StatelessWidget {
@@ -11,7 +12,7 @@ class ButtonShop extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
+    final ThemeData theme = GlobalValues.theme(context);
 
     return Padding(
       padding: const EdgeInsets.only(right: 20, top: 8, bottom: 12),

@@ -2,6 +2,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
+import '../../../core/global_values.dart';
+
 class ButtonDonate extends StatefulWidget {
   final Map<String, dynamic> destinationData;
   const ButtonDonate({
@@ -14,7 +16,8 @@ class ButtonDonate extends StatefulWidget {
 }
 
 class _ButtonDonateState extends State<ButtonDonate> {
-  final User? user = FirebaseAuth.instance.currentUser;
+  final User? user = GlobalValues.user;
+
   final TextEditingController _donationController = TextEditingController();
   final TextEditingController _commentController = TextEditingController();
 
@@ -71,8 +74,8 @@ class _ButtonDonateState extends State<ButtonDonate> {
 
   @override
   Widget build(BuildContext context) {
-    final ThemeData theme = Theme.of(context);
-    final Size screenSize = MediaQuery.of(context).size;
+    final ThemeData theme = GlobalValues.theme(context);
+    final Size screenSize = GlobalValues.screenSize(context);
 
     return Padding(
       padding: const EdgeInsets.only(right: 20, top: 8, bottom: 12),

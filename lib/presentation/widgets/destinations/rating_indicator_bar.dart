@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../../core/global_values.dart';
+
 class RatingIndicatorBar extends StatelessWidget {
   final List<int> ratings;
   final int totalRatings;
@@ -11,7 +13,7 @@ class RatingIndicatorBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
+    final ThemeData theme = GlobalValues.theme(context);
 
     final percentages = ratings
         .map((count) => totalRatings > 0 ? (count / totalRatings) * 100 : 0.0)

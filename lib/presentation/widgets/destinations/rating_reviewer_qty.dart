@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../../core/global_values.dart';
+
 class RatingReviewerQty extends StatelessWidget {
   final List<int> ratings;
   const RatingReviewerQty({
@@ -9,7 +11,7 @@ class RatingReviewerQty extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
+    final ThemeData theme = GlobalValues.theme(context);
 
     return Column(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,

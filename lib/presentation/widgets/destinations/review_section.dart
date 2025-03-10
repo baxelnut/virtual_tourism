@@ -1,9 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-// import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-// import 'package:virtual_tourism/src/services/firebase/api/firebase_api.dart';
 
+import '../../../core/global_values.dart';
 import 'button_donate.dart';
 import 'button_share.dart';
 import 'button_shop.dart';
@@ -64,8 +63,8 @@ class _ReviewSectionState extends State<ReviewSection> {
 
   @override
   Widget build(BuildContext context) {
-    final ThemeData theme = Theme.of(context);
-    final Size screenSize = MediaQuery.of(context).size;
+    final ThemeData theme = GlobalValues.theme(context);
+    final Size screenSize = GlobalValues.screenSize(context);
 
     List<int> ratings = processRatings();
     int totalRatings = ratings.fold(0, (acc, value) => acc + value);
@@ -140,9 +139,7 @@ class _ReviewSectionState extends State<ReviewSection> {
     );
   }
 
-  Widget _actionButtons({
-    required ThemeData theme,
-  }) {
+  Widget _actionButtons({required ThemeData theme}) {
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
       child: Padding(
@@ -280,6 +277,8 @@ class _ReviewSectionState extends State<ReviewSection> {
           }).toList()
         : [];
 
+    final String defaultProfile = GlobalValues.defaultProfile;
+
     if (reviews.isEmpty) {
       return const Text('No reviews yet. Be the first to leave a review!');
     }
@@ -310,27 +309,22 @@ class _ReviewSectionState extends State<ReviewSection> {
 
         Map<String, String> userImageMap = {
           for (var doc in snapshot.data!.docs)
-            doc.id: ((doc.data() as Map<String, dynamic>?)?['imageUrl']
-                            as String?)
-                        ?.trim()
-                        .isNotEmpty ==
-                    true
-                ? (doc.data() as Map<String, dynamic>)['imageUrl']
-                : 'https://firebasestorage.googleapis.com/v0/b/virtual-tourism-7625f.appspot.com/o/users%2F.default%2Fprofile.png?alt=media&token=3471ca29-03b2-4bd7-a3fe-20dcc1810559'
+            doc.id:
+                ((doc.data() as Map<String, dynamic>?)?['imageUrl'] as String?)
+                            ?.trim()
+                            .isNotEmpty ==
+                        true
+                    ? (doc.data() as Map<String, dynamic>)['imageUrl']
+                    : defaultProfile
         };
-
-        // final User? user = FirebaseAuth.instance.currentUser;
-        // print(user);
 
         return Column(
           children: reviews.map((review) {
-            final userImageUrl = (userImageMap[review['userUid']]
-                        ?.trim()
-                        .isNotEmpty ==
-                    true)
-                ? userImageMap[review['userUid']]
-                : 'https://firebasestorage.googleapis.com/v0/b/virtual-tourism-7625f.appspot.com/o/users%2F.default%2Fprofile.png?alt=media&token=3471ca29-03b2-4bd7-a3fe-20dcc1810559';
-            // print('INPO: ${review['photoUrl']}');
+            final userImageUrl =
+                (userImageMap[review['userUid']]?.trim().isNotEmpty == true)
+                    ? userImageMap[review['userUid']]
+                    : defaultProfile;
+
             return ReviewTiles(
               userProfile: review['photoUrl'] ?? userImageUrl,
               userName: review['userName'] ?? 'Anonymous',

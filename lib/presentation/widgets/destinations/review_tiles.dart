@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../../core/global_values.dart';
+
 class ReviewTiles extends StatefulWidget {
   final String? userProfile;
   final String userName;
@@ -20,8 +22,7 @@ class ReviewTiles extends StatefulWidget {
 }
 
 class _ReviewTilesState extends State<ReviewTiles> {
-  final String defaultProfile =
-      'https://firebasestorage.googleapis.com/v0/b/virtual-tourism-7625f.appspot.com/o/users%2F.default%2Fprofile.png?alt=media&token=3471ca29-03b2-4bd7-a3fe-20dcc1810559';
+  final String defaultProfile = GlobalValues.defaultProfile;
 
   handleShowPict() {
     return showDialog(
@@ -42,7 +43,7 @@ class _ReviewTilesState extends State<ReviewTiles> {
 
   @override
   Widget build(BuildContext context) {
-    final ThemeData theme = Theme.of(context);
+    final ThemeData theme = GlobalValues.theme(context);
 
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8),
