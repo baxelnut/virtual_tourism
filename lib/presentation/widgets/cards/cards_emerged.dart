@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../core/global_values.dart';
 import '../content/load_image.dart';
 import '../destinations/destination_overview.dart';
 
@@ -12,10 +13,9 @@ class CardsEmerged extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final ThemeData theme = Theme.of(context);
-    final Size screenSize = MediaQuery.of(context).size;
-    const String placeholderPath =
-        'https://hellenic.org/wp-content/plugins/elementor/assets/images/placeholder.png';
+    final ThemeData theme = GlobalValues.theme(context);
+    final Size screenSize = GlobalValues.screenSize(context);
+    const String placeholderPath = GlobalValues.placeholderPath;
 
     String getImagePath() {
       final String? mainThumbnail = destinationData['thumbnailPath'];

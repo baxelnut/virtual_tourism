@@ -53,8 +53,14 @@ class _TourCollectionsState extends State<TourCollections> {
 
   @override
   Widget build(BuildContext context) {
+    final Size screenSize = MediaQuery.of(context).size;
     if (isLoading) {
-      return const Center(child: CircularProgressIndicator());
+      return SizedBox(
+        height: screenSize.height - 120,
+        child: Center(
+          child: CircularProgressIndicator(),
+        ),
+      );
     }
 
     return SingleChildScrollView(

@@ -53,32 +53,30 @@ class _TourPageState extends State<TourPage> {
                 style: theme.textTheme.headlineSmall,
               ),
             ),
-            isLoading
-                ? const Center(child: CircularProgressIndicator())
-                : Column(
-                    children: tours0.map((destinationData) {
-                      return FutureBuilder<Map<String, dynamic>?>(
-                        future: firebaseApi
-                            .getUserData(destinationData['userId'] ?? ''),
-                        builder: (context, snapshot) {
-                          if (snapshot.hasError) {
-                            return FitWidthCard(
-                              userProfile: '',
-                              destinationData: destinationData,
-                            );
-                          }
-
-                          final userData = snapshot.data;
-                          final userProfile = userData?['imageUrl'] ?? '';
-
-                          return FitWidthCard(
-                            userProfile: userProfile,
-                            destinationData: destinationData,
-                          );
-                        },
+            Column(
+              children: tours0.map((destinationData) {
+                return FutureBuilder<Map<String, dynamic>?>(
+                  future:
+                      firebaseApi.getUserData(destinationData['userId'] ?? ''),
+                  builder: (context, snapshot) {
+                    if (snapshot.hasError) {
+                      return FitWidthCard(
+                        userProfile: '',
+                        destinationData: destinationData,
                       );
-                    }).toList(),
-                  ),
+                    }
+
+                    final userData = snapshot.data;
+                    final userProfile = userData?['imageUrl'] ?? '';
+
+                    return FitWidthCard(
+                      userProfile: userProfile,
+                      destinationData: destinationData,
+                    );
+                  },
+                );
+              }).toList(),
+            ),
             const SizedBox(height: 100),
           ],
         ),
