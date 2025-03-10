@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../core/global_values.dart';
 import '../../widgets/cards/more_button.dart';
 import '../../widgets/content/load_image.dart';
 import '../../widgets/destinations/destination_overview.dart';
@@ -29,8 +30,8 @@ class ContentTiles extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final ThemeData theme = Theme.of(context);
-    final Size screenSize = MediaQuery.of(context).size;
+    final ThemeData theme = GlobalValues.theme(context);
+    final Size screenSize = GlobalValues.screenSize(context);
 
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 4),
@@ -73,7 +74,10 @@ class ContentTiles extends StatelessWidget {
     );
   }
 
-  Widget _buildTextContent(ThemeData theme, Size screenSize) {
+  Widget _buildTextContent(
+    ThemeData theme,
+    Size screenSize,
+  ) {
     return Expanded(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -91,7 +95,9 @@ class ContentTiles extends StatelessWidget {
     );
   }
 
-  Widget _buildHeader(ThemeData theme) {
+  Widget _buildHeader(
+    ThemeData theme,
+  ) {
     return Padding(
       padding: const EdgeInsets.only(top: 8),
       child: Row(
@@ -113,7 +119,10 @@ class ContentTiles extends StatelessWidget {
     );
   }
 
-  Widget _buildStats(ThemeData theme, Size screenSize) {
+  Widget _buildStats(
+    ThemeData theme,
+    Size screenSize,
+  ) {
     final stats = [
       {'icon': Icons.star, 'value': '3.3'},
       {'icon': Icons.comment, 'value': '4'},
@@ -145,7 +154,11 @@ class ContentTiles extends StatelessWidget {
     );
   }
 
-  Widget _buildText(String text, TextStyle? style, {EdgeInsets? padding}) {
+  Widget _buildText(
+    String text,
+    TextStyle? style, {
+    EdgeInsets? padding,
+  }) {
     return Padding(
       padding: padding ?? EdgeInsets.zero,
       child: Text(

@@ -6,6 +6,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../../core/global_values.dart';
 import '../../../services/firebase/storage/storage_service.dart';
 import 'content_tiles.dart';
 import 'create_content_page.dart';
@@ -18,10 +19,11 @@ class YourContentPage extends StatefulWidget {
 }
 
 class _YourContentPageState extends State<YourContentPage> {
-  final String placeholderPath =
-      'https://hellenic.org/wp-content/plugins/elementor/assets/images/placeholder.png';
+  final String placeholderPath = GlobalValues.placeholderPath;
+  final User? user = GlobalValues.user;
+
   late Future<List<Map<String, dynamic>>> _fetchDestinationsFuture;
-  final User? user = FirebaseAuth.instance.currentUser;
+
   final String collection = 'verified_user_uploads';
 
   Future<List<Map<String, dynamic>>> fetchDestinations() async {
@@ -79,8 +81,8 @@ class _YourContentPageState extends State<YourContentPage> {
 
   @override
   Widget build(BuildContext context) {
-    final ThemeData theme = Theme.of(context);
-    final Size screenSize = MediaQuery.of(context).size;
+    final ThemeData theme = GlobalValues.theme(context);
+    final Size screenSize = GlobalValues.screenSize(context);
 
     return Scaffold(
       appBar: AppBar(
@@ -114,8 +116,8 @@ class _YourContentPageState extends State<YourContentPage> {
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
                     return SizedBox(
-                      height: screenSize.width,
-                      child: const Center(
+                      height: screenSize.height - 120,
+                      child: Center(
                         child: CircularProgressIndicator(),
                       ),
                     );
@@ -123,18 +125,14 @@ class _YourContentPageState extends State<YourContentPage> {
                     return SizedBox(
                       height: screenSize.width,
                       child: Center(
-                        child: Text(
-                          'Error: ${snapshot.error}',
-                        ),
+                        child: Text('Error: ${snapshot.error}'),
                       ),
                     );
                   } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
                     return SizedBox(
                       height: screenSize.width,
-                      child: const Center(
-                        child: Text(
-                          'No destinations found.',
-                        ),
+                      child: Center(
+                        child: Text('No destinations found.'),
                       ),
                     );
                   }

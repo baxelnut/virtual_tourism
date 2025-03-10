@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../core/global_values.dart';
 import '../../../services/firebase/api/firebase_api.dart';
 import '../../widgets/content/pin_point_coords.dart';
 
@@ -42,8 +43,7 @@ class HotspotInput extends StatefulWidget {
 
 class _HotspotInputState extends State<HotspotInput> {
   final FirebaseApi _firebaseApi = FirebaseApi();
-  final String placeholderPath =
-      'https://hellenic.org/wp-content/plugins/elementor/assets/images/placeholder.png';
+  final String placeholderPath = GlobalValues.placeholderPath;
 
   int _hotspotQty = 2;
   final List<TextEditingController> _latControllers = [];
@@ -167,7 +167,7 @@ class _HotspotInputState extends State<HotspotInput> {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
+    final ThemeData theme = GlobalValues.theme(context);
 
     return Padding(
       padding: const EdgeInsets.only(top: 20),
