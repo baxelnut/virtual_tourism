@@ -225,6 +225,7 @@ class FirebaseApi with ChangeNotifier {
 
       await _firestore.collection(collectionId).doc(docId).set(
         {
+          'docId': docId,
           'category': category,
           'subcategory': subcategory,
           'destinationName': destinationName,
@@ -369,13 +370,14 @@ class FirebaseApi with ChangeNotifier {
     }
   }
 
-  Future<List<Map<String, dynamic>>> fetchDocuments() async {
+  Future<List<Map<String, dynamic>>> fetchDocuments({
+    required final String collection,
+  }) async {
     _isLoading = true;
     notifyListeners();
 
     try {
-      final querySnapshot =
-          await _firestore.collection('case_study_destinations').get();
+      final querySnapshot = await _firestore.collection(collection).get();
 
       return querySnapshot.docs.map((doc) => doc.data()).toList();
     } catch (e) {
