@@ -29,7 +29,7 @@ class ThemeProvider extends ChangeNotifier {
 
   loadTheme() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    bool isDarkMode = prefs.getBool('isDarkMode') ?? false;
+    bool isDarkMode = prefs.getBool('isDarkMode') ?? true;
     _themeData = isDarkMode ? darkMode : lightMode;
     notifyListeners();
   }
