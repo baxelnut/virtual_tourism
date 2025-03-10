@@ -42,35 +42,44 @@ class FullCountryListPageState extends State<FullCountryListPage> {
       ..sort((a, b) => a.key.compareTo(b.key));
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Passport'),
-        actions: [
-          Padding(
-            padding: const EdgeInsets.only(right: 40),
-            child: Text(
-              '$visitedCount/${countries.length}',
-              style: theme.textTheme.bodyLarge,
+      body: CustomScrollView(
+        slivers: [
+          SliverAppBar(
+            floating: true,
+            snap: true,
+            title: const Text('Passport'),
+            centerTitle: false,
+            actions: [
+              Padding(
+                padding: const EdgeInsets.only(right: 40),
+                child: Text(
+                  '$visitedCount/${countries.length}',
+                  style: theme.textTheme.bodyLarge,
+                ),
+              ),
+            ],
+          ),
+          SliverToBoxAdapter(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              child: Center(
+                child: Wrap(
+                  spacing: 10,
+                  runSpacing: 10,
+                  children: sortedCountries.map((entry) {
+                    return CountryBox(
+                      countryName: entry.key,
+                      initialVisited: entry.value,
+                      onVisitedChanged: (visited) {
+                        updateCountry(entry.key, visited);
+                      },
+                    );
+                  }).toList(),
+                ),
+              ),
             ),
           ),
         ],
-      ),
-      body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 20),
-        child: Center(
-          child: Wrap(
-            spacing: 10,
-            runSpacing: 10,
-            children: sortedCountries.map((entry) {
-              return CountryBox(
-                countryName: entry.key,
-                initialVisited: entry.value,
-                onVisitedChanged: (visited) {
-                  updateCountry(entry.key, visited);
-                },
-              );
-            }).toList(),
-          ),
-        ),
       ),
     );
   }

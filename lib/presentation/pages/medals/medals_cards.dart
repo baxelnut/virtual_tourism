@@ -134,7 +134,7 @@ class MedalsCardsState extends State<MedalsCards> {
     final topCountries = [
       ...visited,
       ...notVisited,
-    ].take(6).toList();
+    ].take(30).toList();
 
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
@@ -168,7 +168,7 @@ class MedalsCardsState extends State<MedalsCards> {
           countryName,
           style: theme.textTheme.bodySmall,
           textAlign: TextAlign.center,
-          maxLines: 2,
+          maxLines: 3,
           overflow: TextOverflow.ellipsis,
         ),
       ),
