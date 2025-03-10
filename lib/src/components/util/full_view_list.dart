@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../pages/tour/tour_card.dart';
+import '../cards/fit_width_card.dart';
 
 class FullViewList extends StatefulWidget {
   final String cardsTitle;
@@ -45,7 +45,7 @@ class _FullViewListState extends State<FullViewList> {
               )
             else
               ...widget.destinationData!.map(
-                (data) => TourCard(
+                (data) => FitWidthCard(
                   userProfile: photoUrlPlaceholder,
                   destinationData: data,
                 ),

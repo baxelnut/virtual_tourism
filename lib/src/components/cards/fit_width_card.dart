@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import '../../components/content/load_image.dart';
 import '../../components/destinations/destination_overview.dart';
 
-class TourCard extends StatelessWidget {
+class FitWidthCard extends StatelessWidget {
   final String userProfile;
   final Map<String, dynamic> destinationData;
-  const TourCard({
+  const FitWidthCard({
     super.key,
     required this.userProfile,
     required this.destinationData,

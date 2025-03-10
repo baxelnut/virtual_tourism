@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
+import '../../components/cards/fit_width_card.dart';
 import '../../services/firebase/api/firebase_api.dart';
 import 'tour_collections.dart';
-import 'tour_card.dart';
 
 class TourPage extends StatefulWidget {
   const TourPage({super.key});
@@ -62,7 +62,7 @@ class _TourPageState extends State<TourPage> {
                             .getUserData(destinationData['userId'] ?? ''),
                         builder: (context, snapshot) {
                           if (snapshot.hasError) {
-                            return TourCard(
+                            return FitWidthCard(
                               userProfile: '',
                               destinationData: destinationData,
                             );
@@ -71,7 +71,7 @@ class _TourPageState extends State<TourPage> {
                           final userData = snapshot.data;
                           final userProfile = userData?['imageUrl'] ?? '';
 
-                          return TourCard(
+                          return FitWidthCard(
                             userProfile: userProfile,
                             destinationData: destinationData,
                           );
