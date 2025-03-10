@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 import '../../../app.dart';
+import '../../../core/global_values.dart';
 import '../api/firebase_api.dart';
 import 'auth.dart';
 import 'auth_page.dart';
@@ -17,6 +18,7 @@ class VerifyEmailPage extends StatefulWidget {
 class _VerifyEmailPageState extends State<VerifyEmailPage> {
   final Auth _auth = Auth();
   final FirebaseApi _firebaseApi = FirebaseApi();
+
   bool isEmailVerified = false;
   Timer? timer;
   bool canResend = false;
@@ -77,7 +79,8 @@ class _VerifyEmailPageState extends State<VerifyEmailPage> {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
+    final ThemeData theme = GlobalValues.theme(context);
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Verify Email'),

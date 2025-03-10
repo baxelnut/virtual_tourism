@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../app.dart';
+import '../../../core/global_values.dart';
 import '../../../presentation/widgets/utils/input_section.dart';
 import 'auth.dart';
 import 'widgets/additional_action.dart';
@@ -48,7 +49,7 @@ class _AuthPageState extends State<AuthPage> {
   }
 
   void showAlertDialog(String message) {
-    final theme = Theme.of(context);
+    final ThemeData theme = GlobalValues.theme(context);
 
     showDialog(
       context: context,
@@ -58,13 +59,8 @@ class _AuthPageState extends State<AuthPage> {
           content: Text(message),
           actions: [
             TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: Text(
-                "OK",
-                style: theme.textTheme.titleMedium,
-              ),
+              onPressed: () => Navigator.of(context).pop(),
+              child: Text("OK", style: theme.textTheme.titleMedium),
             ),
           ],
         );
@@ -138,7 +134,7 @@ class _AuthPageState extends State<AuthPage> {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
+    final ThemeData theme = GlobalValues.theme(context);
 
     return Scaffold(
       resizeToAvoidBottomInset: true,
