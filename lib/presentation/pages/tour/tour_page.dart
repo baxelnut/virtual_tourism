@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../core/global_values.dart';
 import '../../../services/firebase/api/firebase_api.dart';
 import '../../widgets/cards/fit_width_card.dart';
 import 'tour_collections.dart';
@@ -34,7 +35,7 @@ class _TourPageState extends State<TourPage> {
 
   @override
   Widget build(BuildContext context) {
-    final ThemeData theme = Theme.of(context);
+    final ThemeData theme = GlobalValues.theme(context);
 
     return Scaffold(
       appBar: AppBar(

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../../core/global_values.dart';
 import '../../../services/firebase/api/firebase_api.dart';
 import '../../widgets/cards/cards_emerged.dart';
 import '../../widgets/cards/cards_header.dart';
@@ -53,7 +54,8 @@ class _TourCollectionsState extends State<TourCollections> {
 
   @override
   Widget build(BuildContext context) {
-    final Size screenSize = MediaQuery.of(context).size;
+    final Size screenSize = GlobalValues.screenSize(context);
+
     if (isLoading) {
       return SizedBox(
         height: screenSize.height - 120,
@@ -67,13 +69,15 @@ class _TourCollectionsState extends State<TourCollections> {
       child: Column(
         children: [
           caseStudyDestinations(
-              collections: "verified_user_uploads",
-              title: 'by Users',
-              context: context),
+            collections: "verified_user_uploads",
+            title: 'by Users',
+            context: context,
+          ),
           caseStudyDestinations(
-              collections: "case_study_destinations",
-              title: 'La Silla',
-              context: context),
+            collections: "case_study_destinations",
+            title: 'La Silla',
+            context: context,
+          ),
         ],
       ),
     );
@@ -92,13 +96,16 @@ class _TourCollectionsState extends State<TourCollections> {
       title: title,
       cardSize: cardSize,
       data: caseStudies,
+      context: context,
     );
   }
 
-  Widget dataSection(
-      {required String title,
-      required double cardSize,
-      required List<Map<String, dynamic>> data}) {
+  Widget dataSection({
+    required String title,
+    required double cardSize,
+    required List<Map<String, dynamic>> data,
+    required BuildContext context,
+  }) {
     if (data.isEmpty) {
       final ThemeData theme = Theme.of(context);
       return Padding(
