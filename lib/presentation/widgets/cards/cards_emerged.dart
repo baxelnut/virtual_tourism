@@ -12,10 +12,24 @@ class CardsEmerged extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final screenSize = MediaQuery.of(context).size;
-    const placeholderPath =
+    final ThemeData theme = Theme.of(context);
+    final Size screenSize = MediaQuery.of(context).size;
+    const String placeholderPath =
         'https://hellenic.org/wp-content/plugins/elementor/assets/images/placeholder.png';
+
+    String getImagePath() {
+      final String? mainThumbnail = destinationData['thumbnailPath'];
+      final String? hotspotThumbnail =
+          destinationData['hotspotData']?['hotspot0']?['thumbnailPath'];
+
+      if (mainThumbnail != null && mainThumbnail.isNotEmpty) {
+        return mainThumbnail;
+      } else if (hotspotThumbnail != null && hotspotThumbnail.isNotEmpty) {
+        return hotspotThumbnail;
+      } else {
+        return placeholderPath;
+      }
+    }
 
     return Padding(
       padding: const EdgeInsets.only(left: 5),
@@ -30,7 +44,7 @@ class CardsEmerged extends StatelessWidget {
             child: ClipRRect(
               borderRadius: BorderRadius.circular(16),
               child: LoadImage(
-                imagePath: destinationData['thumbnailPath'] ?? placeholderPath,
+                imagePath: getImagePath(),
                 width: screenSize.width / 2,
                 height: screenSize.width / 2,
               ),
