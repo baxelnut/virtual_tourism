@@ -536,7 +536,7 @@ class FirebaseApi with ChangeNotifier {
 
     final snapshot = await FirebaseFirestore.instance
         .collection('verified_user_uploads')
-        .doc(destinationId) // Each destination has its own document
+        .doc(destinationId) 
         .get();
 
     if (!snapshot.exists) {
