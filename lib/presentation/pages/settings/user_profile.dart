@@ -72,7 +72,7 @@ class UserProfileState extends State<UserProfile> {
           backgroundColor: theme.colorScheme.onSurface,
         ),
         onPressed: () async {
-          Navigator.of(context).pop();
+          navigator.pop();
 
           if (mounted) {
             setState(() {
@@ -104,10 +104,6 @@ class UserProfileState extends State<UserProfile> {
             if (updatedUrl != null) {
               setState(() {
                 user?.updatePhotoURL(updatedUrl);
-                showAlertDialog(
-                    context, 'Profile updated successfully, please refresh');
-                Navigator.of(context).pop();
-                Navigator.of(context).pop();
               });
             } else {
               scaffoldMessenger.showSnackBar(
@@ -216,12 +212,6 @@ class UserProfileState extends State<UserProfile> {
         gender: _selectedGender,
         birthday: _selectedBirthday?.toIso8601String(),
       );
-
-      if (mounted) {
-        showAlertDialog(
-            context, 'Profile updated successfully, please refresh');
-        Navigator.of(context).pop();
-      }
     } catch (e) {
       if (mounted) {
         showAlertDialog(context, e.toString());
@@ -425,10 +415,13 @@ class UserProfileState extends State<UserProfile> {
   }) {
     return ElevatedButton(
       style: ElevatedButton.styleFrom(
-        fixedSize: Size(screenSize.width, 60),
+        fixedSize: Size(screenSize.width, 50),
         backgroundColor: theme.colorScheme.primary,
       ),
-      onPressed: _saveProfile,
+      onPressed: () {
+        _saveProfile();
+        Navigator.pop(context);
+      },
       child: Text(
         'Save',
         style: theme.textTheme.bodyLarge?.copyWith(

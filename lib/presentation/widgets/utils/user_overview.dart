@@ -1,4 +1,3 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -27,9 +26,33 @@ class UserOverview extends StatefulWidget {
 
 class _UserOverviewState extends State<UserOverview> {
   bool isAdmin = false;
-
-  final User? user = GlobalValues.user;
   final String defaultProfile = GlobalValues.defaultProfile;
+  final user = GlobalValues.user;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadAdminStatus();
+  }
+
+  Future<void> _loadAdminStatus() async {
+    final prefs = await SharedPreferences.getInstance();
+
+    bool cachedAdmin = prefs.getBool('admin_status') ?? false;
+    setState(() {
+      isAdmin = cachedAdmin;
+    });
+
+    final userData = await FirebaseApi().getUserData(user!.uid);
+    bool adminFromFirestore = userData?['admin'] ?? false;
+
+    if (adminFromFirestore != cachedAdmin) {
+      setState(() {
+        isAdmin = adminFromFirestore;
+      });
+      await prefs.setBool('admin_status', adminFromFirestore);
+    }
+  }
 
   handleShowPict() {
     return showDialog(
@@ -67,34 +90,8 @@ class _UserOverviewState extends State<UserOverview> {
   }
 
   @override
-  void initState() {
-    super.initState();
-    _loadAdminStatus();
-  }
-
-  Future<void> _loadAdminStatus() async {
-    final prefs = await SharedPreferences.getInstance();
-
-    bool cachedAdmin = prefs.getBool('admin_status') ?? false;
-    setState(() {
-      isAdmin = cachedAdmin;
-    });
-
-    final userData = await FirebaseApi().getUserData(user!.uid);
-    bool adminFromFirestore = userData?['admin'] ?? false;
-
-    if (adminFromFirestore != cachedAdmin) {
-      setState(() {
-        isAdmin = adminFromFirestore;
-      });
-      await prefs.setBool('admin_status', adminFromFirestore);
-    }
-  }
-
-  @override
   Widget build(BuildContext context) {
     final ThemeData theme = GlobalValues.theme(context);
-
     final bool isDark =
         Provider.of<ThemeProvider>(context).themeData == darkMode;
 
