@@ -36,6 +36,7 @@ class _TourPageState extends State<TourPage> {
   @override
   Widget build(BuildContext context) {
     final ThemeData theme = GlobalValues.theme(context);
+    final Size screenSize = GlobalValues.screenSize(context);
 
     return Scaffold(
       body: CustomScrollView(
@@ -48,13 +49,13 @@ class _TourPageState extends State<TourPage> {
           ),
           SliverToBoxAdapter(
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 const TourCollections(),
                 Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 50),
+                  padding: const EdgeInsets.only(top: 50, bottom: 20),
                   child: Text(
-                    'Public',
+                    'All Post by Users',
                     style: theme.textTheme.headlineSmall,
                   ),
                 ),
@@ -82,7 +83,7 @@ class _TourPageState extends State<TourPage> {
                     );
                   }).toList(),
                 ),
-                SizedBox(height: MediaQuery.of(context).size.width / 3),
+                SizedBox(height: screenSize.width / 3),
               ],
             ),
           ),
