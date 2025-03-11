@@ -118,26 +118,31 @@ class _UserOverviewState extends State<UserOverview> {
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                SizedBox(
-                  width: GlobalValues.screenSize(context).width - 120,
-                  child: Text(
-                    user?.displayName ?? 'username',
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: theme.textTheme.headlineSmall
-                        ?.copyWith(fontWeight: FontWeight.bold),
+                IntrinsicWidth(
+                  // 🔥 Shrinks width to fit the text
+                  child: ConstrainedBox(
+                    constraints: BoxConstraints(
+                      maxWidth: GlobalValues.screenSize(context).width -
+                          120, // 🔥 Max width limit
+                    ),
+                    child: Text(
+                      user?.displayName ?? 'username',
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: theme.textTheme.headlineSmall
+                          ?.copyWith(fontWeight: FontWeight.bold),
+                    ),
                   ),
                 ),
                 Visibility(
                   visible: isAdmin,
-                  child: const SizedBox(width: 8),
-                ),
-                Visibility(
-                  visible: isAdmin,
-                  child: const Icon(
-                    Icons.verified_rounded,
-                    size: 20,
-                    color: Colors.blue,
+                  child: Padding(
+                    padding: const EdgeInsets.only(left: 5),
+                    child: const Icon(
+                      Icons.verified_rounded,
+                      size: 20,
+                      color: Colors.blue,
+                    ),
                   ),
                 ),
               ],
