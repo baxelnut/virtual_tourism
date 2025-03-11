@@ -90,7 +90,9 @@ class _AuthPageState extends State<AuthPage> {
             if (context.mounted) {
               showAlertDialog('Successfully registered');
               Navigator.of(context).pushReplacement(
-                MaterialPageRoute(builder: (context) => const MyApp()),
+                MaterialPageRoute(
+                  builder: (context) => const MyApp(),
+                ),
               );
             }
           } catch (e) {
@@ -115,7 +117,9 @@ class _AuthPageState extends State<AuthPage> {
           if (context.mounted) {
             showAlertDialog('Successfully logged in');
             Navigator.of(context).pushReplacement(
-              MaterialPageRoute(builder: (context) => const MyApp()),
+              MaterialPageRoute(
+                builder: (context) => const MyApp(),
+              ),
             );
           }
         } catch (e) {

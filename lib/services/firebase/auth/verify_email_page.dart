@@ -67,7 +67,9 @@ class _VerifyEmailPageState extends State<VerifyEmailPage> {
         userUid: user!.uid, isVerified: user.emailVerified);
 
     Navigator.of(context).pushReplacement(
-      MaterialPageRoute(builder: (context) => const MyApp()),
+      MaterialPageRoute(
+        builder: (context) => const MyApp(),
+      ),
     );
   }
 
