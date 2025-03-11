@@ -204,12 +204,15 @@ class _ExplorePageState extends State<ExplorePage> {
                   ),
                 )
               : SliverToBoxAdapter(
-                  child: Center(
-                    child: Padding(
-                      padding: EdgeInsets.only(top: screenSize.width / 3),
+                  child: SizedBox(
+                    height: screenSize.height - 150,
+                    child: Center(
                       child: _isSearching
                           ? const CircularProgressIndicator()
-                          : const Text('No results found'),
+                          : Text(
+                              'No results found',
+                              style: theme.textTheme.bodyMedium,
+                            ),
                     ),
                   ),
                 ),
