@@ -1,6 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:liquid_pull_to_refresh/liquid_pull_to_refresh.dart';
 import 'package:provider/provider.dart';
+import 'package:virtual_tourism/app.dart';
 
 import '../../../core/global_values.dart';
 import '../../../core/theme/theme.dart';
@@ -12,7 +14,11 @@ import 'privacy_and_policy.dart';
 import 'settings_tiles.dart';
 
 class SettingsPage extends StatefulWidget {
-  const SettingsPage({super.key});
+  final VoidCallback? onRefresh;
+  const SettingsPage({
+    super.key,
+    this.onRefresh,
+  });
 
   @override
   State<SettingsPage> createState() => _SettingsPageState();
@@ -21,8 +27,28 @@ class SettingsPage extends StatefulWidget {
 class _SettingsPageState extends State<SettingsPage> {
   final Auth _auth = Auth();
   bool notifAllowed = false;
+  User? user = FirebaseAuth.instance.currentUser;
 
-  final User? user = GlobalValues.user;
+  Future<void> _handleRefresh() async {
+    try {
+      await GlobalValues.reloadUser();
+      await FirebaseAuth.instance.currentUser?.reload();
+
+      if (!mounted) return;
+
+      Navigator.of(context).pop();
+      Navigator.of(context).push(
+        MaterialPageRoute(
+          builder: (context) => MyApp(pageIndex: 4),
+        ),
+      );
+      // ignore: avoid_print
+      print("Page fully reloaded 🔄");
+    } catch (error) {
+      // ignore: avoid_print
+      print("Error refreshing: $error 💀");
+    }
+  }
 
   void showAlertDialog(String title, String message) {
     final ThemeData theme = GlobalValues.theme(context);
@@ -35,9 +61,7 @@ class _SettingsPageState extends State<SettingsPage> {
           content: Text(message),
           actions: [
             TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
+              onPressed: () => Navigator.of(context).pop(),
               child: Text("OK", style: theme.textTheme.titleMedium),
             ),
           ],
@@ -164,16 +188,34 @@ class _SettingsPageState extends State<SettingsPage> {
       },
     ];
 
+    final ThemeData theme = GlobalValues.theme(context);
+
     return Scaffold(
-      body: SingleChildScrollView(
+      body: LiquidPullToRefresh(
+        onRefresh: _handleRefresh,
+        height: 120,
+        color: theme.colorScheme.primary,
+        backgroundColor: theme.colorScheme.surface,
+        animSpeedFactor: 4,
+        borderWidth: 3,
+        showChildOpacityTransition: false,
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
           child: Center(
-            child: Column(
+            child: ListView(
               children: [
                 const SizedBox(height: 50),
-                const UserOverview(
-                  isFull: true,
+                StreamBuilder<User?>(
+                  stream:
+                      FirebaseAuth.instance.userChanges().asBroadcastStream(),
+                  builder: (context, snapshot) {
+                    if (!snapshot.hasData) return Text('User not found 💀');
+                    final user = snapshot.data!;
+                    return UserOverview(
+                      isFull: true,
+                      key: ValueKey(user.uid),
+                    );
+                  },
                 ),
                 for (var thang in listOfThangz)
                   SettingsTiles(
