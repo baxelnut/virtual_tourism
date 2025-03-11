@@ -16,15 +16,25 @@ import 'services/firebase/auth/auth_page.dart';
 import 'services/firebase/auth/verify_email_page.dart';
 
 class MyApp extends StatefulWidget {
-  const MyApp({super.key});
+  final int? pageIndex;
+  const MyApp({
+    super.key,
+    this.pageIndex,
+  });
 
   @override
   State<MyApp> createState() => _MyAppState();
 }
 
 class _MyAppState extends State<MyApp> {
-  int pageIndex = 0;
   final FirebaseAuth _auth = FirebaseAuth.instance;
+  late int pageIndex;
+
+  @override
+  void initState() {
+    super.initState();
+    pageIndex = widget.pageIndex ?? 0;
+  }
 
   @override
   Widget build(BuildContext context) {

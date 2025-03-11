@@ -21,11 +21,12 @@ dependencies:
   provider: ^6.1.2
 
   # UI Packages
+  flutter_svg: ^2.0.17
   google_fonts: ^6.2.1
   google_nav_bar: ^5.0.7
   panorama_viewer: ^2.0.3
-  flutter_svg: ^2.0.17
   popover: ^0.3.1
+  liquid_pull_to_refresh: ^3.0.1
 
   # Image & Storage
   image_picker: ^1.1.2
