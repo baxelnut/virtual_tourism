@@ -118,12 +118,15 @@ class _UserOverviewState extends State<UserOverview> {
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                Text(
-                  user?.displayName ?? 'username',
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: theme.textTheme.headlineSmall
-                      ?.copyWith(fontWeight: FontWeight.bold),
+                SizedBox(
+                  width: GlobalValues.screenSize(context).width - 120,
+                  child: Text(
+                    user?.displayName ?? 'username',
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: theme.textTheme.headlineSmall
+                        ?.copyWith(fontWeight: FontWeight.bold),
+                  ),
                 ),
                 Visibility(
                   visible: isAdmin,
