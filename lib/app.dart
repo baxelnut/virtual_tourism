@@ -42,7 +42,6 @@ class _MyAppState extends State<MyApp> {
     final ThemeData theme = themeProvider.themeData;
     final bool isDark =
         Provider.of<ThemeProvider>(context).themeData == darkMode;
-    final User? user = _auth.currentUser;
 
     final List<Widget> pages = [
       HomePage(onPageChange: _changePage),
@@ -61,57 +60,58 @@ class _MyAppState extends State<MyApp> {
     return MaterialApp(
       theme: theme,
       debugShowCheckedModeBanner: false,
-      home: Scaffold(
-        body: StreamBuilder<User?>(
-          stream: _auth.authStateChanges(),
-          builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return const Center(
-                child: CircularProgressIndicator(),
-              );
-            }
-            if (snapshot.hasData) {
-              return user != null && !user.emailVerified
-                  ? const VerifyEmailPage()
-                  : pages[pageIndex];
-            }
-            return const AuthPage();
-          },
-        ),
-        floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-        floatingActionButton: user != null
-            ? _buildNavBar(
-                theme,
-                isDark,
-                customTextStyle,
-              )
-            : null,
+      home: StreamBuilder<User?>(
+        stream: _auth.authStateChanges(),
+        builder: (context, snapshot) {
+          final bool isLoggedIn = snapshot.hasData;
+
+          return Scaffold(
+            body: isLoggedIn
+                ? (snapshot.data != null && !snapshot.data!.emailVerified
+                    ? const VerifyEmailPage()
+                    : pages[pageIndex])
+                : const AuthPage(),
+            floatingActionButtonLocation:
+                FloatingActionButtonLocation.centerDocked,
+            floatingActionButton: isLoggedIn
+                ? _buildNavBar(theme, isDark, customTextStyle)
+                : null,
+          );
+        },
       ),
     );
   }
 
-  Widget _buildNavBar(
-    ThemeData theme,
-    bool isDark,
-    TextStyle customTextStyle,
-  ) {
+  Widget _buildNavBar(ThemeData theme, bool isDark, TextStyle customTextStyle) {
+    final Color navBarColor =
+        isDark ? const Color(0xff1289B4) : const Color(0xff1178A1);
+    final Color borderColor = const Color(0xffB43D12);
+    final Color shadowColor = Colors.black.withOpacity(0.6);
+
+    final List<Map<String, dynamic>> navItems = [
+      {'icon': Icons.home_rounded, 'label': 'Home'},
+      {'icon': Icons.tour_rounded, 'label': 'Tour'},
+      {'icon': Icons.travel_explore_rounded, 'label': 'Explore'},
+      {'icon': Icons.military_tech_rounded, 'label': 'Medals'},
+      {'icon': Icons.person_2_rounded, 'label': 'User'},
+    ];
+
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 12),
       child: Container(
         decoration: BoxDecoration(
-          color: isDark ? const Color(0xff1289B4) : const Color(0xff1178A1),
+          color: navBarColor,
           borderRadius: BorderRadius.circular(28),
           boxShadow: [
             BoxShadow(
-              color: const Color(0xff151515).withOpacity(0.6),
+              color: shadowColor,
               spreadRadius: 3.5,
               blurRadius: 6.9,
-              offset: const Offset(0, 0),
             ),
           ],
         ),
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 12),
+          padding: const EdgeInsets.symmetric(vertical: 12),
           child: GNav(
             color: theme.colorScheme.onPrimary,
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -120,55 +120,22 @@ class _MyAppState extends State<MyApp> {
             padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
             gap: 10,
             tabBackgroundColor: theme.colorScheme.onPrimary,
-            tabActiveBorder: const Border(
-              top: BorderSide(
-                color: Color(0xffB43D12),
-                width: 1.69,
-              ),
-              bottom: BorderSide(
-                color: Color(0xffB43D12),
-                width: 1.69,
-              ),
+            tabActiveBorder: Border(
+              top: BorderSide(color: borderColor, width: 1.69),
+              bottom: BorderSide(color: borderColor, width: 1.69),
             ),
-            activeColor: const Color(0xffB43D12),
-            tabs: [
-              _navButton(
-                Icons.home_rounded,
-                'Home',
-                customTextStyle,
-              ),
-              _navButton(
-                Icons.tour_rounded,
-                'Tour',
-                customTextStyle,
-              ),
-              _navButton(
-                Icons.travel_explore_rounded,
-                'Explore',
-                customTextStyle,
-              ),
-              _navButton(
-                Icons.military_tech_rounded,
-                'Medals',
-                customTextStyle,
-              ),
-              _navButton(
-                Icons.person_2_rounded,
-                'User',
-                customTextStyle,
-              ),
-            ],
+            activeColor: borderColor,
+            tabs: navItems
+                .map((item) =>
+                    _navButton(item['icon'], item['label'], customTextStyle))
+                .toList(),
           ),
         ),
       ),
     );
   }
 
-  GButton _navButton(
-    IconData icon,
-    String text,
-    TextStyle textStyle,
-  ) {
+  GButton _navButton(IconData icon, String text, TextStyle textStyle) {
     return GButton(
       icon: icon,
       iconSize: 30,
