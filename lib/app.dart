@@ -34,9 +34,6 @@ class _MyAppState extends State<MyApp> {
   void initState() {
     super.initState();
     pageIndex = widget.pageIndex ?? 0;
-    _auth.idTokenChanges().listen((User? user) {
-      print('🔥 ID Token Updated: ${user?.uid ?? "No user"}');
-    });
   }
 
   @override
