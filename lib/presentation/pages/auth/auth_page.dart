@@ -3,11 +3,11 @@ import 'package:flutter/material.dart';
 import '../../../app.dart';
 import '../../../core/global_values.dart';
 import '../../../presentation/widgets/utils/input_section.dart';
-import 'auth.dart';
-import 'widgets/additional_action.dart';
-import 'widgets/alternative_methods.dart';
-import 'widgets/auth_button.dart';
-import 'widgets/header_section.dart';
+import '../../../services/firebase/auth/auth.dart';
+import 'additional_action.dart';
+import 'alternative_methods.dart';
+import 'auth_button.dart';
+import 'header_section.dart';
 
 class AuthPage extends StatefulWidget {
   const AuthPage({super.key});

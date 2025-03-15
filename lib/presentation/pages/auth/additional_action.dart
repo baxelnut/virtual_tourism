@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../auth.dart';
+import '../../../services/firebase/auth/auth.dart';
 
 class AdditionalAction extends StatefulWidget {
   final List<bool> isSelected;

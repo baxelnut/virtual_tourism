@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 import '../../../../app.dart';
-import '../auth.dart';
+import '../../../services/firebase/auth/auth.dart';
 
 class AlternativeMethods extends StatefulWidget {
   final bool isLoading;
