@@ -7,13 +7,13 @@ import 'package:provider/provider.dart';
 import 'core/global_values.dart';
 import 'core/theme/theme.dart';
 import 'core/theme/theme_provider.dart';
+import 'presentation/pages/auth/auth_page.dart';
+import 'presentation/pages/auth/verify_email_page.dart';
 import 'presentation/pages/explore/explore_page.dart';
 import 'presentation/pages/home/home_page.dart';
 import 'presentation/pages/medals/medals_page.dart';
 import 'presentation/pages/settings/settings_page.dart';
 import 'presentation/pages/tour/tour_page.dart';
-import 'services/firebase/auth/auth_page.dart';
-import 'services/firebase/auth/verify_email_page.dart';
 
 class MyApp extends StatefulWidget {
   final int? pageIndex;
@@ -65,7 +65,6 @@ class _MyAppState extends State<MyApp> {
         builder: (context, snapshot) {
           final User? user = snapshot.data;
           final bool isLoggedIn = user != null;
-          // print('🔍 Full user data: ${user?.displayName}');
           WidgetsBinding.instance.addPostFrameCallback((_) {
             setState(() {});
           });
