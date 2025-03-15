@@ -22,11 +22,4 @@ class GlobalValues {
       Provider.of<ThemeProvider>(context, listen: false);
 
   static User? user = FirebaseAuth.instance.currentUser;
-
-  static Future<void> reloadUser() async {
-    if (user != null) {
-      await user!.reload();
-      user = FirebaseAuth.instance.currentUser;
-    }
-  }
 }
