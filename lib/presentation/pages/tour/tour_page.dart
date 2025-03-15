@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:liquid_pull_to_refresh/liquid_pull_to_refresh.dart';
 
 import '../../../core/global_values.dart';
+import '../../../core/nuke_refresh.dart';
 import '../../../services/firebase/api/firebase_api.dart';
 import '../../widgets/cards/fit_width_card.dart';
 import 'tour_collections.dart';
@@ -39,55 +41,66 @@ class _TourPageState extends State<TourPage> {
     final Size screenSize = GlobalValues.screenSize(context);
 
     return Scaffold(
-      body: CustomScrollView(
-        slivers: [
-          SliverAppBar(
-            floating: true,
-            snap: true,
-            title: const Text('Tour'),
-            centerTitle: true,
-          ),
-          SliverToBoxAdapter(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                const TourCollections(),
-                Padding(
-                  padding: const EdgeInsets.only(top: 50, bottom: 20),
-                  child: Text(
-                    'All Post by Users',
-                    style: theme.textTheme.headlineSmall,
+      body: LiquidPullToRefresh(
+        onRefresh: () async {
+          await NukeRefresh.forceRefresh(context, 1);
+        },
+        height: 120,
+        color: theme.colorScheme.primary,
+        backgroundColor: theme.colorScheme.surface,
+        animSpeedFactor: 4,
+        borderWidth: 3,
+        showChildOpacityTransition: false,
+        child: CustomScrollView(
+          slivers: [
+            SliverAppBar(
+              floating: true,
+              snap: true,
+              title: const Text('Tour'),
+              centerTitle: true,
+            ),
+            SliverToBoxAdapter(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  const TourCollections(),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 50, bottom: 20),
+                    child: Text(
+                      'All Post by Users',
+                      style: theme.textTheme.headlineSmall,
+                    ),
                   ),
-                ),
-                Column(
-                  children: tours0.map((destinationData) {
-                    return FutureBuilder<Map<String, dynamic>?>(
-                      future: firebaseApi
-                          .getUserData(destinationData['userId'] ?? ''),
-                      builder: (context, snapshot) {
-                        if (snapshot.hasError) {
+                  Column(
+                    children: tours0.map((destinationData) {
+                      return FutureBuilder<Map<String, dynamic>?>(
+                        future: firebaseApi
+                            .getUserData(destinationData['userId'] ?? ''),
+                        builder: (context, snapshot) {
+                          if (snapshot.hasError) {
+                            return FitWidthCard(
+                              userProfile: '',
+                              destinationData: destinationData,
+                            );
+                          }
+
+                          final userData = snapshot.data;
+                          final userProfile = userData?['imageUrl'] ?? '';
+
                           return FitWidthCard(
-                            userProfile: '',
+                            userProfile: userProfile,
                             destinationData: destinationData,
                           );
-                        }
-
-                        final userData = snapshot.data;
-                        final userProfile = userData?['imageUrl'] ?? '';
-
-                        return FitWidthCard(
-                          userProfile: userProfile,
-                          destinationData: destinationData,
-                        );
-                      },
-                    );
-                  }).toList(),
-                ),
-                SizedBox(height: screenSize.width / 3),
-              ],
+                        },
+                      );
+                    }).toList(),
+                  ),
+                  SizedBox(height: screenSize.width / 3),
+                ],
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

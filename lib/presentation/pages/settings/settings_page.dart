@@ -2,9 +2,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:liquid_pull_to_refresh/liquid_pull_to_refresh.dart';
 import 'package:provider/provider.dart';
-import 'package:virtual_tourism/app.dart';
 
 import '../../../core/global_values.dart';
+import '../../../core/nuke_refresh.dart';
 import '../../../core/theme/theme.dart';
 import '../../../core/theme/theme_provider.dart';
 import '../../../services/firebase/auth/auth.dart';
@@ -28,27 +28,6 @@ class _SettingsPageState extends State<SettingsPage> {
   final Auth _auth = Auth();
   bool notifAllowed = false;
   User? user = FirebaseAuth.instance.currentUser;
-
-  Future<void> _handleRefresh() async {
-    try {
-      await GlobalValues.reloadUser();
-      await FirebaseAuth.instance.currentUser?.reload();
-
-      if (!mounted) return;
-
-      Navigator.of(context).pop();
-      Navigator.of(context).push(
-        MaterialPageRoute(
-          builder: (context) => MyApp(pageIndex: 4),
-        ),
-      );
-      // ignore: avoid_print
-      print("Page fully reloaded 🔄");
-    } catch (error) {
-      // ignore: avoid_print
-      print("Error refreshing: $error 💀");
-    }
-  }
 
   void showAlertDialog(String title, String message) {
     final ThemeData theme = GlobalValues.theme(context);
@@ -192,7 +171,9 @@ class _SettingsPageState extends State<SettingsPage> {
 
     return Scaffold(
       body: LiquidPullToRefresh(
-        onRefresh: _handleRefresh,
+        onRefresh: () async {
+          await NukeRefresh.forceRefresh(context, 4);
+        },
         height: 120,
         color: theme.colorScheme.primary,
         backgroundColor: theme.colorScheme.surface,

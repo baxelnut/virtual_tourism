@@ -1,8 +1,10 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:liquid_pull_to_refresh/liquid_pull_to_refresh.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../core/global_values.dart';
+import '../../../core/nuke_refresh.dart';
 import '../../widgets/utils/chips_component.dart';
 import '../../widgets/utils/user_overview.dart';
 import 'community_content.dart';
@@ -45,12 +47,22 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    final ThemeData theme = GlobalValues.theme(context);
+
     return Scaffold(
-      body: SingleChildScrollView(
+      body: LiquidPullToRefresh(
+        onRefresh: () async {
+          await NukeRefresh.forceRefresh(context);
+        },
+        height: 120,
+        color: theme.colorScheme.primary,
+        backgroundColor: theme.colorScheme.surface,
+        animSpeedFactor: 4,
+        borderWidth: 3,
+        showChildOpacityTransition: false,
         child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 50),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+          padding: const EdgeInsets.only(bottom: 50, top: 35),
+          child: ListView(
             children: [
               homeHeader(),
               _buildTabContent(),
