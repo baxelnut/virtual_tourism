@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
+import '../../../core/global_values.dart';
 import '../api/firebase_api.dart';
 
 class Auth {
@@ -10,6 +11,12 @@ class Auth {
 
   User? get currentUser => _firebaseAuth.currentUser;
   Stream<User?> get authStateChanges => _firebaseAuth.authStateChanges();
+
+  Auth() {
+    _firebaseAuth.authStateChanges().listen((User? user) {
+      GlobalValues.user = user;
+    });
+  }
 
   Future<void> resetPassword(String email) async {
     try {
@@ -22,6 +29,8 @@ class Auth {
   Future<void> logout() async {
     await _googleSignIn.signOut();
     await _firebaseAuth.signOut();
+    await Future.delayed(Duration(milliseconds: 300));
+    GlobalValues.user = null;
   }
 
   Future<void> login({
@@ -136,6 +145,7 @@ class Auth {
         await _firebaseApi.updateUserAdminStatus(user.uid, false);
       }
 
+      await currentUser?.reload();
       return user;
     } catch (e) {
       throw Exception('Failed to sign in with Google: ${e.toString()}');
