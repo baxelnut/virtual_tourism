@@ -20,7 +20,7 @@ class ButtonWriteReview extends StatefulWidget {
 class _ButtonWriteReviewState extends State<ButtonWriteReview> {
   final User? user = GlobalValues.user;
   final TextEditingController reviewController = TextEditingController();
-  double ratingStars = 0.0;
+  double ratingStars = 0.0; // 🔥 Now it persists across rebuilds
 
   void showReviewModal(BuildContext context) {
     FirebaseApi firebaseApi = FirebaseApi();
@@ -31,10 +31,6 @@ class _ButtonWriteReviewState extends State<ButtonWriteReview> {
       context: context,
       isScrollControlled: true,
       builder: (BuildContext context) {
-        double localRatingStars = 0.0;
-        TextEditingController localReviewController =
-            TextEditingController(text: reviewController.text);
-
         return StatefulBuilder(
           builder: (context, setModalState) {
             return Padding(
@@ -52,26 +48,32 @@ class _ButtonWriteReviewState extends State<ButtonWriteReview> {
                     style: Theme.of(context).textTheme.titleLarge,
                   ),
                   const SizedBox(height: 10),
+
+                  // ⭐ Fixed Rating Bar
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
-                    children: List<Widget>.generate(5, (int index) {
+                    children: List.generate(5, (index) {
                       return IconButton(
                         onPressed: () {
                           setModalState(() {
-                            localRatingStars = (index + 1).toDouble();
+                            ratingStars = (index + 1)
+                                .toDouble(); // 🔥 Updates the parent state
                           });
                         },
                         icon: Icon(
                           Icons.star,
-                          color: index < localRatingStars.toInt()
+                          color: index < ratingStars.toInt()
                               ? Colors.amber
                               : Colors.grey,
                         ),
                       );
                     }),
                   ),
+
+                  // 📝 Fixed TextField (Persists input)
                   TextField(
-                    controller: localReviewController,
+                    controller:
+                        reviewController, // 🔥 Now using the global controller
                     decoration: const InputDecoration(
                       hintText: 'Write your review here...',
                       border: OutlineInputBorder(),
@@ -79,11 +81,12 @@ class _ButtonWriteReviewState extends State<ButtonWriteReview> {
                     maxLines: 3,
                   ),
                   const SizedBox(height: 10),
+
                   SizedBox(
                     width: screenSize.width,
                     child: ElevatedButton(
                       onPressed: () {
-                        if (localRatingStars == 0.0) {
+                        if (ratingStars == 0.0) {
                           showDialog(
                             context: context,
                             builder: (BuildContext context) {
@@ -93,9 +96,7 @@ class _ButtonWriteReviewState extends State<ButtonWriteReview> {
                                     "Please rate before submitting."),
                                 actions: [
                                   TextButton(
-                                    onPressed: () {
-                                      Navigator.pop(context);
-                                    },
+                                    onPressed: () => Navigator.pop(context),
                                     child: const Text("OK"),
                                   ),
                                 ],
@@ -105,19 +106,34 @@ class _ButtonWriteReviewState extends State<ButtonWriteReview> {
                           return;
                         }
 
-                        setState(() {
-                          ratingStars = localRatingStars;
-                          reviewController.text = localReviewController.text;
-                        });
+                        // 🔥 Check if text is actually being written
+                        if (reviewController.text.trim().isEmpty) {
+                          showDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return AlertDialog(
+                                title: const Text("Warning"),
+                                content: const Text("Review cannot be empty."),
+                                actions: [
+                                  TextButton(
+                                    onPressed: () => Navigator.pop(context),
+                                    child: const Text("OK"),
+                                  ),
+                                ],
+                              );
+                            },
+                          );
+                          return;
+                        }
 
                         firebaseApi.addReview(
                           collectionId: "verified_user_uploads",
                           destinationId: widget.theId,
                           userId: user!.uid,
-                          userName: user!.displayName!,
-                          ratingStars: localRatingStars,
-                          reviewComment: localReviewController.text,
-                          photoUrl: user!.photoURL,
+                          userName: user!.displayName ?? 'Anonymous',
+                          ratingStars: ratingStars,
+                          reviewComment: reviewController.text,
+                          photoUrl: user!.photoURL ?? '',
                         );
 
                         Navigator.pop(context);
@@ -130,8 +146,9 @@ class _ButtonWriteReviewState extends State<ButtonWriteReview> {
                       child: Text(
                         'Post',
                         style: theme.textTheme.bodyLarge?.copyWith(
-                            color: theme.colorScheme.onPrimary,
-                            fontWeight: FontWeight.w900),
+                          color: theme.colorScheme.onPrimary,
+                          fontWeight: FontWeight.w900,
+                        ),
                       ),
                     ),
                   ),
