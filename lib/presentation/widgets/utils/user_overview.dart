@@ -119,11 +119,9 @@ class _UserOverviewState extends State<UserOverview> {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 IntrinsicWidth(
-                  // 🔥 Shrinks width to fit the text
                   child: ConstrainedBox(
                     constraints: BoxConstraints(
-                      maxWidth: GlobalValues.screenSize(context).width -
-                          120, // 🔥 Max width limit
+                      maxWidth: GlobalValues.screenSize(context).width - 120,
                     ),
                     child: Text(
                       user?.displayName ?? 'username',

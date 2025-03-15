@@ -34,6 +34,9 @@ class _MyAppState extends State<MyApp> {
   void initState() {
     super.initState();
     pageIndex = widget.pageIndex ?? 0;
+    _auth.idTokenChanges().listen((User? user) {
+      print('🔥 ID Token Updated: ${user?.uid ?? "No user"}');
+    });
   }
 
   @override
@@ -63,11 +66,16 @@ class _MyAppState extends State<MyApp> {
       home: StreamBuilder<User?>(
         stream: _auth.authStateChanges(),
         builder: (context, snapshot) {
-          final bool isLoggedIn = snapshot.hasData;
+          final User? user = snapshot.data;
+          final bool isLoggedIn = user != null;
+          // print('🔍 Full user data: ${user?.displayName}');
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            setState(() {});
+          });
 
           return Scaffold(
             body: isLoggedIn
-                ? (snapshot.data != null && !snapshot.data!.emailVerified
+                ? (!user.emailVerified
                     ? const VerifyEmailPage()
                     : pages[pageIndex])
                 : const AuthPage(),
