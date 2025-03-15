@@ -20,7 +20,7 @@ class ButtonWriteReview extends StatefulWidget {
 class _ButtonWriteReviewState extends State<ButtonWriteReview> {
   final User? user = GlobalValues.user;
   final TextEditingController reviewController = TextEditingController();
-  double ratingStars = 0.0; // 🔥 Now it persists across rebuilds
+  double ratingStars = 0.0;
 
   void showReviewModal(BuildContext context) {
     FirebaseApi firebaseApi = FirebaseApi();
@@ -48,16 +48,13 @@ class _ButtonWriteReviewState extends State<ButtonWriteReview> {
                     style: Theme.of(context).textTheme.titleLarge,
                   ),
                   const SizedBox(height: 10),
-
-                  // ⭐ Fixed Rating Bar
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: List.generate(5, (index) {
                       return IconButton(
                         onPressed: () {
                           setModalState(() {
-                            ratingStars = (index + 1)
-                                .toDouble(); // 🔥 Updates the parent state
+                            ratingStars = (index + 1).toDouble();
                           });
                         },
                         icon: Icon(
@@ -69,11 +66,8 @@ class _ButtonWriteReviewState extends State<ButtonWriteReview> {
                       );
                     }),
                   ),
-
-                  // 📝 Fixed TextField (Persists input)
                   TextField(
-                    controller:
-                        reviewController, // 🔥 Now using the global controller
+                    controller: reviewController,
                     decoration: const InputDecoration(
                       hintText: 'Write your review here...',
                       border: OutlineInputBorder(),
@@ -81,7 +75,6 @@ class _ButtonWriteReviewState extends State<ButtonWriteReview> {
                     maxLines: 3,
                   ),
                   const SizedBox(height: 10),
-
                   SizedBox(
                     width: screenSize.width,
                     child: ElevatedButton(
@@ -106,7 +99,6 @@ class _ButtonWriteReviewState extends State<ButtonWriteReview> {
                           return;
                         }
 
-                        // 🔥 Check if text is actually being written
                         if (reviewController.text.trim().isEmpty) {
                           showDialog(
                             context: context,
