@@ -119,15 +119,10 @@ class _ReviewSectionState extends State<ReviewSection> {
               children: [
                 const RatingStars(),
                 const SizedBox(width: 8),
-                RatingIndicatorBar(
-                  ratings: ratings,
-                  totalRatings: totalRatings,
-                ),
+                RatingIndicatorBar(ratings: ratings, totalRatings: totalRatings)
               ],
             ),
-            RatingReviewerQty(
-              ratings: ratings,
-            ),
+            RatingReviewerQty(ratings: ratings),
           ],
         ),
       ),
@@ -269,7 +264,10 @@ class _ReviewSectionState extends State<ReviewSection> {
     final String defaultProfile = GlobalValues.defaultProfile;
 
     if (reviews.isEmpty) {
-      return const Text('No reviews yet. Be the first to leave a review!');
+      return Padding(
+        padding: const EdgeInsets.only(top: 120),
+        child: const Text('No reviews yet. Be the first to leave a review!'),
+      );
     }
 
     List<String> userUids = reviews
@@ -288,12 +286,11 @@ class _ReviewSectionState extends State<ReviewSection> {
           .where(FieldPath.documentId, whereIn: userUids)
           .get(),
       builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return const CircularProgressIndicator();
-        }
-
         if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
-          return const Text('Failed to load reviews.');
+          return Padding(
+            padding: const EdgeInsets.only(top: 100),
+            child: const CircularProgressIndicator(),
+          );
         }
 
         Map<String, String> userImageMap = {
