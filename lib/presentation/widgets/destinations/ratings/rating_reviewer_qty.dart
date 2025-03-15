@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../../core/global_values.dart';
+import '../../../../core/global_values.dart';
 
 class RatingReviewerQty extends StatelessWidget {
   final List<int> ratings;

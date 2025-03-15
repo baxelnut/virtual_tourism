@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../../core/global_values.dart';
+import '../../../../core/global_values.dart';
 
 class ReviewTiles extends StatefulWidget {
   final String? userProfile;

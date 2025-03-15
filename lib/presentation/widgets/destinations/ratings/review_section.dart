@@ -2,11 +2,11 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-import '../../../core/global_values.dart';
-import 'button_donate.dart';
-import 'button_share.dart';
-import 'button_shop.dart';
-import 'button_write_review.dart';
+import '../../../../core/global_values.dart';
+import '../button_donate.dart';
+import '../button_share.dart';
+import '../button_shop.dart';
+import '../button_write_review.dart';
 import 'rating_average.dart';
 import 'rating_indicator_bar.dart';
 import 'rating_reviewer_qty.dart';
@@ -79,10 +79,7 @@ class _ReviewSectionState extends State<ReviewSection> {
             left: 20,
             right: 20,
           ),
-          child: Text(
-            'Rating & Reviews',
-            style: theme.textTheme.headlineSmall,
-          ),
+          child: Text('Rating & Reviews', style: theme.textTheme.headlineSmall),
         ),
         _ratingStat(
           screenSize: screenSize,
@@ -90,9 +87,7 @@ class _ReviewSectionState extends State<ReviewSection> {
           ratings: ratings,
           totalRatings: totalRatings,
         ),
-        _actionButtons(
-          theme: theme,
-        ),
+        _actionButtons(theme: theme),
         _reviewWidget(
           ratings: widget.destinationData['ratings'],
           screenSize: screenSize,
@@ -153,15 +148,9 @@ class _ReviewSectionState extends State<ReviewSection> {
               destinationData: widget.destinationData,
               theId: widget.theId,
             ),
-            ButtonShare(
-              destinationData: widget.destinationData,
-            ),
-            ButtonDonate(
-              destinationData: widget.destinationData,
-            ),
-            ButtonShop(
-              destinationData: widget.destinationData,
-            ),
+            ButtonShare(destinationData: widget.destinationData),
+            ButtonDonate(destinationData: widget.destinationData),
+            ButtonShop(destinationData: widget.destinationData),
             const SizedBox(width: 30),
           ],
         ),

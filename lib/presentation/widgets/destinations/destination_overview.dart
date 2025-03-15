@@ -9,7 +9,7 @@ import '../../../core/global_values.dart';
 import '../content/load_image.dart';
 import '../content/photographic_screen.dart';
 import '../content/tour_screen.dart';
-import 'review_section.dart';
+import 'ratings/review_section.dart';
 
 class DestinationOverview extends StatefulWidget {
   final Map<String, dynamic> destinationData;
