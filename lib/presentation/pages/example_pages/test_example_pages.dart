@@ -2,7 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 import '../../../services/firebase/api/firebase_api.dart';
-import '../../../services/firebase/auth/auth_page.dart';
+import '../auth/auth_page.dart';
 import 'image_storage_test.dart';
 import 'upload_destinations.dart';
 import 'upload_image.dart';
