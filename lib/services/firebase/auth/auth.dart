@@ -2,11 +2,12 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
 import '../../../core/global_values.dart';
-import '../api/firebase_api.dart';
+import '../api/users_service.dart';
 
 class Auth {
+  final UsersService _usersService = UsersService();
+
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
-  final FirebaseApi _firebaseApi = FirebaseApi();
   final GoogleSignIn _googleSignIn = GoogleSignIn();
 
   User? get currentUser => _firebaseAuth.currentUser;
@@ -49,10 +50,10 @@ class Auth {
         throw Exception('User not found after login.');
       }
 
-      final userData = await _firebaseApi.getUserData(user.uid);
+      final userData = await _usersService.getUserData(user.uid);
 
       if (userData == null) {
-        await _firebaseApi.createUserData(
+        await _usersService.createUserData(
           userUid: user.uid,
           isVerified: user.emailVerified,
           email: user.email,
@@ -63,7 +64,7 @@ class Auth {
           admin: false,
         );
       } else if (userData['admin'] == null) {
-        await _firebaseApi.updateUserAdminStatus(user.uid, false);
+        await _usersService.updateUserAdminStatus(user.uid, false);
       }
     } on FirebaseAuthException catch (e) {
       throw Exception(e.message);
@@ -89,7 +90,7 @@ class Auth {
       await userCredential.user?.sendEmailVerification();
 
       final user = FirebaseAuth.instance.currentUser;
-      _firebaseApi.createUserData(
+      _usersService.createUserData(
         userUid: user!.uid,
         isVerified: user.emailVerified,
         email: user.email,
@@ -128,10 +129,10 @@ class Auth {
         throw Exception('User not found after sign-in.');
       }
 
-      final userData = await _firebaseApi.getUserData(user.uid);
+      final userData = await _usersService.getUserData(user.uid);
 
       if (userData == null) {
-        await _firebaseApi.createUserData(
+        await _usersService.createUserData(
           userUid: user.uid,
           isVerified: user.emailVerified,
           email: user.email,
@@ -142,7 +143,7 @@ class Auth {
           admin: false,
         );
       } else if (userData['admin'] == null) {
-        await _firebaseApi.updateUserAdminStatus(user.uid, false);
+        await _usersService.updateUserAdminStatus(user.uid, false);
       }
 
       await currentUser?.reload();
