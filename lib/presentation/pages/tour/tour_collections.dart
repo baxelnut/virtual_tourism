@@ -90,7 +90,9 @@ class _TourCollectionsState extends State<TourCollections> {
     required String title,
     required BuildContext context,
   }) {
-    final double cardSize = MediaQuery.of(context).size.width / 2;
+    final Size screenSize = GlobalValues.screenSize(context);
+    final double cardSize = screenSize.width / 2;
+
     final List<Map<String, dynamic>> caseStudies =
         fetchedData[collections] ?? [];
 
@@ -109,7 +111,8 @@ class _TourCollectionsState extends State<TourCollections> {
     required BuildContext context,
   }) {
     if (data.isEmpty) {
-      final ThemeData theme = Theme.of(context);
+      final ThemeData theme = GlobalValues.theme(context);
+
       return Padding(
         padding: const EdgeInsets.all(16.0),
         child: Text(

@@ -100,36 +100,36 @@ final List<Map<String, String>> countriesList = [
         'https://www.gowisatanusapenida.com/wp-content/uploads/2020/12/48369E1C-3A4B-4C9D-9DA5-E1534803E34F-768x960.jpeg'
   },
   {
+    'flag': '🇨🇱',
+    'country': 'Chile',
+    'thumbnailPath':
+        'https://upload.wikimedia.org/wikipedia/commons/thumb/5/59/Amalia_Glacier_%2847461801572%29.jpg/1200px-Amalia_Glacier_%2847461801572%29.jpg',
+    'imagePath':
+        'https://upload.wikimedia.org/wikipedia/commons/thumb/5/59/Amalia_Glacier_%2847461801572%29.jpg/1200px-Amalia_Glacier_%2847461801572%29.jpg'
+  },
+  {
     'flag': '🇯🇲',
     'country': 'Jamaica',
     'thumbnailPath':
-        'https://www.gowisatanusapenida.com/wp-content/uploads/2020/12/48369E1C-3A4B-4C9D-9DA5-E1534803E34F-768x960.jpeg',
+        'https://upload.wikimedia.org/wikipedia/commons/a/ac/Doctors-Cave-Beach.jpg',
     'imagePath':
-        'https://www.gowisatanusapenida.com/wp-content/uploads/2020/12/48369E1C-3A4B-4C9D-9DA5-E1534803E34F-768x960.jpeg'
+        'https://upload.wikimedia.org/wikipedia/commons/a/ac/Doctors-Cave-Beach.jpg'
   },
   {
     'flag': '🇯🇵',
     'country': 'Japan',
     'thumbnailPath':
-        'https://www.gowisatanusapenida.com/wp-content/uploads/2020/12/48369E1C-3A4B-4C9D-9DA5-E1534803E34F-768x960.jpeg',
+        'https://upload.wikimedia.org/wikipedia/commons/4/4c/Series-N700a-Mt.Fuji.jpg',
     'imagePath':
-        'https://www.gowisatanusapenida.com/wp-content/uploads/2020/12/48369E1C-3A4B-4C9D-9DA5-E1534803E34F-768x960.jpeg'
+        'https://upload.wikimedia.org/wikipedia/commons/4/4c/Series-N700a-Mt.Fuji.jpg'
   },
   {
-    'flag': '🇺🇸',
-    'country': 'United States',
+    'flag': '🇪🇸',
+    'country': 'Spain',
     'thumbnailPath':
-        'https://www.gowisatanusapenida.com/wp-content/uploads/2020/12/48369E1C-3A4B-4C9D-9DA5-E1534803E34F-768x960.jpeg',
+        'https://upload.wikimedia.org/wikipedia/commons/9/9c/Guggenheim_night_2_%283804035123%29.jpg',
     'imagePath':
-        'https://www.gowisatanusapenida.com/wp-content/uploads/2020/12/48369E1C-3A4B-4C9D-9DA5-E1534803E34F-768x960.jpeg'
-  },
-  {
-    'flag': '🇬🇧',
-    'country': 'United Kingdom',
-    'thumbnailPath':
-        'https://www.gowisatanusapenida.com/wp-content/uploads/2020/12/48369E1C-3A4B-4C9D-9DA5-E1534803E34F-768x960.jpeg',
-    'imagePath':
-        'https://www.gowisatanusapenida.com/wp-content/uploads/2020/12/48369E1C-3A4B-4C9D-9DA5-E1534803E34F-768x960.jpeg'
+        'https://upload.wikimedia.org/wikipedia/commons/9/9c/Guggenheim_night_2_%283804035123%29.jpg'
   },
 ];
 

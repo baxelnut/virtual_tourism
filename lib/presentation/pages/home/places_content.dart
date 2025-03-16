@@ -1,19 +1,65 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import '../../../core/global_values.dart';
 import '../../../data/destination_data.dart';
+import '../../../services/firebase/api/destinations_service.dart';
 import '../../widgets/cards/cards_emerged.dart';
 import '../../widgets/cards/cards_header.dart';
 import '../../widgets/cards/cards_linear.dart';
 // import 'top_picks.dart';
 
-class PlacesContent extends StatelessWidget {
+class PlacesContent extends StatefulWidget {
   const PlacesContent({super.key});
+
+  @override
+  State<PlacesContent> createState() => _PlacesContentState();
+}
+
+class _PlacesContentState extends State<PlacesContent> {
+  final Map<String, List<Map<String, dynamic>>> fetchedData = {
+    'case_study_destinations': [],
+  };
+
+  bool isLoading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    fetchData();
+  }
+
+  Future<void> fetchData() async {
+    try {
+      final destinationsService =
+          Provider.of<DestinationsService>(context, listen: false);
+      final collections = fetchedData.keys.toList();
+
+      final results = await Future.wait(
+        collections.map((collection) async {
+          final data =
+              await destinationsService.fetchDocuments(collection: collection);
+          return {collection: data};
+        }),
+      );
+
+      setState(() {
+        for (var result in results) {
+          final key = result.keys.first;
+          fetchedData[key] = result[key] ?? [];
+        }
+        isLoading = false;
+      });
+    } catch (e) {
+      debugPrint('Error fetching data: $e');
+      setState(() => isLoading = false);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     final ThemeData theme = GlobalValues.theme(context);
-    final Size screenSize = GlobalValues.screenSize(context);
+    // final Size screenSize = GlobalValues.screenSize(context);
 
     return Column(
       children: [
@@ -37,7 +83,12 @@ class PlacesContent extends StatelessWidget {
         ),
         // TopPicks(),
         topCountries(theme),
-        popularDestionation(theme, screenSize),
+        // popularDestionation(theme, screenSize),
+        caseStudyDestinations(
+          collections: "case_study_destinations",
+          title: 'Popular',
+          context: context,
+        ),
         const SizedBox(height: 50),
       ],
     );
@@ -78,16 +129,95 @@ class PlacesContent extends StatelessWidget {
     );
   }
 
-  Widget popularDestionation(ThemeData theme, Size screenSize) {
-    final double cardSize = screenSize.width / 2;
+  // Widget popularDestionation(ThemeData theme, Size screenSize) {
+  //   final double cardSize = screenSize.width / 2;
 
+  //   return Padding(
+  //     padding: const EdgeInsets.symmetric(vertical: 25),
+  //     child: Column(
+  //       children: [
+  //         const SizedBox(height: 20),
+  //         const CardsHeader(cardsTitle: 'Popular'),
+  //         const SizedBox(height: 10),
+  //         SizedBox(
+  //           height: cardSize,
+  //           child: RotatedBox(
+  //             quarterTurns: -1,
+  //             child: ListWheelScrollView(
+  //               itemExtent: cardSize,
+  //               squeeze: 1.05,
+  //               physics: const FixedExtentScrollPhysics(),
+  //               children: popularList.map(
+  //                 (popularData) {
+  //                   return RotatedBox(
+  //                     quarterTurns: 1,
+  //                     child: CardsEmerged(
+  //                       destinationData: popularData,
+  //                     ),
+  //                   );
+  //                 },
+  //               ).toList(),
+  //             ),
+  //           ),
+  //         ),
+  //         Padding(
+  //           padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+  //           child: Text(
+  //             'Explore trending spots that travelers love right now. Start your journey today and let your curiosity guide you! 🔥',
+  //             style: theme.textTheme.bodyMedium,
+  //             textAlign: TextAlign.center,
+  //             maxLines: 4,
+  //             overflow: TextOverflow.ellipsis,
+  //           ),
+  //         ),
+  //       ],
+  //     ),
+  //   );
+  // }
+
+  Widget caseStudyDestinations({
+    required String collections,
+    required String title,
+    required BuildContext context,
+  }) {
+    final double cardSize = MediaQuery.of(context).size.width / 2;
+    final List<Map<String, dynamic>> caseStudies =
+        fetchedData[collections] ?? [];
+
+    return dataSection(
+      title: title,
+      cardSize: cardSize,
+      data: caseStudies,
+      context: context,
+    );
+  }
+
+  Widget dataSection({
+    required String title,
+    required double cardSize,
+    required List<Map<String, dynamic>> data,
+    required BuildContext context,
+  }) {
+    if (data.isEmpty) {
+      final ThemeData theme = Theme.of(context);
+      return Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Text(
+          '$title: No data yet',
+          style: theme.textTheme.bodyMedium,
+        ),
+      );
+    }
+
+    final ThemeData theme = Theme.of(context);
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 25),
+      padding: const EdgeInsets.only(top: 20),
       child: Column(
         children: [
-          const SizedBox(height: 20),
-          const CardsHeader(cardsTitle: 'Popular'),
-          const SizedBox(height: 10),
+          CardsHeader(
+            cardsTitle: title,
+            destinationData: data,
+          ),
           SizedBox(
             height: cardSize,
             child: RotatedBox(
@@ -96,16 +226,14 @@ class PlacesContent extends StatelessWidget {
                 itemExtent: cardSize,
                 squeeze: 1.05,
                 physics: const FixedExtentScrollPhysics(),
-                children: popularList.map(
-                  (popularData) {
-                    return RotatedBox(
-                      quarterTurns: 1,
-                      child: CardsEmerged(
-                        destinationData: popularData,
-                      ),
-                    );
-                  },
-                ).toList(),
+                children: data.map((item) {
+                  return RotatedBox(
+                    quarterTurns: 1,
+                    child: CardsEmerged(
+                      destinationData: item,
+                    ),
+                  );
+                }).toList(),
               ),
             ),
           ),
