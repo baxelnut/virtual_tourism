@@ -79,7 +79,7 @@ class _ImageStorageTestState extends State<ImageStorageTest> {
         builder: (context, storageService, child) {
           return FloatingActionButton(
             onPressed: () {
-              storageService.uploadImage(ref: 'uploaded_images/');
+              // storageService.uploadImage(ref: 'uploaded_images/');
             },
             child: const Icon(Icons.add_a_photo_rounded),
           );

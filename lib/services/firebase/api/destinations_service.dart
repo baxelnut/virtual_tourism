@@ -8,12 +8,42 @@ import 'storage_service.dart';
 
 class DestinationsService with ChangeNotifier {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-  final StorageService _storageService = StorageService();
+  final StorageService storageService = StorageService();
 
   User? user = FirebaseAuth.instance.currentUser;
   bool _isLoading = false;
 
   bool get isLoading => _isLoading;
+
+  Future<List<String>>? addInfoPath({
+    required final String collectionId,
+    required final String category,
+    required final String subcategory,
+    required final String typeShit,
+    required final String docId,
+    required final List<String> infosPath,
+  }) async {
+    try {
+      List<String> uploadedInfos =
+          await storageService.uploadMultipleInfoImages(
+        collections: collectionId,
+        category: category,
+        subcategory: subcategory,
+        docId: docId,
+        typeShit: typeShit,
+        infosPath: infosPath,
+      );
+
+      await _firestore.collection(collectionId).doc(docId).update({
+        'infosPath': FieldValue.arrayUnion(uploadedInfos),
+      });
+
+      return uploadedInfos;
+    } catch (e) {
+      print('🔥 Error adding infoPath in database: $e');
+      return [];
+    }
+  }
 
   Future<String?> addDestination({
     required final String collectionId,
@@ -29,6 +59,9 @@ class DestinationsService with ChangeNotifier {
     required Map<String, dynamic> hotspotData,
     final int? hotspotIndex,
     final bool? decideCoords,
+    final List<String>? infos,
+    final List<String>? infosPath,
+    required final bool trynnaDoHotspot,
   }) async {
     _isLoading = true;
     notifyListeners();
@@ -72,88 +105,104 @@ class DestinationsService with ChangeNotifier {
           'type': typeShit,
           'address': address,
           'hotspotData': hotspotData,
+          'infos': infos,
         },
         SetOptions(merge: true),
       );
 
-      if (typeShit == "Photographic") {
-        final Map<String, String>? urls = await _storageService.addImage(
-          collections: collectionId,
+      if (infosPath != null) {
+        storageService.addInfosPath(
+          collectionId: collectionId,
+          typeShit: typeShit,
           category: category,
           subcategory: subcategory,
           imageId: docId,
-          typeShit: typeShit,
+          infosPath: infosPath,
         );
-        if (urls != null) {
-          await _firestore.collection(collectionId).doc(docId).set(
-            {
-              'imagePath': urls['imagePath'],
-              'thumbnailPath': urls['thumbnailPath'],
-              'imageSize': urls['imageSize'],
-            },
-            SetOptions(merge: true),
-          );
-        }
       }
 
-      if (typeShit == "Tour") {
-        if (decideCoords == false || decideCoords == null) {
-          final Map<String, String>? hotspot =
-              await _storageService.uploadHotspotImage(
-            collectionId: collectionId,
-            typeShit: typeShit,
+      if (trynnaDoHotspot) {
+        if (typeShit == "Photographic") {
+          final Map<String, String>? urls = await storageService.addImage(
+            collections: collectionId,
             category: category,
             subcategory: subcategory,
-            imageId: docId,
-            hotspotIndex: hotspotIndex!,
+            docId: docId,
+            typeShit: typeShit,
           );
+          if (urls != null) {
+            await _firestore.collection(collectionId).doc(docId).set(
+              {
+                'imagePath': urls['imagePath'],
+                'thumbnailPath': urls['thumbnailPath'],
+                'imageSize': urls['imageSize'],
+              },
+              SetOptions(merge: true),
+            );
+          }
+        }
 
-          if (hotspot != null) {
-            hotspotData['hotspot$hotspotIndex'] = {
-              'imagePath': hotspot['imagePath'],
-              'thumbnailPath': hotspot['thumbnailPath'],
-            };
+        if (typeShit == "Tour") {
+          if (decideCoords == false || decideCoords == null) {
+            final Map<String, String>? hotspot =
+                await storageService.uploadHotspotImage(
+              collectionId: collectionId,
+              typeShit: typeShit,
+              category: category,
+              subcategory: subcategory,
+              imageId: docId,
+              hotspotIndex: hotspotIndex!,
+            );
 
-            String? hotspot0ThumbnailPath;
-            try {
-              DocumentSnapshot snapshot =
-                  await _firestore.collection(collectionId).doc(docId).get();
+            if (hotspot != null) {
+              hotspotData['hotspot$hotspotIndex'] = {
+                'imagePath': hotspot['imagePath'],
+                'thumbnailPath': hotspot['thumbnailPath'],
+              };
 
-              if (snapshot.exists) {
-                Map<String, dynamic>? data =
-                    snapshot.data() as Map<String, dynamic>?;
-                if (data != null &&
-                    data.containsKey('hotspotData') &&
-                    data['hotspotData'] is Map &&
-                    data['hotspotData']['hotspot0'] is Map &&
-                    data['hotspotData']['hotspot0']
-                        .containsKey('thumbnailPath')) {
-                  hotspot0ThumbnailPath =
-                      data['hotspotData']['hotspot0']['thumbnailPath'];
+              String? hotspot0ThumbnailPath;
+              try {
+                DocumentSnapshot snapshot =
+                    await _firestore.collection(collectionId).doc(docId).get();
+
+                if (snapshot.exists) {
+                  Map<String, dynamic>? data =
+                      snapshot.data() as Map<String, dynamic>?;
+                  if (data != null &&
+                      data.containsKey('hotspotData') &&
+                      data['hotspotData'] is Map &&
+                      data['hotspotData']['hotspot0'] is Map &&
+                      data['hotspotData']['hotspot0']
+                          .containsKey('thumbnailPath')) {
+                    hotspot0ThumbnailPath =
+                        data['hotspotData']['hotspot0']['thumbnailPath'];
+                  }
                 }
+              } catch (e) {
+                print("Error fetching hotspot0 thumbnailPath: $e");
               }
-            } catch (e) {
-              print("Error fetching hotspot0 thumbnailPath: $e");
+
+              String? finalThumbnailPath =
+                  hotspot0ThumbnailPath ?? hotspot['thumbnailPath'];
+
+              await _firestore.collection(collectionId).doc(docId).update(
+                {
+                  'hotspotData': hotspotData,
+                  'thumbnailPath': finalThumbnailPath,
+                },
+              );
             }
-
-            String? finalThumbnailPath =
-                hotspot0ThumbnailPath ?? hotspot['thumbnailPath'];
-
+          } else if (decideCoords == true) {
             await _firestore.collection(collectionId).doc(docId).update(
               {
                 'hotspotData': hotspotData,
-                'thumbnailPath': finalThumbnailPath,
               },
             );
           }
-        } else if (decideCoords == true) {
-          await _firestore.collection(collectionId).doc(docId).update(
-            {
-              'hotspotData': hotspotData,
-            },
-          );
         }
       }
+
+      return docId;
     } catch (e) {
       print('Error adding/updating destination in database: $e');
     } finally {

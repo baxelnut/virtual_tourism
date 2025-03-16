@@ -316,6 +316,7 @@ class _HotspotInputState extends State<HotspotInput> {
                     hotspotData: updatedHotspot,
                     hotspotIndex: index,
                     decideCoords: true,
+                    trynnaDoHotspot: true,
                   );
                 },
               ),
@@ -340,6 +341,7 @@ class _HotspotInputState extends State<HotspotInput> {
             country: widget.country,
             hotspotData: updatedHotspot,
             hotspotIndex: index,
+            trynnaDoHotspot: true,
           );
 
           widget.onChanged?.call(updatedHotspot);

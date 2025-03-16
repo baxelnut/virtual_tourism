@@ -45,19 +45,22 @@ class _CreateContentPageState extends State<CreateContentPage> {
     });
   }
 
-  List<Widget> imageWidgets = [];
+  List<String> infos = [];
+  List<String> infosPath = [];
 
   void _addNewWidget() {
     setState(() {
-      imageWidgets.add(
-        ImageWidgetInput(
-          key: UniqueKey(),
-          icon: Icons.image,
-          hintText: 'Additional Info',
-          maxLength: 200,
-        ),
-      );
+      infos.add("");
+      infosPath.add("");
     });
+  }
+
+  void _updateInfoText(int index, String text) {
+    if (index < infos.length) {
+      setState(() {
+        infos[index] = text;
+      });
+    } else {}
   }
 
   @override
@@ -122,7 +125,27 @@ class _CreateContentPageState extends State<CreateContentPage> {
                 maxLines: null,
                 isReadOnly: nameController.text.isEmpty,
               ),
-              ...imageWidgets,
+              ...List.generate(infos.length, (index) {
+                return ImageWidgetInput(
+                  key: ValueKey(index),
+                  icon: Icons.image,
+                  hintText: 'Additional Info',
+                  maxLength: 200,
+                  onTextChanged: (text) => _updateInfoText(index, text),
+                  collectionId: 'verified_user_uploads',
+                  typeShit: _selectedType,
+                  destinationName: nameController.text.trim(),
+                  category: _selectedCategory,
+                  subcategory: _selectedSubcategory ?? '',
+                  infosPath: infosPath,
+                  description: descriptionController.text.trim(),
+                  externalSource: websiteController.text.trim(),
+                  address: addressController.text.trim(),
+                  continent: _selectedContinent,
+                  country: _selectedCountry ?? '',
+                  hotspotData: _hotspotData,
+                );
+              }),
               SizedBox(height: 20),
               ElevatedButton(
                 onPressed: _addNewWidget,
@@ -258,6 +281,9 @@ class _CreateContentPageState extends State<CreateContentPage> {
                   continent: _selectedContinent,
                   country: _selectedCountry ?? '',
                   hotspotData: _hotspotData,
+                  infos: infos,
+                  // infosPath: infosPath,
+                  trynnaDoHotspot: false,
                 );
               }
               Navigator.of(context).pop();

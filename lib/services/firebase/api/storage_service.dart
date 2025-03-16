@@ -47,7 +47,6 @@ class StorageService with ChangeNotifier {
     return Uri.decodeComponent(encodedPath);
   }
 
-  // not so useful
   Future<void> uploadImage({
     required String ref,
   }) async {
@@ -150,7 +149,7 @@ class StorageService with ChangeNotifier {
     required final String collections,
     required final String category,
     required final String subcategory,
-    required final String imageId,
+    required final String docId,
     required final String typeShit,
   }) async {
     _isUploading = true;
@@ -162,9 +161,9 @@ class StorageService with ChangeNotifier {
     if (image == null) return null;
     try {
       String originalFilePath =
-          '$collections/$typeShit/$category/$subcategory/$imageId';
+          '$collections/$typeShit/$category/$subcategory/$docId';
       String thumbnailFilePath =
-          '$collections/$typeShit/$category/$subcategory/${imageId}_thumbnail';
+          '$collections/$typeShit/$category/$subcategory/${docId}_thumbnail';
       File file = File(image.path);
       int fileSizeInBytes = await file.length();
 
@@ -276,6 +275,103 @@ class StorageService with ChangeNotifier {
       };
     } catch (e) {
       print('🔥 Error uploading image: $e');
+      return null;
+    }
+  }
+
+  Future<String?> uploadInfoImage({
+    required String collections,
+    required String category,
+    required String subcategory,
+    required String docId,
+    required String typeShit,
+    required List<String> infosPath,
+  }) async {
+    try {
+      final ImagePicker picker = ImagePicker();
+      final XFile? image = await picker.pickImage(source: ImageSource.gallery);
+      if (image == null) return null;
+
+      File file = File(image.path);
+      String filePath = '$collections/$typeShit/$category/$subcategory/$docId';
+
+      await firebaseStorage.ref(filePath).putFile(file);
+      return await firebaseStorage.ref(filePath).getDownloadURL();
+    } catch (e) {
+      print('🔥 Error uploading infosPath: $e');
+      return null;
+    }
+  }
+
+  Future<List<String>> uploadMultipleInfoImages({
+    required String collections,
+    required String category,
+    required String subcategory,
+    required String typeShit,
+    required String docId,
+    required List<String> infosPath,
+  }) async {
+    List<String> uploadedUrls = List.generate(infosPath.length, (_) => "");
+
+    for (int i = 0; i < infosPath.length; i++) {
+      if (infosPath[i].isNotEmpty) {
+        String imageId = '${docId}_info_$i';
+
+        String? imageUrl = await uploadInfoImage(
+          collections: collections,
+          category: category,
+          subcategory: subcategory,
+          docId: imageId,
+          typeShit: typeShit,
+          infosPath: infosPath,
+        );
+
+        if (imageUrl != null) {
+          uploadedUrls[i] = imageUrl;
+        }
+      }
+    }
+    print("this is the uploadedUrls: $uploadedUrls");
+    return uploadedUrls;
+  }
+
+  Future<List<String>?> addInfosPath({
+    required String collectionId,
+    required String typeShit,
+    required String category,
+    required String subcategory,
+    required String imageId,
+    required List<String> infosPath,
+  }) async {
+    final ImagePicker picker = ImagePicker();
+    final XFile? pickedFile =
+        await picker.pickImage(source: ImageSource.gallery);
+
+    if (pickedFile == null) {
+      print('🔥 No image selected.');
+      return null;
+    }
+
+    File imageFile = File(pickedFile.path);
+    List<String> uploadedUrls = List.generate(infosPath.length, (_) => "");
+
+    try {
+      for (int i = 0; i < infosPath.length; i++) {
+        if (infosPath[i].isNotEmpty) {
+          String imagePath =
+              '$collectionId/$typeShit/$category/$subcategory/${imageId}__info_$i';
+
+          TaskSnapshot snapshot =
+              await firebaseStorage.ref(imagePath).putFile(imageFile);
+
+          String downloadUrl = await snapshot.ref.getDownloadURL();
+          uploadedUrls[i] = downloadUrl;
+        }
+      }
+
+      return uploadedUrls;
+    } catch (e) {
+      print('🔥 Error uploading images: $e');
       return null;
     }
   }
