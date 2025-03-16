@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../../core/global_values.dart';
-import '../../../services/firebase/api/firebase_api.dart';
+import '../../../services/firebase/api/utils_service.dart';
 import '../../pages/medals/full_country_list_page.dart';
 
 class MedalsCards extends StatefulWidget {
@@ -31,14 +31,15 @@ class MedalsCardsState extends State<MedalsCards> {
   int get totalCount => countries.length;
 
   void toggleCountryVisited(String countryName) async {
-    final firebaseApi = Provider.of<FirebaseApi>(context, listen: false);
+    final utilsService = Provider.of<UtilsService>(context, listen: false);
     final newVisited = !countries[countryName]!;
 
     setState(() {
       countries[countryName] = newVisited;
     });
+
     try {
-      await firebaseApi.updatePassportStatus(countryName, newVisited);
+      await utilsService.updatePassportStatus(countryName, newVisited);
     } catch (e) {
       setState(() {
         countries[countryName] = !newVisited;

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../../core/global_values.dart';
-import '../../../services/firebase/api/firebase_api.dart';
+import '../../../services/firebase/api/utils_service.dart';
 import 'medals_cards.dart';
 
 class MedalsPage extends StatefulWidget {
@@ -23,8 +23,8 @@ class _MedalsPageState extends State<MedalsPage> {
 
   Future<Map<String, bool>> fetchPassport() async {
     try {
-      final firebaseApi = Provider.of<FirebaseApi>(context, listen: false);
-      final data = await firebaseApi.fetchPassport();
+      final utilsService = Provider.of<UtilsService>(context, listen: false);
+      final data = await utilsService.fetchPassport();
       return data;
     } catch (e) {
       // ignore: avoid_print

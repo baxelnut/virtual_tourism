@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../../core/global_values.dart';
-import '../../../services/firebase/api/firebase_api.dart';
+import '../../../services/firebase/api/utils_service.dart';
 
 class CountryBox extends StatefulWidget {
   final String countryName;
@@ -35,9 +35,9 @@ class CountryBoxState extends State<CountryBox> {
 
     widget.onVisitedChanged(visited);
 
-    final firebaseApi = Provider.of<FirebaseApi>(context, listen: false);
+    final utilsService = Provider.of<UtilsService>(context, listen: false);
     try {
-      await firebaseApi.updateVisitedState(widget.countryName, visited);
+      await utilsService.updateVisitedState(widget.countryName, visited);
     } catch (e) {
       setState(() {
         visited = !visited;
