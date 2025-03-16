@@ -16,8 +16,7 @@ class ContentTiles extends StatelessWidget {
     final String? mainThumbnail = destinationData['thumbnailPath'];
     final String? hotspotThumbnail =
         destinationData['hotspotData']?['hotspot0']?['thumbnailPath'];
-    const String placeholderPath =
-        'https://hellenic.org/wp-content/plugins/elementor/assets/images/placeholder.png';
+    const String placeholderPath = GlobalValues.placeholderPath;
 
     if (mainThumbnail != null && mainThumbnail.isNotEmpty) {
       return mainThumbnail;
@@ -123,10 +122,16 @@ class ContentTiles extends StatelessWidget {
     ThemeData theme,
     Size screenSize,
   ) {
+    double averageScore = destinationData['averageScore'] ?? 0;
+    int totalRatings = destinationData['totalRatings'] ?? 0;
+    dynamic totalHotspot = destinationData['hotspotData'].isEmpty
+        ? 1
+        : destinationData['hotspotData'].length;
+
     final stats = [
-      {'icon': Icons.star, 'value': '3.3'},
-      {'icon': Icons.comment, 'value': '4'},
-      {'icon': Icons.remove_red_eye_rounded, 'value': '10'},
+      {'icon': Icons.star, 'value': averageScore.toString()},
+      {'icon': Icons.comment, 'value': totalRatings.toString()},
+      {'icon': Icons.location_on_rounded, 'value': totalHotspot.toString()},
     ];
 
     return SizedBox(
