@@ -287,9 +287,10 @@ class _ReviewSectionState extends State<ReviewSection> {
           .get(),
       builder: (context, snapshot) {
         if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
-          return Padding(
-            padding: const EdgeInsets.only(top: 100),
-            child: const CircularProgressIndicator(),
+          return SizedBox(
+            width: 300,
+            height: 300,
+            child: const Center(child: CircularProgressIndicator()),
           );
         }
 

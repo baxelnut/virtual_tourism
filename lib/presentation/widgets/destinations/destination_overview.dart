@@ -170,13 +170,8 @@ class DestinationOverviewState extends State<DestinationOverview> {
                       theme: theme,
                     ),
                   ),
-                  descriptionView(
-                    theme: theme,
-                  ),
-                  buildTheTable(
-                    theme: theme,
-                    screenSize: screenSize,
-                  ),
+                  descriptionView(theme: theme),
+                  buildTheTable(theme: theme, screenSize: screenSize),
                   if (widget.destinationData
                       .toString()
                       .contains("verified_user_uploads"))
@@ -211,7 +206,10 @@ class DestinationOverviewState extends State<DestinationOverview> {
       child: Stack(
         children: [
           LoadImage(
-            imagePath: getImagePath(widget.destinationData, placeholderPath),
+            imagePath: getImagePath(
+              widget.destinationData,
+              placeholderPath,
+            ),
             width: screenSize.width,
             height: screenSize.width / 1.5,
           ),
