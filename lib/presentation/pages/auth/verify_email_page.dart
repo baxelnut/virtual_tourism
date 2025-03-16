@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 
 import '../../../app.dart';
 import '../../../core/global_values.dart';
-import '../../../services/firebase/api/firebase_api.dart';
+import '../../../services/firebase/api/users_service.dart';
 import '../../../services/firebase/auth/auth.dart';
 import 'auth_page.dart';
 
@@ -17,7 +17,7 @@ class VerifyEmailPage extends StatefulWidget {
 
 class _VerifyEmailPageState extends State<VerifyEmailPage> {
   final Auth _auth = Auth();
-  final FirebaseApi _firebaseApi = FirebaseApi();
+  final UsersService _usersService = UsersService();
 
   bool isEmailVerified = false;
   Timer? timer;
@@ -63,7 +63,7 @@ class _VerifyEmailPageState extends State<VerifyEmailPage> {
 
   void navigateToMyApp() {
     final user = FirebaseAuth.instance.currentUser;
-    _firebaseApi.updateUserVerificationStatus(
+    _usersService.updateUserVerificationStatus(
         userUid: user!.uid, isVerified: user.emailVerified);
 
     Navigator.of(context).pushReplacement(
