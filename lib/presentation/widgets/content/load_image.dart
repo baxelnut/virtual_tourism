@@ -4,6 +4,7 @@ class LoadImage extends StatelessWidget {
   final String imagePath;
   final double width;
   final double height;
+
   const LoadImage({
     super.key,
     required this.imagePath,
@@ -13,21 +14,14 @@ class LoadImage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder(
-      future: precacheImage(
-        NetworkImage(
-          imagePath,
-        ),
-        context,
-      ),
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.done) {
-          return Image.network(
-            imagePath,
-            fit: BoxFit.cover,
-            width: width,
-            height: height,
-          );
+    return Image.network(
+      imagePath,
+      fit: BoxFit.cover,
+      width: width,
+      height: height,
+      loadingBuilder: (context, child, loadingProgress) {
+        if (loadingProgress == null) {
+          return child;
         } else {
           return Container(
             width: width,
@@ -38,6 +32,16 @@ class LoadImage extends StatelessWidget {
             ),
           );
         }
+      },
+      errorBuilder: (context, error, stackTrace) {
+        return Container(
+          width: width,
+          height: height,
+          color: Colors.grey,
+          child: const Center(
+            child: Icon(Icons.error, color: Colors.red),
+          ),
+        );
       },
     );
   }
