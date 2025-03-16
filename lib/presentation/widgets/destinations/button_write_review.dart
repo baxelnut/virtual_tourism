@@ -2,7 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 import '../../../core/global_values.dart';
-import '../../../services/firebase/api/firebase_api.dart';
+import '../../../services/firebase/api/reviews_service.dart';
 
 class ButtonWriteReview extends StatefulWidget {
   final dynamic destinationData;
@@ -23,7 +23,8 @@ class _ButtonWriteReviewState extends State<ButtonWriteReview> {
   double ratingStars = 0.0;
 
   void showReviewModal(BuildContext context) {
-    FirebaseApi firebaseApi = FirebaseApi();
+    ReviewsService reviewsService = ReviewsService();
+
     final ThemeData theme = GlobalValues.theme(context);
     final Size screenSize = GlobalValues.screenSize(context);
 
@@ -118,7 +119,7 @@ class _ButtonWriteReviewState extends State<ButtonWriteReview> {
                           return;
                         }
 
-                        firebaseApi.addReview(
+                        reviewsService.addReview(
                           collectionId: "verified_user_uploads",
                           destinationId: widget.theId,
                           userId: user!.uid,
