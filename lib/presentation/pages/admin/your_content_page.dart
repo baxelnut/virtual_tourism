@@ -6,7 +6,7 @@ import 'package:liquid_pull_to_refresh/liquid_pull_to_refresh.dart';
 import 'package:provider/provider.dart';
 
 import '../../../core/global_values.dart';
-import '../../../services/firebase/storage/storage_service.dart';
+import '../../../services/firebase/api/storage_service.dart';
 import 'content_tiles.dart';
 import 'create_content_page.dart';
 
