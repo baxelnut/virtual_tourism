@@ -20,10 +20,10 @@ class ImageWidgetInput extends StatefulWidget {
   });
 
   @override
-  _ImageWidgetInputState createState() => _ImageWidgetInputState();
+  ImageWidgetInputState createState() => ImageWidgetInputState();
 }
 
-class _ImageWidgetInputState extends State<ImageWidgetInput> {
+class ImageWidgetInputState extends State<ImageWidgetInput> {
   final TextEditingController controller = TextEditingController();
   File? _selectedImage;
 
