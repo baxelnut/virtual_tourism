@@ -7,6 +7,7 @@ import '../../../services/firebase/api/destinations_service.dart';
 import '../../widgets/utils/input_dropdown.dart';
 import '../../widgets/utils/input_section.dart';
 import 'hotspot_input.dart';
+import 'image_widget_input.dart';
 
 class CreateContentPage extends StatefulWidget {
   final User? user;
@@ -44,6 +45,21 @@ class _CreateContentPageState extends State<CreateContentPage> {
     });
   }
 
+  List<Widget> imageWidgets = [];
+
+  void _addNewWidget() {
+    setState(() {
+      imageWidgets.add(
+        ImageWidgetInput(
+          key: UniqueKey(),
+          icon: Icons.image,
+          hintText: 'Additional Info',
+          maxLength: 200,
+        ),
+      );
+    });
+  }
+
   @override
   void initState() {
     super.initState();
@@ -51,6 +67,8 @@ class _CreateContentPageState extends State<CreateContentPage> {
     _selectedSubcategory = categoryMap[_selectedCategory]?.first;
     _selectedContinent = countriesMap.keys.first;
     _selectedCountry = countriesMap[_selectedContinent]?.first;
+
+    _addNewWidget();
   }
 
   @override
@@ -103,6 +121,19 @@ class _CreateContentPageState extends State<CreateContentPage> {
                 maxLength: 6000,
                 maxLines: null,
                 isReadOnly: nameController.text.isEmpty,
+              ),
+              ...imageWidgets,
+              SizedBox(height: 20),
+              ElevatedButton(
+                onPressed: _addNewWidget,
+                style: ElevatedButton.styleFrom(
+                  shape: const CircleBorder(),
+                  backgroundColor: theme.colorScheme.secondary,
+                ),
+                child: Icon(
+                  Icons.add,
+                  color: theme.colorScheme.onSecondary,
+                ),
               ),
               InputDropdown(
                 title: 'Category*',
