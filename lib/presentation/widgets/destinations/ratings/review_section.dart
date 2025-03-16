@@ -66,8 +66,7 @@ class _ReviewSectionState extends State<ReviewSection> {
     final ThemeData theme = GlobalValues.theme(context);
     final Size screenSize = GlobalValues.screenSize(context);
 
-    List<int> ratings = processRatings();
-    int totalRatings = ratings.fold(0, (acc, value) => acc + value);
+    int totalRatings = widget.destinationData['totalRatings'] ?? 0;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -84,7 +83,7 @@ class _ReviewSectionState extends State<ReviewSection> {
         _ratingStat(
           screenSize: screenSize,
           theme: theme,
-          ratings: ratings,
+          ratings: processRatings(),
           totalRatings: totalRatings,
         ),
         _actionButtons(theme: theme),
@@ -112,14 +111,18 @@ class _ReviewSectionState extends State<ReviewSection> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             RatingAverage(
-              ratings: ratings,
-              totalRatings: totalRatings,
+              collectionId: 'verified_user_uploads',
+              destinationId: widget.theId,
+              destinationData: widget.destinationData,
             ),
             Row(
               children: [
                 const RatingStars(),
                 const SizedBox(width: 8),
-                RatingIndicatorBar(ratings: ratings, totalRatings: totalRatings)
+                RatingIndicatorBar(
+                  ratings: ratings,
+                  totalRatings: totalRatings,
+                )
               ],
             ),
             RatingReviewerQty(ratings: ratings),
@@ -168,8 +171,8 @@ class _ReviewSectionState extends State<ReviewSection> {
           .toList();
 
       if (allComments.isNotEmpty) {
-        allComments.shuffle();
-        randomComment = allComments.first;
+        // allComments.shuffle();
+        randomComment = allComments.last;
       }
     }
 

@@ -201,18 +201,21 @@ class DestinationsService with ChangeNotifier {
     required final String collection,
   }) async {
     _isLoading = true;
-    notifyListeners();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      notifyListeners();
+    });
 
     try {
       final querySnapshot = await _firestore.collection(collection).get();
-
       return querySnapshot.docs.map((doc) => doc.data()).toList();
     } catch (e) {
       print('Error fetching case studies: $e');
       return [];
     } finally {
       _isLoading = false;
-      notifyListeners();
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        notifyListeners();
+      });
     }
   }
 }

@@ -38,22 +38,59 @@ class ReviewsService with ChangeNotifier {
     String? reviewComment,
     String? photoUrl,
   }) async {
-    final reviewData = {
-      'userName': userName,
-      'ratingStars': ratingStars,
-      'reviewComment': reviewComment ?? '',
-      'timestamp': FieldValue.serverTimestamp(),
-      'photoUrl': photoUrl,
-    };
+    final docRef = _firestore.collection(collectionId).doc(destinationId);
 
-    final docRef =
-        FirebaseFirestore.instance.collection(collectionId).doc(destinationId);
+    await _firestore.runTransaction((transaction) async {
+      final snapshot = await transaction.get(docRef);
 
-    await docRef.set({
-      'ratings': {
-        userId: reviewData,
+      Map<String, dynamic> ratings = {};
+      double newTotalStars = ratingStars;
+      int newTotalRatings = 1;
+
+      Map<String, dynamic> data = {};
+
+      if (snapshot.exists) {
+        data = snapshot.data() ?? {};
+        ratings = Map<String, dynamic>.from(data['ratings'] ?? {});
+
+        if (ratings.containsKey(userId)) {
+          newTotalStars = (data['totalStars'] ?? 0) -
+              (ratings[userId]['ratingStars'] as num) +
+              ratingStars;
+          newTotalRatings = (data['totalRatings'] ?? 0);
+        } else {
+          newTotalStars = (data['totalStars'] ?? 0) + ratingStars;
+          newTotalRatings = (data['totalRatings'] ?? 0) + 1;
+        }
       }
-    }, SetOptions(merge: true));
+
+      int updatedTotalRatings = ratings.containsKey(userId)
+          ? (data['totalRatings'] ?? 0)
+          : newTotalRatings;
+
+      double newAverageScore = double.parse(
+          (newTotalStars / updatedTotalRatings).toStringAsFixed(1));
+
+      final reviewData = {
+        'userName': userName,
+        'ratingStars': ratingStars,
+        'reviewComment': reviewComment ?? '',
+        'timestamp': FieldValue.serverTimestamp(),
+        'photoUrl': photoUrl,
+      };
+
+      ratings[userId] = reviewData;
+      transaction.set(
+        docRef,
+        {
+          'ratings': ratings,
+          'totalRatings': updatedTotalRatings,
+          'totalStars': newTotalStars,
+          'averageScore': newAverageScore,
+        },
+        SetOptions(merge: true),
+      );
+    });
   }
 
   Future<void> deleteReview({
@@ -61,11 +98,37 @@ class ReviewsService with ChangeNotifier {
     required String destinationId,
     required String userId,
   }) async {
-    await FirebaseFirestore.instance
-        .collection(collectionId)
-        .doc(destinationId)
-        .update({
-      'ratings.$userId': FieldValue.delete(),
+    final docRef = _firestore.collection(collectionId).doc(destinationId);
+
+    await _firestore.runTransaction((transaction) async {
+      final snapshot = await transaction.get(docRef);
+
+      if (!snapshot.exists) return;
+
+      final data = snapshot.data()!;
+      final currentTotal = (data['totalRatings'] ?? 0) as int;
+      final currentAverage = (data['averageScore'] ?? 0.0) as double;
+
+      if (currentTotal <= 1) {
+        transaction.update(docRef, {
+          'ratings.$userId': FieldValue.delete(),
+          'totalRatings': 0,
+          'averageScore': 0.0,
+        });
+        return;
+      }
+
+      final deletedRating =
+          (data['ratings'][userId]['ratingStars'] ?? 0.0) as double;
+      final newTotalRatings = currentTotal - 1;
+      final newAverage =
+          ((currentAverage * currentTotal) - deletedRating) / newTotalRatings;
+
+      transaction.update(docRef, {
+        'ratings.$userId': FieldValue.delete(),
+        'totalRatings': newTotalRatings,
+        'averageScore': newAverage,
+      });
     });
   }
 
