@@ -3,7 +3,8 @@ import 'package:liquid_pull_to_refresh/liquid_pull_to_refresh.dart';
 
 import '../../../core/global_values.dart';
 import '../../../core/nuke_refresh.dart';
-import '../../../services/firebase/api/firebase_api.dart';
+import '../../../services/firebase/api/destinations_service.dart';
+import '../../../services/firebase/api/users_service.dart';
 import '../../widgets/cards/fit_width_card.dart';
 import 'tour_collections.dart';
 
@@ -15,7 +16,8 @@ class TourPage extends StatefulWidget {
 }
 
 class _TourPageState extends State<TourPage> {
-  final FirebaseApi firebaseApi = FirebaseApi();
+  final DestinationsService _destinationsService = DestinationsService();
+  final UsersService _usersService = UsersService();
   List<Map<String, dynamic>> tours0 = [];
   bool isLoading = true;
 
@@ -26,7 +28,7 @@ class _TourPageState extends State<TourPage> {
   }
 
   Future<void> loadTours() async {
-    final tours = await firebaseApi.fetchDestinations(
+    final tours = await _destinationsService.fetchDestinations(
         collection: "verified_user_uploads");
 
     setState(() {
@@ -74,7 +76,7 @@ class _TourPageState extends State<TourPage> {
                   Column(
                     children: tours0.map((destinationData) {
                       return FutureBuilder<Map<String, dynamic>?>(
-                        future: firebaseApi
+                        future: _usersService
                             .getUserData(destinationData['userId'] ?? ''),
                         builder: (context, snapshot) {
                           if (snapshot.hasError) {

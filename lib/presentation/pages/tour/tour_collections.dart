@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../../core/global_values.dart';
-import '../../../services/firebase/api/firebase_api.dart';
+import '../../../services/firebase/api/destinations_service.dart';
 import '../../widgets/cards/cards_emerged.dart';
 import '../../widgets/cards/cards_header.dart';
 
@@ -29,12 +29,14 @@ class _TourCollectionsState extends State<TourCollections> {
 
   Future<void> fetchData() async {
     try {
-      final firebaseApi = Provider.of<FirebaseApi>(context, listen: false);
+      final destinationsService =
+          Provider.of<DestinationsService>(context, listen: false);
       final collections = fetchedData.keys.toList();
 
       final results = await Future.wait(
         collections.map((collection) async {
-          final data = await firebaseApi.fetchDocuments(collection: collection);
+          final data =
+              await destinationsService.fetchDocuments(collection: collection);
           return {collection: data};
         }),
       );
