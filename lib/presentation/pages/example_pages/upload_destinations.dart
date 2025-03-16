@@ -4,7 +4,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../../../services/firebase/storage/storage_service.dart';
+import '../../../services/firebase/api/storage_service.dart';
 
 class UploadDestinations extends StatefulWidget {
   const UploadDestinations({super.key});

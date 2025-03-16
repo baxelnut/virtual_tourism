@@ -5,7 +5,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../../../services/firebase/storage/storage_service.dart';
+import '../../../services/firebase/api/storage_service.dart';
 import '../../widgets/content/photographic_screen.dart';
 
 class UploadImage extends StatefulWidget {
@@ -17,7 +17,6 @@ class UploadImage extends StatefulWidget {
 
 class _UploadImageState extends State<UploadImage> {
   late Future<List<Map<String, dynamic>>> _fetchDestinationsFuture;
-  // late Future<void> _fetchImagesFuture;
   final nameController = TextEditingController();
   final countryController = TextEditingController();
   final descriptionController = TextEditingController();

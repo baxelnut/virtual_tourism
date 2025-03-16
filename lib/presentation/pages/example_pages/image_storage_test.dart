@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../../../services/firebase/storage/storage_service.dart';
+import '../../../services/firebase/api/storage_service.dart';
 import '../../widgets/cards/cards_emerged.dart';
 
 class ImageStorageTest extends StatefulWidget {
