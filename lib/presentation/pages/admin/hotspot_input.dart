@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../core/global_values.dart';
-import '../../../services/firebase/api/firebase_api.dart';
+import '../../../services/firebase/api/destinations_service.dart';
 import '../../widgets/content/pin_point_coords.dart';
 
 class HotspotInput extends StatefulWidget {
@@ -42,7 +42,7 @@ class HotspotInput extends StatefulWidget {
 }
 
 class _HotspotInputState extends State<HotspotInput> {
-  final FirebaseApi _firebaseApi = FirebaseApi();
+  final DestinationsService _destinationsService = DestinationsService();
   final String placeholderPath = GlobalValues.placeholderPath;
 
   int _hotspotQty = 2;
@@ -302,7 +302,7 @@ class _HotspotInputState extends State<HotspotInput> {
                     _lonControllers[index].text = longitude.toStringAsFixed(1);
                     _notifyHotspotData();
                   });
-                  await _firebaseApi.addDestination(
+                  await _destinationsService.addDestination(
                     collectionId: 'verified_user_uploads',
                     typeShit: widget.typeShit,
                     destinationName: widget.destinationName,
@@ -327,7 +327,7 @@ class _HotspotInputState extends State<HotspotInput> {
             _hotspotImages[index] = 'uploading';
           });
           _notifyHotspotData();
-          String? downloadUrl = await _firebaseApi.addDestination(
+          String? downloadUrl = await _destinationsService.addDestination(
             collectionId: 'verified_user_uploads',
             typeShit: widget.typeShit,
             destinationName: widget.destinationName,

@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 
 import '../../../core/global_values.dart';
 import '../../../data/destination_data.dart';
-import '../../../services/firebase/api/firebase_api.dart';
+import '../../../services/firebase/api/destinations_service.dart';
 import '../../widgets/utils/input_dropdown.dart';
 import '../../widgets/utils/input_section.dart';
 import 'hotspot_input.dart';
@@ -20,6 +20,8 @@ class CreateContentPage extends StatefulWidget {
 }
 
 class _CreateContentPageState extends State<CreateContentPage> {
+  final DestinationsService _destinationsService = DestinationsService();
+
   final nameController = TextEditingController();
   final descriptionController = TextEditingController();
   final websiteController = TextEditingController();
@@ -213,7 +215,7 @@ class _CreateContentPageState extends State<CreateContentPage> {
           onPressed: () {
             if (nameController.text.isNotEmpty) {
               if (_selectedType == "Photographic") {
-                FirebaseApi().addDestination(
+                _destinationsService.addDestination(
                   collectionId: 'verified_user_uploads',
                   typeShit: _selectedType,
                   destinationName: nameController.text.trim(),
