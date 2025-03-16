@@ -5,7 +5,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../../../core/global_values.dart';
 import '../../../core/theme/theme.dart';
 import '../../../core/theme/theme_provider.dart';
-import '../../../services/firebase/api/firebase_api.dart';
+import '../../../services/firebase/api/users_service.dart';
 import '../../pages/admin/your_content_page.dart';
 import '../../pages/bookmarks/bookmarks_page.dart';
 import '../../pages/settings/user_profile.dart';
@@ -43,8 +43,9 @@ class _UserOverviewState extends State<UserOverview> {
       isAdmin = cachedAdmin;
     });
 
-    final userData = await FirebaseApi().getUserData(user!.uid);
-    bool adminFromFirestore = userData?['admin'] ?? false;
+    final usersService = await UsersService().getUserData(user!.uid);
+
+    bool adminFromFirestore = usersService?['admin'] ?? false;
 
     if (adminFromFirestore != cachedAdmin) {
       setState(() {
