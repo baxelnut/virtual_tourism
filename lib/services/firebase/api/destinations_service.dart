@@ -269,4 +269,50 @@ class DestinationsService with ChangeNotifier {
       });
     }
   }
+
+  Future<void> deleteDestination({
+    required String collectionId,
+    required final Map<String, dynamic> destinationData,
+  }) async {
+    String docId = destinationData['docId'] ?? "";
+    try {
+      DocumentSnapshot docSnapshot =
+          await _firestore.collection(collectionId).doc(docId).get();
+
+      if (!docSnapshot.exists) {
+        print("⚠️ Destination not found.");
+        return;
+      }
+
+      Map<String, dynamic>? data = docSnapshot.data() as Map<String, dynamic>?;
+
+      if (data != null) {
+        await storageService.deleteImage(
+          destinationData: destinationData,
+          isHotspot: false,
+        );
+
+        if (data.containsKey('hotspotData') && data['hotspotData'] is Map) {
+          Map<String, dynamic> hotspotData = data['hotspotData'];
+          int index = 0;
+
+          for (var hotspot in hotspotData.values) {
+            if (hotspot is Map && hotspot.containsKey('imagePath')) {
+              await storageService.deleteImage(
+                destinationData: destinationData,
+                isHotspot: true,
+                hotspotIndex: index,
+              );
+            }
+            index++;
+          }
+        }
+      }
+
+      await _firestore.collection(collectionId).doc(docId).delete();
+      print("🔥 Destination and associated images deleted successfully!");
+    } catch (e) {
+      print("❌ Error deleting destination: $e");
+    }
+  }
 }

@@ -30,17 +30,6 @@ class StorageService with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> deleteImages(String imageUrl) async {
-    try {
-      _imageUrls.remove(imageUrl);
-      final String path = extractPathFromUrl(imageUrl);
-      await firebaseStorage.ref(path).delete();
-    } catch (e) {
-      print('Error deleting image: $e');
-    }
-    notifyListeners();
-  }
-
   String extractPathFromUrl(String url) {
     Uri uri = Uri.parse(url);
     String encodedPath = uri.pathSegments.last;
@@ -68,6 +57,39 @@ class StorageService with ChangeNotifier {
     } finally {
       _isUploading = false;
       notifyListeners();
+    }
+  }
+
+  Future<void> deleteImage({
+    required Map<String, dynamic> destinationData,
+    required bool isHotspot,
+    int? hotspotIndex, // Added optional index for hotspots
+  }) async {
+    try {
+      String basePath =
+          'verified_user_uploads/${destinationData['type']}/${destinationData['category']}/${destinationData['subcategory']}/${destinationData['docId']}';
+
+      // 🔥 Check if deleting a hotspot
+      if (isHotspot && hotspotIndex != null) {
+        basePath = '${basePath}_$hotspotIndex';
+      }
+
+      String imagePath = basePath;
+      String thumbnailPath = '${basePath}_thumbnail';
+
+      // 🔍 Debugging paths
+      print("🗑 Deleting image: $imagePath");
+      print("🗑 Deleting thumbnail: $thumbnailPath");
+
+      await FirebaseStorage.instance.ref(imagePath).delete();
+      await FirebaseStorage.instance.ref(thumbnailPath).delete();
+
+      print("✅ Images deleted successfully!");
+    } catch (e) {
+      print("❌ Error deleting image: $e");
+      if (e.toString().contains("channel-error")) {
+        print("⚠️ Possible Firebase App Check issue. Try disabling App Check.");
+      }
     }
   }
 
