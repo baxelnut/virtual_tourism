@@ -363,17 +363,19 @@ class DestinationOverviewState extends State<DestinationOverview> {
   }) {
     final dataMap = {
       "Address": widget.destinationData["address"],
-      "Released": formatDate(
-        widget.destinationData["created"],
-        "E, d MMM y, h:mm a",
-      ),
-      "Link": widget.destinationData["source"].isEmpty
-          ? 'no link'
+      "Released": widget.destinationData["releaseDate"] ??
+          formatDate(
+            widget.destinationData["created"] ?? "",
+            "E, d MMM y, h:mm a",
+          ),
+      "Link": widget.destinationData["source"] == " " ||
+              widget.destinationData["source"] == null
+          ? widget.destinationData['sourcePath'] ?? 'No link'
           : widget.destinationData["source"],
       widget.destinationData["type"] == 'Tour' ? 'Hotspots' : 'Size':
           (widget.destinationData["type"] == 'Tour'
-              ? widget.destinationData["hotspotData"].length.toString()
-              : widget.destinationData["imageSize"].toString()),
+              ? widget.destinationData["hotspotData"].length ?? "-"
+              : widget.destinationData["imageSize"] ?? "-"),
     };
 
     return Padding(
@@ -410,7 +412,7 @@ class DestinationOverviewState extends State<DestinationOverview> {
                           ),
                         )
                       : Text(
-                          entry.value,
+                          entry.value ?? "",
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                         ),
