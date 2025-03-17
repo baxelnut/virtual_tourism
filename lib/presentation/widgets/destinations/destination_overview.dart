@@ -171,6 +171,24 @@ class DestinationOverviewState extends State<DestinationOverview> {
                     ),
                   ),
                   descriptionView(theme: theme),
+                  SizedBox(height: 10),
+                  Visibility(
+                    visible: widget.destinationData['infosPath'] != null &&
+                        (widget.destinationData['infosPath'] as List)
+                            .isNotEmpty,
+                    child: additionalInfos(
+                      theme: theme,
+                      screenSize: screenSize,
+                      infosPath: widget.destinationData['infosPath'] != null
+                          ? List<String>.from(
+                              widget.destinationData['infosPath'])
+                          : [GlobalValues.placeholderPath],
+                      infos: widget.destinationData['infos'] != null
+                          ? List<String>.from(widget.destinationData['infos'])
+                          : [""],
+                    ),
+                  ),
+                  SizedBox(height: 60),
                   buildTheTable(theme: theme, screenSize: screenSize),
                   if (widget.destinationData
                       .toString()
@@ -341,6 +359,49 @@ class DestinationOverviewState extends State<DestinationOverview> {
           color: Colors.blue,
         ),
       ],
+    );
+  }
+
+  Widget additionalInfos({
+    required ThemeData theme,
+    required Size screenSize,
+    required List<String>? infosPath,
+    required List<String>? infos,
+  }) {
+    final safeInfosPath = infosPath?.isNotEmpty == true
+        ? infosPath!
+        : [GlobalValues.placeholderPath];
+
+    final safeInfos = infos?.isNotEmpty == true
+        ? infos!
+        : List.generate(safeInfosPath.length, (index) => "");
+
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: List.generate(safeInfosPath.length, (index) {
+          return Column(
+            children: [
+              LoadImage(
+                imagePath: safeInfosPath[index],
+                width: screenSize.width,
+                height: screenSize.width / 2,
+              ),
+              SizedBox(height: 20),
+              SizedBox(
+                width: screenSize.width,
+                child: Text(
+                  safeInfos.length > index ? safeInfos[index] : "",
+                  textAlign: TextAlign.left,
+                  style: theme.textTheme.bodyLarge,
+                ),
+              ),
+              SizedBox(height: 40),
+            ],
+          );
+        }),
+      ),
     );
   }
 
