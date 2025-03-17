@@ -361,61 +361,64 @@ class DestinationOverviewState extends State<DestinationOverview> {
     required ThemeData theme,
     required Size screenSize,
   }) {
+    final dataMap = {
+      "Address": widget.destinationData["address"],
+      "Released": formatDate(
+        widget.destinationData["created"],
+        "E, d MMM y, h:mm a",
+      ),
+      "Link": widget.destinationData["source"].isEmpty
+          ? 'no link'
+          : widget.destinationData["source"],
+      widget.destinationData["type"] == 'Tour' ? 'Hotspots' : 'Size':
+          (widget.destinationData["type"] == 'Tour'
+              ? widget.destinationData["hotspotData"].length.toString()
+              : widget.destinationData["imageSize"].toString()),
+    };
+
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 30),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          for (var entry in {
-            widget.destinationData["type"] == 'Tour' ? 'Hotspots' : 'Size':
-                widget.destinationData["type"] == 'Tour'
-                    ? widget.destinationData["hotspotData"].length.toString()
-                    : widget.destinationData["imageSize"].toString(),
-            "Released": formatDate(
-              widget.destinationData["created"],
-              "E, d MMM y, h:mm a",
-            ),
-            "Source": widget.destinationData["source"]
-          }.entries)
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 4.0),
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  SizedBox(
-                    width: screenSize.width * 0.3,
-                    child: Text(
-                      entry.key,
-                      style: const TextStyle(
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
+        children: dataMap.entries.map((entry) {
+          final isLink = entry.key == "Link";
+          return Padding(
+            padding: const EdgeInsets.symmetric(vertical: 4.0),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SizedBox(
+                  width: screenSize.width * 0.3,
+                  child: Text(
+                    entry.key,
+                    style: const TextStyle(fontWeight: FontWeight.bold),
                   ),
-                  SizedBox(
-                    width: screenSize.width / 2,
-                    child: entry.key == "Source"
-                        ? GestureDetector(
-                            onTap: () => _launchURL(entry.value),
-                            child: Text(
-                              entry.value ?? "-",
-                              style: const TextStyle(
-                                color: Colors.blue,
-                                decoration: TextDecoration.underline,
-                              ),
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                          )
-                        : Text(
+                ),
+                SizedBox(
+                  width: screenSize.width / 2,
+                  child: isLink
+                      ? GestureDetector(
+                          onTap: () => _launchURL(entry.value),
+                          child: Text(
                             entry.value,
+                            style: const TextStyle(
+                              color: Colors.blue,
+                              decoration: TextDecoration.underline,
+                            ),
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
                           ),
-                  ),
-                ],
-              ),
+                        )
+                      : Text(
+                          entry.value,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                ),
+              ],
             ),
-        ],
+          );
+        }).toList(),
       ),
     );
   }
