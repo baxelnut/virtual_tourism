@@ -85,6 +85,7 @@ class _FitWidthCardState extends State<FitWidthCard> {
               ),
               trailing: MoreButton(
                 isAdmin: false,
+                destinationData: widget.destinationData,
               ),
               contentPadding: EdgeInsets.only(left: 24, right: 6),
             ),

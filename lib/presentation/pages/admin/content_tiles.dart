@@ -112,6 +112,7 @@ class ContentTiles extends StatelessWidget {
           ),
           MoreButton(
             isAdmin: true,
+            destinationData: destinationData,
           ),
         ],
       ),
