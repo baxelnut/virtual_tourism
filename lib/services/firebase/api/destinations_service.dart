@@ -315,4 +315,32 @@ class DestinationsService with ChangeNotifier {
       print("❌ Error deleting destination: $e");
     }
   }
+
+  Future<void> updateDestination({
+    required String collectionId,
+    required Map<String, dynamic> destinationData,
+  }) async {
+    _isLoading = true;
+    notifyListeners();
+
+    String docId = destinationData['docId'] ?? '';
+
+    if (docId.isEmpty) {
+      print("❌ Error: docId is missing!");
+      return;
+    }
+
+    try {
+      await _firestore
+          .collection(collectionId)
+          .doc(docId)
+          .update(destinationData);
+      print("✅ Destination updated successfully!");
+    } catch (e) {
+      print("❌ Error updating destination: $e");
+    } finally {
+      _isLoading = false;
+      notifyListeners();
+    }
+  }
 }
