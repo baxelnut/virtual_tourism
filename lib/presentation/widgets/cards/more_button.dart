@@ -44,6 +44,91 @@ class _MoreButtonState extends State<MoreButton> {
         false;
   }
 
+  void _showEditDialog(
+    BuildContext dialogContext,
+    String collectionId,
+    Map<String, dynamic> destinationData,
+  ) {
+    TextEditingController nameController =
+        TextEditingController(text: destinationData['destinationName']);
+    TextEditingController descController =
+        TextEditingController(text: destinationData['description']);
+    TextEditingController addressController =
+        TextEditingController(text: destinationData['address']);
+    TextEditingController sourceController =
+        TextEditingController(text: destinationData['source']);
+
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text("Edit Destination"),
+          content: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                TextField(
+                  controller: nameController,
+                  decoration:
+                      const InputDecoration(labelText: "Destination Name"),
+                ),
+                TextField(
+                  controller: descController,
+                  decoration: const InputDecoration(labelText: "Description"),
+                  maxLines: 3,
+                ),
+                TextField(
+                  controller: addressController,
+                  decoration: const InputDecoration(labelText: "Address"),
+                ),
+                TextField(
+                  controller: sourceController,
+                  decoration:
+                      const InputDecoration(labelText: "Website / Source"),
+                  keyboardType: TextInputType.url,
+                ),
+              ],
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text("Cancel"),
+            ),
+            ElevatedButton(
+              onPressed: () async {
+                String newName = nameController.text.trim();
+                String newDesc = descController.text.trim();
+                String newAddress = addressController.text.trim();
+                String newSource = sourceController.text.trim();
+
+                if (newName.isEmpty || newDesc.isEmpty) return;
+
+                Map<String, dynamic> updatedData = Map.from(destinationData);
+                updatedData['destinationName'] = newName;
+                updatedData['description'] = newDesc;
+                updatedData['address'] = newAddress;
+                updatedData['source'] = newSource;
+
+                await Provider.of<DestinationsService>(dialogContext,
+                        listen: false)
+                    .updateDestination(
+                  collectionId: collectionId,
+                  destinationData: updatedData,
+                );
+
+                if (dialogContext.mounted) {
+                  Navigator.pop(dialogContext);
+                }
+              },
+              child: const Text("Save"),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final ThemeData theme = GlobalValues.theme(context);
@@ -73,6 +158,11 @@ class _MoreButtonState extends State<MoreButton> {
                       onTap: () {
                         if (popoverContext.mounted) {
                           Navigator.pop(popoverContext);
+                          _showEditDialog(
+                            context,
+                            "verified_user_uploads",
+                            widget.destinationData,
+                          );
                         }
                       },
                     ),
