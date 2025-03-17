@@ -63,13 +63,12 @@ class StorageService with ChangeNotifier {
   Future<void> deleteImage({
     required Map<String, dynamic> destinationData,
     required bool isHotspot,
-    int? hotspotIndex, // Added optional index for hotspots
+    int? hotspotIndex,
   }) async {
     try {
       String basePath =
           'verified_user_uploads/${destinationData['type']}/${destinationData['category']}/${destinationData['subcategory']}/${destinationData['docId']}';
 
-      // 🔥 Check if deleting a hotspot
       if (isHotspot && hotspotIndex != null) {
         basePath = '${basePath}_$hotspotIndex';
       }
@@ -77,7 +76,6 @@ class StorageService with ChangeNotifier {
       String imagePath = basePath;
       String thumbnailPath = '${basePath}_thumbnail';
 
-      // 🔍 Debugging paths
       print("🗑 Deleting image: $imagePath");
       print("🗑 Deleting thumbnail: $thumbnailPath");
 
