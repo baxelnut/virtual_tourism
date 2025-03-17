@@ -20,10 +20,10 @@ class _PinPointCoordsState extends State<PinPointCoords> {
   double _lon = 0;
   double _lat = 0;
 
-  void onViewChanged(longitude, latitude, tilt) {
+  void onViewChanged(double longitude, double latitude, double tilt) {
     setState(() {
-      _lon = longitude;
-      _lat = latitude;
+      _lon = longitude % 360;
+      _lat = latitude.clamp(-90, 90);
     });
   }
 
@@ -77,7 +77,14 @@ class _PinPointCoordsState extends State<PinPointCoords> {
               ),
               ElevatedButton(
                 onPressed: () {
-                  widget.onCoordinatesSelected(_lon, _lat);
+                  final adjustedLon = (_lon + 180) % 360 - 180;
+                  final adjustedLat = _lat.clamp(-90, 90);
+
+                  widget.onCoordinatesSelected(
+                    adjustedLon.toDouble(),
+                    adjustedLat.toDouble(),
+                  );
+
                   Navigator.pop(context);
                 },
                 style: ElevatedButton.styleFrom(

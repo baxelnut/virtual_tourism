@@ -18,7 +18,7 @@ class HotspotInput extends StatefulWidget {
   final Map<String, dynamic> hotspotData;
   final ValueChanged<Map<String, dynamic>>? onChanged;
   final Function(bool) onConfirmChanged;
-  // final ValueChanged<int> onHotspotQtyChanged;
+
   const HotspotInput({
     super.key,
     required this.collections,
@@ -34,7 +34,6 @@ class HotspotInput extends StatefulWidget {
     required this.hotspotData,
     this.onChanged,
     required this.onConfirmChanged,
-    // required this.onHotspotQtyChanged,
   });
 
   @override
@@ -110,7 +109,7 @@ class _HotspotInputState extends State<HotspotInput> {
       _lonControllers.add(TextEditingController());
       isConfirmed = false;
     });
-    // widget.onHotspotQtyChanged(_hotspotQty);
+
     _notifyHotspotData();
   }
 
@@ -125,7 +124,7 @@ class _HotspotInputState extends State<HotspotInput> {
         _hotspotImages.remove(_hotspotQty);
         isConfirmed = false;
       });
-      // widget.onHotspotQtyChanged(_hotspotQty);
+
       _notifyHotspotData();
     }
   }
@@ -149,7 +148,6 @@ class _HotspotInputState extends State<HotspotInput> {
       isConfirmed = isConfirmEnabled;
     });
     widget.onConfirmChanged(isConfirmed);
-    // print('Updated _hotspotImages[index] ${_hotspotImages[index]}');
   }
 
   final Map<int, String> _hotspotImages = {};
@@ -201,8 +199,6 @@ class _HotspotInputState extends State<HotspotInput> {
               _incrementbutton(),
             ],
           ),
-          // Text(isConfirmEnabled.toString()),
-          // Text(isConfirmed.toString()),
         ],
       ),
     );
@@ -364,9 +360,6 @@ class _HotspotInputState extends State<HotspotInput> {
               _onImageUploadComplete(index);
             }
           });
-          // print('Updated _hotspotImages: $_hotspotImages');
-          // print('isConfirmEnabled: $isConfirmEnabled');
-          // print('isConfirmed: $isConfirmed');
         }
       },
       style: ElevatedButton.styleFrom(
