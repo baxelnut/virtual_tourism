@@ -47,6 +47,7 @@ class _HotspotInputState extends State<HotspotInput> {
   int _hotspotQty = 2;
   final List<TextEditingController> _latControllers = [];
   final List<TextEditingController> _lonControllers = [];
+  final List<TextEditingController> _hotspotDecsController = [];
 
   late Map<String, dynamic> updatedHotspot = widget.hotspotData;
 
@@ -59,9 +60,11 @@ class _HotspotInputState extends State<HotspotInput> {
   void _initializeHotspotControllers(int qty) {
     _latControllers.clear();
     _lonControllers.clear();
+    _hotspotDecsController.clear();
     for (int i = 0; i < qty; i++) {
       _latControllers.add(TextEditingController());
       _lonControllers.add(TextEditingController());
+      _hotspotDecsController.add(TextEditingController());
     }
     _notifyHotspotData();
   }
@@ -70,11 +73,13 @@ class _HotspotInputState extends State<HotspotInput> {
     for (int i = 0; i < _hotspotQty; i++) {
       double latitude = double.tryParse(_latControllers[i].text.trim()) ?? 0.0;
       double longitude = double.tryParse(_lonControllers[i].text.trim()) ?? 0.0;
+      String hotDesc = _hotspotDecsController[i].text.trim();
 
       setState(() {
         updatedHotspot['hotspot$i'] = {
           'latitude': latitude,
           'longitude': longitude,
+          "hotDesc": hotDesc,
           'imagePath': widget.hotspotData['hotspot$i']?['imagePath'] ?? '',
           'thumbnailPath':
               widget.hotspotData['hotspot$i']?['thumbnailPath'] ?? '',
@@ -107,6 +112,7 @@ class _HotspotInputState extends State<HotspotInput> {
       _hotspotQty++;
       _latControllers.add(TextEditingController());
       _lonControllers.add(TextEditingController());
+      _hotspotDecsController.add(TextEditingController());
       isConfirmed = false;
     });
 
@@ -121,6 +127,8 @@ class _HotspotInputState extends State<HotspotInput> {
         _lonControllers.last.dispose();
         _latControllers.removeLast();
         _lonControllers.removeLast();
+        _hotspotDecsController.removeLast();
+        _hotspotDecsController.removeLast();
         _hotspotImages.remove(_hotspotQty);
         isConfirmed = false;
       });
@@ -158,6 +166,9 @@ class _HotspotInputState extends State<HotspotInput> {
       controller.dispose();
     }
     for (var controller in _lonControllers) {
+      controller.dispose();
+    }
+    for (var controller in _hotspotDecsController) {
       controller.dispose();
     }
     super.dispose();
@@ -264,6 +275,24 @@ class _HotspotInputState extends State<HotspotInput> {
               ),
             ],
           ),
+          const SizedBox(height: 8),
+          TextField(
+            controller: _hotspotDecsController[index],
+            keyboardType: TextInputType.multiline,
+            decoration: InputDecoration(
+              labelText: 'Description',
+              labelStyle: theme.textTheme.bodyLarge?.copyWith(
+                overflow: TextOverflow.ellipsis,
+              ),
+              border: const OutlineInputBorder(
+                borderRadius: BorderRadius.all(
+                  Radius.circular(12),
+                ),
+              ),
+            ),
+            onChanged: (_) => _notifyHotspotData(),
+          ),
+          const SizedBox(height: 8),
         ],
       ),
     );
