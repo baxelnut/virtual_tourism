@@ -37,7 +37,7 @@ class _CreateContentPageState extends State<CreateContentPage> {
   Map<String, dynamic> _hotspotData = {};
   int hotspotQty = 2;
 
-  bool isConfirmedEnabled = false;
+  bool isConfirmedEnabled = true;
 
   void updateConfirmState(bool value) {
     setState(() {

@@ -27,10 +27,11 @@ class _TourScreenState extends State<TourScreen> {
     double clampedLon =
         (hotspotData[hotspotKeys[_panoIndex]]['longitude'] ?? 0.0) % 360;
 
-    String? hotDesc =
-        widget.destinationData['hotspotData']['hotspot$_panoIndex']['hotDesc'];
-    double estimatedHeight = ((hotDesc?.length ?? 0) / 50).ceil() * 20.0;
-    double maxHeight = 80085;
+    String hotDesc = widget.destinationData['hotspotData']['hotspot$_panoIndex']
+            ['hotDesc'] ??
+        "";
+    double estimatedHeight = hotDesc.length * 1.0;
+    double maxHeight = 1000;
 
     return Scaffold(
       body: Stack(
@@ -57,12 +58,12 @@ class _TourScreenState extends State<TourScreen> {
                     }),
                   ),
                 ),
-              if (hotDesc != null)
+              if (hotDesc != "")
                 Hotspot(
-                  latitude: clampedLat - 10,
+                  latitude: clampedLat - 15,
                   longitude: clampedLon,
                   width: 300,
-                  height: estimatedHeight.clamp(50, maxHeight),
+                  height: estimatedHeight.clamp(100, maxHeight),
                   widget: hotspotDescription(hotDesc: hotDesc),
                 ),
             ],
