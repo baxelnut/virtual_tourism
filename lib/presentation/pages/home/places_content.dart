@@ -43,6 +43,8 @@ class _PlacesContentState extends State<PlacesContent> {
         }),
       );
 
+      if (!mounted) return;
+
       setState(() {
         for (var result in results) {
           final key = result.keys.first;
@@ -52,6 +54,9 @@ class _PlacesContentState extends State<PlacesContent> {
       });
     } catch (e) {
       debugPrint('Error fetching data: $e');
+
+      if (!mounted) return;
+
       setState(() => isLoading = false);
     }
   }
