@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../../core/global_values.dart';
 import '../../../services/firebase/api/destinations_service.dart';
 import '../../widgets/content/pin_point_coords.dart';
+import 'image_widget_input.dart';
 
 class HotspotInput extends StatefulWidget {
   final String collections;
@@ -55,6 +56,26 @@ class _HotspotInputState extends State<HotspotInput> {
   void initState() {
     super.initState();
     _initializeHotspotControllers(_hotspotQty);
+
+    _addNewWidget();
+  }
+
+  List<String> infos = [];
+  List<String> infosPath = [];
+
+  void _addNewWidget() {
+    setState(() {
+      infos.add("");
+      infosPath.add("");
+    });
+  }
+
+  void _updateInfoText(int index, String text) {
+    if (index < infos.length) {
+      setState(() {
+        infos[index] = text;
+      });
+    } else {}
   }
 
   void _initializeHotspotControllers(int qty) {
@@ -69,7 +90,7 @@ class _HotspotInputState extends State<HotspotInput> {
     _notifyHotspotData();
   }
 
-  void _notifyHotspotData() {
+  Future<void> _notifyHotspotData({int? index}) async {
     for (int i = 0; i < _hotspotQty; i++) {
       double latitude = double.tryParse(_latControllers[i].text.trim()) ?? 0.0;
       double longitude = double.tryParse(_lonControllers[i].text.trim()) ?? 0.0;
@@ -85,6 +106,25 @@ class _HotspotInputState extends State<HotspotInput> {
               widget.hotspotData['hotspot$i']?['thumbnailPath'] ?? '',
         };
       });
+
+      if (index != null) {
+        await _destinationsService.addDestination(
+          collectionId: 'verified_user_uploads',
+          typeShit: widget.typeShit,
+          destinationName: widget.destinationName,
+          category: widget.category,
+          subcategory: widget.subcategory,
+          description: widget.description,
+          externalSource: widget.externalSource,
+          address: widget.address,
+          continent: widget.continent,
+          country: widget.country,
+          hotspotData: updatedHotspot,
+          hotspotIndex: index,
+          decideCoords: true,
+          trynnaDoHotspot: true,
+        );
+      }
     }
   }
 
@@ -275,24 +315,51 @@ class _HotspotInputState extends State<HotspotInput> {
               ),
             ],
           ),
-          const SizedBox(height: 8),
-          TextField(
-            controller: _hotspotDecsController[index],
-            keyboardType: TextInputType.multiline,
-            decoration: InputDecoration(
-              labelText: 'Description',
-              labelStyle: theme.textTheme.bodyLarge?.copyWith(
-                overflow: TextOverflow.ellipsis,
-              ),
-              border: const OutlineInputBorder(
-                borderRadius: BorderRadius.all(
-                  Radius.circular(12),
+          // const SizedBox(height: 8),
+          ...List.generate(infos.length, (index) {
+            return ImageWidgetInput(
+              key: ValueKey(index),
+              textField: TextField(
+                controller: _hotspotDecsController[index],
+                keyboardType: TextInputType.multiline,
+                decoration: InputDecoration(
+                  hintText: 'Additional Info',
+                  hintStyle: theme.textTheme.bodyMedium?.copyWith(
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  border: const OutlineInputBorder(borderSide: BorderSide.none),
                 ),
+                onChanged: (_) => _notifyHotspotData(index: index),
               ),
-            ),
-            onChanged: (_) => _notifyHotspotData(),
-          ),
-          const SizedBox(height: 8),
+              onTextChanged: (text) => _updateInfoText(index, text),
+              collectionId: widget.collections,
+              typeShit: widget.typeShit,
+              destinationName: widget.destinationName,
+              category: widget.category,
+              subcategory: widget.category,
+              infosPath: infosPath,
+              description: widget.description,
+              externalSource: widget.externalSource,
+              address: widget.address,
+              continent: widget.continent,
+              country: widget.country,
+              hotspotData: widget.hotspotData,
+            );
+          }),
+          SizedBox(height: 16),
+          // Center(
+          //   child: ElevatedButton(
+          //     onPressed: _addNewWidget,
+          //     style: ElevatedButton.styleFrom(
+          //       shape: const CircleBorder(),
+          //       backgroundColor: theme.colorScheme.secondary,
+          //     ),
+          //     child: Icon(
+          //       Icons.add,
+          //       color: theme.colorScheme.onSecondary,
+          //     ),
+          //   ),
+          // ),
         ],
       ),
     );
