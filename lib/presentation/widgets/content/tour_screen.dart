@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:panorama_viewer/panorama_viewer.dart';
 
+import '../../../core/global_values.dart';
+
 class TourScreen extends StatefulWidget {
   final Map<String, dynamic> destinationData;
   const TourScreen({
@@ -13,6 +15,7 @@ class TourScreen extends StatefulWidget {
 }
 
 class _TourScreenState extends State<TourScreen> {
+  String placeholder = GlobalValues.placeholderPath;
   int _panoIndex = 0;
 
   @override
@@ -30,6 +33,10 @@ class _TourScreenState extends State<TourScreen> {
     String hotDesc = widget.destinationData['hotspotData']['hotspot$_panoIndex']
             ['hotDesc'] ??
         "";
+    String hotUrl = widget.destinationData['hotspotData']['hotspot$_panoIndex']
+            ['hotUrl'] ??
+        placeholder;
+
     double estimatedHeight = hotDesc.length * 1.0;
     double maxHeight = 1000;
 
@@ -60,11 +67,15 @@ class _TourScreenState extends State<TourScreen> {
                 ),
               if (hotDesc != "")
                 Hotspot(
-                  latitude: clampedLat - 15,
+                  latitude: clampedLat - 16,
                   longitude: clampedLon,
-                  width: 300,
-                  height: estimatedHeight.clamp(100, maxHeight),
-                  widget: hotspotDescription(hotDesc: hotDesc),
+                  width: (hotUrl == placeholder ? 300 : 400),
+                  height: estimatedHeight.clamp(
+                      (hotUrl == placeholder ? 100 : 200), maxHeight),
+                  widget: hotspotDescription(
+                    hotDesc: hotDesc,
+                    hotUrl: hotUrl,
+                  ),
                 ),
             ],
             child: Image.network(
@@ -115,6 +126,7 @@ class _TourScreenState extends State<TourScreen> {
 
   Widget hotspotDescription({
     required String hotDesc,
+    required String hotUrl,
   }) {
     return Container(
       padding: const EdgeInsets.all(8.0),
@@ -123,11 +135,28 @@ class _TourScreenState extends State<TourScreen> {
         borderRadius: BorderRadius.circular(4),
       ),
       child: SingleChildScrollView(
-        child: Text(
-          hotDesc,
-          textAlign: TextAlign.center,
-          overflow: TextOverflow.ellipsis,
-          maxLines: 69,
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Column(
+            children: [
+              Text(
+                hotDesc,
+                textAlign: TextAlign.center,
+                overflow: TextOverflow.ellipsis,
+                maxLines: 69,
+              ),
+              if (hotUrl != placeholder)
+                Padding(
+                  padding: const EdgeInsets.only(top: 8.0),
+                  child: Image.network(
+                    hotUrl,
+                    fit: BoxFit.cover,
+                    height: 150,
+                    width: 330,
+                  ),
+                )
+            ],
+          ),
         ),
       ),
     );
