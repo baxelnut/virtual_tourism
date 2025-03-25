@@ -59,8 +59,10 @@ class DestinationsService with ChangeNotifier {
     required Map<String, dynamic> hotspotData,
     final int? hotspotIndex,
     final bool? decideCoords,
-    final List<String>? infos,
-    final List<String>? infosPath,
+    // final List<String>? infos,
+    // final List<String>? infosPath,
+    final String? hotDesc,
+    final String? hotUrl,
     required final bool trynnaDoHotspot,
   }) async {
     _isLoading = true;
@@ -105,7 +107,6 @@ class DestinationsService with ChangeNotifier {
           'type': typeShit,
           'address': address,
           'hotspotData': hotspotData,
-          'infos': infos,
         },
         SetOptions(merge: true),
       );
@@ -161,6 +162,8 @@ class DestinationsService with ChangeNotifier {
             hotspotData['hotspot$hotspotIndex'] = {
               'imagePath': hotspot['imagePath'],
               'thumbnailPath': hotspot['thumbnailPath'],
+              'hotDesc': hotDesc,
+              'hotUrl': hotUrl
             };
 
             String? hotspot0ThumbnailPath;
