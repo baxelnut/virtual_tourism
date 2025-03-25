@@ -8,9 +8,7 @@ import '../../../core/global_values.dart';
 // import '../../../services/firebase/api/storage_service.dart';
 
 class ImageWidgetInput extends StatefulWidget {
-  final IconData icon;
-  final String hintText;
-  final int maxLength;
+  final TextField textField;
   final int? maxLines;
   final Function(String) onTextChanged;
   final String collectionId;
@@ -27,9 +25,6 @@ class ImageWidgetInput extends StatefulWidget {
   final Map<String, dynamic> hotspotData;
   const ImageWidgetInput({
     super.key,
-    required this.icon,
-    required this.hintText,
-    required this.maxLength,
     this.maxLines,
     required this.onTextChanged,
     required this.collectionId,
@@ -44,6 +39,7 @@ class ImageWidgetInput extends StatefulWidget {
     required this.address,
     required this.hotspotData,
     required this.description,
+    required this.textField,
   });
 
   @override
@@ -53,7 +49,7 @@ class ImageWidgetInput extends StatefulWidget {
 class ImageWidgetInputState extends State<ImageWidgetInput> {
   // final DestinationsService _destinationsService = DestinationsService();
   // final StorageService _storageService = StorageService();
-  final TextEditingController controller = TextEditingController();
+  // final TextEditingController controller = TextEditingController();
   File? _selectedImage;
 
   Future<void> _pickImage() async {
@@ -121,26 +117,7 @@ class ImageWidgetInputState extends State<ImageWidgetInput> {
               ),
               borderRadius: BorderRadius.circular(15),
             ),
-            leading: Icon(
-              widget.icon,
-              color: theme.colorScheme.onSurface,
-              size: 20,
-            ),
-            title: TextField(
-              controller: controller,
-              onChanged: widget.onTextChanged,
-              style: theme.textTheme.bodyLarge?.copyWith(
-                fontWeight: FontWeight.bold,
-              ),
-              decoration: InputDecoration(
-                border: InputBorder.none,
-                hintText: widget.hintText,
-                hintStyle: theme.textTheme.bodyLarge,
-              ),
-              maxLength: widget.maxLength,
-              maxLines: widget.maxLines,
-            ),
-            trailing: ElevatedButton(
+            leading: ElevatedButton(
               onPressed: () {
                 _pickImage();
               },
@@ -153,6 +130,22 @@ class ImageWidgetInputState extends State<ImageWidgetInput> {
                 color: theme.colorScheme.onPrimary,
               ),
             ),
+            title: widget.textField
+            // TextField(
+            //   controller: controller,
+            //   onChanged: widget.onTextChanged,
+            //   style: theme.textTheme.bodyLarge?.copyWith(
+            //     fontWeight: FontWeight.bold,
+            //   ),
+            //   decoration: InputDecoration(
+            //     border: InputBorder.none,
+            //     hintText: widget.hintText,
+            //     hintStyle: theme.textTheme.bodyLarge,
+            //   ),
+            //   maxLength: widget.maxLength,
+            //   maxLines: widget.maxLines,
+            // )
+            ,
           ),
         ),
         if (_selectedImage != null)
