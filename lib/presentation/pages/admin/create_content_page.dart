@@ -7,7 +7,6 @@ import '../../../services/firebase/api/destinations_service.dart';
 import '../../widgets/utils/input_dropdown.dart';
 import '../../widgets/utils/input_section.dart';
 import 'hotspot_input.dart';
-import 'image_widget_input.dart';
 
 class CreateContentPage extends StatefulWidget {
   final User? user;
@@ -45,24 +44,6 @@ class _CreateContentPageState extends State<CreateContentPage> {
     });
   }
 
-  List<String> infos = [];
-  List<String> infosPath = [];
-
-  void _addNewWidget() {
-    setState(() {
-      infos.add("");
-      infosPath.add("");
-    });
-  }
-
-  void _updateInfoText(int index, String text) {
-    if (index < infos.length) {
-      setState(() {
-        infos[index] = text;
-      });
-    } else {}
-  }
-
   @override
   void initState() {
     super.initState();
@@ -70,8 +51,6 @@ class _CreateContentPageState extends State<CreateContentPage> {
     _selectedSubcategory = categoryMap[_selectedCategory]?.first;
     _selectedContinent = countriesMap.keys.first;
     _selectedCountry = countriesMap[_selectedContinent]?.first;
-
-    _addNewWidget();
   }
 
   @override
@@ -124,39 +103,6 @@ class _CreateContentPageState extends State<CreateContentPage> {
                 maxLength: 6000,
                 maxLines: null,
                 isReadOnly: nameController.text.isEmpty,
-              ),
-              ...List.generate(infos.length, (index) {
-                return ImageWidgetInput(
-                  key: ValueKey(index),
-                  icon: Icons.image,
-                  hintText: 'Additional Info',
-                  maxLength: 200,
-                  onTextChanged: (text) => _updateInfoText(index, text),
-                  collectionId: 'verified_user_uploads',
-                  typeShit: _selectedType,
-                  destinationName: nameController.text.trim(),
-                  category: _selectedCategory,
-                  subcategory: _selectedSubcategory ?? '',
-                  infosPath: infosPath,
-                  description: descriptionController.text.trim(),
-                  externalSource: websiteController.text.trim(),
-                  address: addressController.text.trim(),
-                  continent: _selectedContinent,
-                  country: _selectedCountry ?? '',
-                  hotspotData: _hotspotData,
-                );
-              }),
-              SizedBox(height: 20),
-              ElevatedButton(
-                onPressed: _addNewWidget,
-                style: ElevatedButton.styleFrom(
-                  shape: const CircleBorder(),
-                  backgroundColor: theme.colorScheme.secondary,
-                ),
-                child: Icon(
-                  Icons.add,
-                  color: theme.colorScheme.onSecondary,
-                ),
               ),
               InputDropdown(
                 title: 'Category*',
@@ -243,7 +189,9 @@ class _CreateContentPageState extends State<CreateContentPage> {
                   onConfirmChanged: updateConfirmState,
                 ),
               ),
-              (_selectedType == "Tour" && isConfirmedEnabled) ||
+              (_selectedType == "Tour"
+                      // && isConfirmedEnabled
+                      ) ||
                       _selectedType == "Photographic"
                   ? _buildSubmitButton(
                       screenSize: screenSize,
@@ -281,7 +229,7 @@ class _CreateContentPageState extends State<CreateContentPage> {
                   continent: _selectedContinent,
                   country: _selectedCountry ?? '',
                   hotspotData: _hotspotData,
-                  infos: infos,
+                  // infos: infos,
                   // infosPath: infosPath,
                   trynnaDoHotspot: false,
                 );
