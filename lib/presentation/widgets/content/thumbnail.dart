@@ -5,17 +5,16 @@ import '../../../core/global_values.dart';
 import 'photographic_screen.dart';
 
 class Thumbnail extends StatelessWidget {
-  final String imagePath;
-  final String thumbPath;
+  final Map<String, dynamic> destinationData;
   const Thumbnail({
     super.key,
-    required this.imagePath,
-    required this.thumbPath,
+    required this.destinationData,
   });
 
   @override
   Widget build(BuildContext context) {
     final double screenWidth = GlobalValues.screenSize(context).width;
+    String placeholderPath = GlobalValues.placeholderPath;
 
     double thumbWidth = screenWidth;
     if (kIsWeb) {
@@ -25,7 +24,7 @@ class Thumbnail extends StatelessWidget {
       padding: const EdgeInsets.symmetric(vertical: 3.0),
       child: InkWell(
         child: Image.asset(
-          thumbPath,
+          destinationData['thumbnailPath'] ?? placeholderPath,
           cacheWidth: thumbWidth.toInt(),
           cacheHeight: (thumbWidth ~/ 2),
         ),
@@ -33,7 +32,7 @@ class Thumbnail extends StatelessWidget {
           Navigator.of(context).push(
             MaterialPageRoute(
               builder: (context) => PhotographicScreen(
-                imageUrl: imagePath,
+                destinationData: destinationData,
               ),
             ),
           );
