@@ -271,51 +271,21 @@ class _HotspotInputState extends State<HotspotInput> {
           const SizedBox(height: 8),
           Row(
             children: [
-              Expanded(
-                child: TextField(
-                  controller: _latControllers[index],
-                  keyboardType: TextInputType.number,
-                  decoration: InputDecoration(
-                    labelText: 'Latitude',
-                    labelStyle: theme.textTheme.bodyLarge?.copyWith(
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                    border: const OutlineInputBorder(
-                      borderRadius: BorderRadius.all(
-                        Radius.circular(12),
-                      ),
-                    ),
-                  ),
-                  onChanged: (_) => _notifyHotspotData(),
-                ),
-              ),
-              const SizedBox(width: 20),
-              Expanded(
-                child: TextField(
-                  controller: _lonControllers[index],
-                  keyboardType: TextInputType.number,
-                  decoration: InputDecoration(
-                    labelText: 'Longitude',
-                    labelStyle: theme.textTheme.bodyLarge?.copyWith(
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                    border: const OutlineInputBorder(
-                      borderRadius: BorderRadius.all(
-                        Radius.circular(12),
-                      ),
-                    ),
-                  ),
-                  onChanged: (_) => _notifyHotspotData(),
-                ),
-              ),
-              const SizedBox(width: 20),
-              _pinPointButton(
-                index: index,
+              _buildCoordTextField(
+                controller: _latControllers[index],
+                hint: 'Latitude',
                 theme: theme,
               ),
+              const SizedBox(width: 10),
+              _buildCoordTextField(
+                controller: _lonControllers[index],
+                hint: 'Longitude',
+                theme: theme,
+              ),
+              const SizedBox(width: 10),
+              _pinPointButton(index: index, theme: theme),
             ],
           ),
-          // const SizedBox(height: 8),
           ...List.generate(infos.length, (index) {
             return ImageWidgetInput(
               key: ValueKey(index),
@@ -323,9 +293,9 @@ class _HotspotInputState extends State<HotspotInput> {
                 controller: _hotspotDecsController[index],
                 keyboardType: TextInputType.multiline,
                 decoration: InputDecoration(
-                  hintText: 'Additional Info',
-                  hintStyle: theme.textTheme.bodyMedium?.copyWith(
-                    overflow: TextOverflow.ellipsis,
+                  hintText: 'Additional info (Optional)',
+                  hintStyle: theme.textTheme.bodyLarge?.copyWith(
+                    color: theme.colorScheme.onSurface.withOpacity(0.6),
                   ),
                   border: const OutlineInputBorder(borderSide: BorderSide.none),
                 ),
@@ -336,7 +306,7 @@ class _HotspotInputState extends State<HotspotInput> {
               typeShit: widget.typeShit,
               destinationName: widget.destinationName,
               category: widget.category,
-              subcategory: widget.category,
+              subcategory: widget.subcategory,
               infosPath: infosPath,
               description: widget.description,
               externalSource: widget.externalSource,
@@ -346,21 +316,36 @@ class _HotspotInputState extends State<HotspotInput> {
               hotspotData: widget.hotspotData,
             );
           }),
-          SizedBox(height: 16),
-          // Center(
-          //   child: ElevatedButton(
-          //     onPressed: _addNewWidget,
-          //     style: ElevatedButton.styleFrom(
-          //       shape: const CircleBorder(),
-          //       backgroundColor: theme.colorScheme.secondary,
-          //     ),
-          //     child: Icon(
-          //       Icons.add,
-          //       color: theme.colorScheme.onSecondary,
-          //     ),
-          //   ),
-          // ),
         ],
+      ),
+    );
+  }
+
+  Widget _buildCoordTextField({
+    required TextEditingController controller,
+    required String hint,
+    required ThemeData theme,
+  }) {
+    return Expanded(
+      child: TextField(
+        controller: controller,
+        keyboardType: TextInputType.number,
+        decoration: InputDecoration(
+          hintText: hint,
+          hintStyle: theme.textTheme.bodyLarge?.copyWith(
+            color: theme.colorScheme.onSurface.withOpacity(0.6),
+          ),
+          border: OutlineInputBorder(
+            borderSide: BorderSide(
+              color: theme.colorScheme.onSurface.withOpacity(0),
+              width: 1,
+            ),
+            borderRadius: BorderRadius.all(
+              Radius.circular(12),
+            ),
+          ),
+        ),
+        onChanged: (_) => _notifyHotspotData(),
       ),
     );
   }
