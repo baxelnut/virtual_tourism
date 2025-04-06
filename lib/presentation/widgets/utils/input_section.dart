@@ -41,7 +41,7 @@ class _InputSectionState extends State<InputSection> {
             color: widget.decorationColor.withOpacity(0.5),
             width: 1,
           ),
-          borderRadius: BorderRadius.circular(15),
+          borderRadius: BorderRadius.circular(12),
         ),
         leading: Icon(
           widget.icon,
@@ -62,7 +62,7 @@ class _InputSectionState extends State<InputSection> {
             border: InputBorder.none,
             hintText: widget.hintText,
             hintStyle: theme.textTheme.bodyLarge?.copyWith(
-              color: widget.decorationColor,
+              color: theme.colorScheme.onSurface.withOpacity(0.6),
             ),
             counterText: "",
             counter: null,
