@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:virtual_tourism/app.dart';
 
 import '../../../core/global_values.dart';
 import '../content/load_image.dart';
@@ -25,6 +26,9 @@ class DestinationOverview extends StatefulWidget {
 class DestinationOverviewState extends State<DestinationOverview> {
   bool _isLoading = false;
   late String publisherImageUrl = '';
+
+  int? selectedAnswerIndex;
+  bool isAnswered = false;
 
   void _launchURL(String url) async {
     final Uri uri = Uri.parse(url);
@@ -170,8 +174,19 @@ class DestinationOverviewState extends State<DestinationOverview> {
                       theme: theme,
                     ),
                   ),
-                  descriptionView(theme: theme),
-                  SizedBox(height: 10),
+                  if (widget.destinationData['description'].isNotEmpty)
+                    descriptionView(theme: theme),
+                  if (widget.destinationData['trivia'] != null)
+                    answerTrivia(
+                      question: widget.destinationData['trivia']['question'] ??
+                          'No question.',
+                      answers: List<String>.from(
+                          widget.destinationData['trivia']['answers'] ?? []),
+                      correctIndex: widget.destinationData['trivia']
+                          ['correctIndex'],
+                      screenSize: screenSize,
+                      theme: theme,
+                    ),
                   Visibility(
                     visible: widget.destinationData['infosPath'] != null &&
                         (widget.destinationData['infosPath'] as List)
@@ -209,6 +224,132 @@ class DestinationOverviewState extends State<DestinationOverview> {
             ),
           ),
         ],
+      ),
+    );
+  }
+
+  Widget answerTrivia({
+    required String question,
+    required List<String> answers,
+    required int correctIndex,
+    required Size screenSize,
+    required ThemeData theme,
+  }) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+      child: SizedBox(
+        width: screenSize.width,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Center(child: Text('Trivia 🏅', style: theme.textTheme.titleLarge)),
+            SizedBox(height: 5),
+            Center(
+              child: SizedBox(
+                width: screenSize.width / 1.5,
+                child: Text(
+                  'Answer this and prove your trivia skills – medal awaits!',
+                  style: theme.textTheme.labelMedium?.copyWith(
+                    fontStyle: FontStyle.italic,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+              ),
+            ),
+            Divider(),
+            SizedBox(height: 5),
+            Text(
+              question,
+              style: theme.textTheme.bodyLarge,
+            ),
+            SizedBox(height: 15),
+            ...answers.asMap().entries.map((entry) {
+              final index = entry.key;
+              final answer = entry.value;
+              final isCorrect = correctIndex == index;
+
+              Color buttonColor = theme.colorScheme.onSurface.withOpacity(0.1);
+
+              if (selectedAnswerIndex == index) {
+                if (isCorrect) {
+                  buttonColor = Colors.green;
+                } else {
+                  buttonColor = theme.colorScheme.error;
+                }
+              }
+
+              return Padding(
+                padding: const EdgeInsets.symmetric(vertical: 1),
+                child: ElevatedButton(
+                  onPressed: () {
+                    if (!isAnswered) {
+                      setState(() {
+                        selectedAnswerIndex = index;
+                        isAnswered = true;
+                        print(isCorrect);
+                        print(selectedAnswerIndex);
+                      });
+                    } else {
+                      print(isCorrect);
+                      print(selectedAnswerIndex);
+                    }
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: buttonColor,
+                  ),
+                  child: Align(
+                    alignment: Alignment.center,
+                    child: Text(
+                      answer,
+                      style: theme.textTheme.bodyLarge?.copyWith(
+                        fontWeight:
+                            isAnswered && isCorrect ? FontWeight.bold : null,
+                      ),
+                    ),
+                  ),
+                ),
+              );
+            }),
+            if (isAnswered)
+              Center(
+                child: Padding(
+                  padding: const EdgeInsets.only(top: 18),
+                  child: ElevatedButton(
+                    onPressed: () {
+                      if (correctIndex == selectedAnswerIndex) {
+                        Navigator.pop(context);
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (context) {
+                              return MyApp(pageIndex: 3);
+                            },
+                          ),
+                        );
+                      } else {
+                        setState(() {
+                          isAnswered = false;
+                          selectedAnswerIndex = null;
+                        });
+                      }
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: theme.colorScheme.primary,
+                    ),
+                    child: Text(
+                      correctIndex == selectedAnswerIndex
+                          ? "Congrats! You got a medal!"
+                          : 'Wrong! Try again?',
+                      style: theme.textTheme.titleMedium?.copyWith(
+                        color: theme.colorScheme.onPrimary,
+                        fontWeight: FontWeight.w900,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+          ],
+        ),
       ),
     );
   }
