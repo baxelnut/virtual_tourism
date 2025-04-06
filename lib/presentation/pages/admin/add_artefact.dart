@@ -127,17 +127,20 @@ class _AddArtefactState extends State<AddArtefact> {
                 ElevatedButton(
                   onPressed: () {
                     final name = widget.artefactController.text.trim();
-                    final lat = latControllers.text.trim();
-                    final lon = lonControllers.text.trim();
+                    final latText = latControllers.text.trim();
+                    final lonText = lonControllers.text.trim();
 
                     if (name.isEmpty) {
                       _showSnackBar("Please enter an artefact's name.");
                       return;
                     }
 
-                    if (lat.isEmpty || lon.isEmpty) {
+                    final lat = double.tryParse(latText);
+                    final lon = double.tryParse(lonText);
+
+                    if (lat == null || lon == null) {
                       _showSnackBar(
-                          "Please enter an artefact's latitude and longitude.");
+                          "Latitude and longitude must be valid numbers.");
                       return;
                     }
 
@@ -148,7 +151,6 @@ class _AddArtefactState extends State<AddArtefact> {
                     };
 
                     widget.onConfirm(artefact);
-
                     setState(() => _isConfirmed = !_isConfirmed);
                   },
                   style: ElevatedButton.styleFrom(
