@@ -107,15 +107,16 @@ class ImageWidgetInputState extends State<ImageWidgetInput> {
     return Column(
       children: [
         Padding(
-          padding: const EdgeInsets.only(top: 20),
+          padding: const EdgeInsets.only(top: 10),
           child: ListTile(
+            contentPadding: EdgeInsets.symmetric(horizontal: 0),
             dense: true,
             shape: RoundedRectangleBorder(
               side: BorderSide(
                 color: theme.colorScheme.onSurface.withOpacity(0.5),
                 width: 1,
               ),
-              borderRadius: BorderRadius.circular(15),
+              borderRadius: BorderRadius.circular(12),
             ),
             leading: ElevatedButton(
               onPressed: () {
@@ -124,10 +125,12 @@ class ImageWidgetInputState extends State<ImageWidgetInput> {
               style: ElevatedButton.styleFrom(
                 shape: const CircleBorder(),
                 backgroundColor: theme.colorScheme.primary,
+                padding: EdgeInsets.zero,
               ),
               child: Icon(
                 Icons.image,
                 color: theme.colorScheme.onPrimary,
+                size: 20,
               ),
             ),
             title: widget.textField
