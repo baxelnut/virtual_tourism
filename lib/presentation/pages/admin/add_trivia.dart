@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../../core/global_values.dart';
 
 class AddTrivia extends StatefulWidget {
+  final String title;
   final TextEditingController triviaController;
   final List<TextEditingController> optionControllers;
   final VoidCallback addAnswerField;
@@ -10,6 +11,7 @@ class AddTrivia extends StatefulWidget {
 
   const AddTrivia({
     super.key,
+    required this.title,
     required this.triviaController,
     required this.optionControllers,
     required this.addAnswerField,
@@ -27,6 +29,7 @@ class _AddTriviaState extends State<AddTrivia> {
   @override
   Widget build(BuildContext context) {
     final ThemeData theme = GlobalValues.theme(context);
+    bool canRemove = widget.optionControllers.length > 2;
 
     return Column(
       children: [
@@ -41,11 +44,6 @@ class _AddTriviaState extends State<AddTrivia> {
               ),
               borderRadius: BorderRadius.circular(15),
             ),
-            leading: Icon(
-              Icons.games_rounded,
-              color: theme.colorScheme.onSurface,
-              size: 20,
-            ),
             title: Column(
               children: [
                 TextField(
@@ -57,7 +55,7 @@ class _AddTriviaState extends State<AddTrivia> {
                   ),
                   decoration: InputDecoration(
                     border: InputBorder.none,
-                    hintText: "Trivia Question...",
+                    hintText: widget.title,
                     hintStyle: theme.textTheme.bodyLarge?.copyWith(
                       color: theme.colorScheme.onSurface,
                     ),
@@ -69,9 +67,9 @@ class _AddTriviaState extends State<AddTrivia> {
                 ),
                 Visibility(
                   visible: !_isConfirmed,
-                  child: const Row(
+                  child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [Text('Correct'), Text('Remove')],
+                    children: [Text('Select'), if (canRemove) Text('Remove')],
                   ),
                 ),
                 ...widget.optionControllers.asMap().entries.map((entry) {
@@ -95,7 +93,7 @@ class _AddTriviaState extends State<AddTrivia> {
                           }
                         });
                       },
-                      canRemove: widget.optionControllers.length > 2,
+                      canRemove: canRemove,
                       correctIndex: correctIndex,
                       onSelectedAsCorrect: (selectedIndex) {
                         setState(() {
