@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:panorama_viewer/panorama_viewer.dart';
 
 import '../../../core/global_values.dart';
+import '../../../services/gamification/gamification_api.dart';
 
 class TourScreen extends StatefulWidget {
   final Map<String, dynamic> destinationData;
@@ -18,8 +19,12 @@ class _TourScreenState extends State<TourScreen> {
   String placeholder = GlobalValues.placeholderPath;
   int _panoIndex = 0;
 
+  final GamificationApi _gamificationApi = GamificationApi();
+
   @override
   Widget build(BuildContext context) {
+    final ThemeData theme = GlobalValues.theme(context);
+
     final hotspotData =
         widget.destinationData['hotspotData'] as Map<String, dynamic>;
     final hotspotKeys = hotspotData.keys.toList();
@@ -47,6 +52,48 @@ class _TourScreenState extends State<TourScreen> {
             animSpeed: .1,
             sensorControl: SensorControl.orientation,
             hotspots: [
+              if (widget.destinationData['artefact'] != null)
+                Hotspot(
+                  latitude: widget.destinationData['artefact']['lat'] ?? 69,
+                  longitude: widget.destinationData['artefact']['lon'] ?? 69,
+                  width: 100,
+                  height: 100,
+                  widget: GestureDetector(
+                    onTap: () {
+                      _gamificationApi.announce(
+                        destinationData: widget.destinationData,
+                      );
+                      _gamificationApi.updateUserStats(
+                        destinationData: widget.destinationData,
+                      );
+                    },
+                    child: Container(
+                      width: 100,
+                      decoration: BoxDecoration(
+                        color: const Color.fromARGB(100, 0, 0, 0),
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(
+                            Icons.diamond_outlined,
+                            size: 30,
+                            color: Colors.amber,
+                          ),
+                          Text(
+                            widget.destinationData['artefact']['name'] ??
+                                "Virgin Oil (Extra)",
+                            style: theme.textTheme.titleMedium,
+                            textAlign: TextAlign.center,
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
               if (hotspotData.isNotEmpty && hotspotKeys.isNotEmpty)
                 Hotspot(
                   latitude: clampedLat,
