@@ -65,6 +65,7 @@ class DestinationsService with ChangeNotifier {
     final String? hotUrl,
     required final bool trynnaDoHotspot,
     final Map<String, dynamic>? trivia,
+    final Map<String, dynamic>? artefact,
   }) async {
     _isLoading = true;
     notifyListeners();
@@ -109,6 +110,7 @@ class DestinationsService with ChangeNotifier {
           'address': address,
           'hotspotData': hotspotData,
           'trivia': trivia,
+          'artefact': artefact,
         },
         SetOptions(merge: true),
       );
