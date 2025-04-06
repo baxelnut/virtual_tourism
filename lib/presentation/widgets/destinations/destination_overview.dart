@@ -287,12 +287,7 @@ class DestinationOverviewState extends State<DestinationOverview> {
                       setState(() {
                         selectedAnswerIndex = index;
                         isAnswered = true;
-                        print(isCorrect);
-                        print(selectedAnswerIndex);
                       });
-                    } else {
-                      print(isCorrect);
-                      print(selectedAnswerIndex);
                     }
                   },
                   style: ElevatedButton.styleFrom(
