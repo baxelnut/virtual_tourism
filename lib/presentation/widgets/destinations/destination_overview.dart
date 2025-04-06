@@ -442,10 +442,7 @@ class DestinationOverviewState extends State<DestinationOverview> {
                     );
                   } else {
                     return PhotographicScreen(
-                      imageUrl: (widget.destinationData["imagePath"] != null &&
-                              widget.destinationData["imagePath"].isNotEmpty)
-                          ? widget.destinationData["imagePath"]
-                          : placeholderPath,
+                      destinationData: widget.destinationData,
                     );
                   }
                 },
