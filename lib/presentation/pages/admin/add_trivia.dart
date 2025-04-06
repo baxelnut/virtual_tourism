@@ -26,6 +26,12 @@ class _AddTriviaState extends State<AddTrivia> {
   int? correctIndex;
   bool _isConfirmed = false;
 
+  void _showSnackBar(String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text(message)),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final ThemeData theme = GlobalValues.theme(context);
@@ -57,7 +63,7 @@ class _AddTriviaState extends State<AddTrivia> {
                     border: InputBorder.none,
                     hintText: widget.title,
                     hintStyle: theme.textTheme.bodyLarge?.copyWith(
-                      color: theme.colorScheme.onSurface,
+                      color: theme.colorScheme.onSurface.withOpacity(0.6),
                     ),
                     counterText: "",
                     counter: null,
@@ -124,89 +130,52 @@ class _AddTriviaState extends State<AddTrivia> {
                         ),
                       ),
                       ElevatedButton(
-                        onPressed: _isConfirmed
-                            ? null
-                            : () {
-                                final question =
-                                    widget.triviaController.text.trim();
-                                final options = widget.optionControllers
-                                    .map((controller) => controller.text.trim())
-                                    .toList();
+                        onPressed: () {
+                          final question = widget.triviaController.text.trim();
+                          final options = widget.optionControllers
+                              .map((controller) => controller.text.trim())
+                              .toList();
 
-                                final emptyIndices = <int>[];
-                                for (int i = 0; i < options.length; i++) {
-                                  if (options[i].isEmpty) {
-                                    emptyIndices.add(i +
-                                        1); // +1 to make it user-friendly (Option 1, 2...)
-                                  }
-                                }
+                          if (question.isEmpty) {
+                            _showSnackBar('Please enter a trivia question.');
+                            return;
+                          }
+                          if (options.length < 2) {
+                            _showSnackBar(
+                                'Please enter at least 2 answer options.');
+                            return;
+                          }
 
-                                if (question.isEmpty) {
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    SnackBar(
-                                        content: Text(
-                                            'Please enter a trivia question.')),
-                                  );
-                                  return;
-                                }
+                          final emptyIndices = <int>[
+                            for (int i = 0; i < options.length; i++)
+                              if (options[i].isEmpty) i + 1
+                          ];
+                          if (emptyIndices.isNotEmpty) {
+                            _showSnackBar(
+                              'Please fill in all options. Empty: ${emptyIndices.join(', ')}',
+                            );
+                            return;
+                          }
+                          if (correctIndex == null) {
+                            _showSnackBar('Please select a correct answer.');
+                            return;
+                          }
 
-                                if (options.length < 2) {
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    SnackBar(
-                                        content: Text(
-                                            'Please enter at least 2 answer options.')),
-                                  );
-                                  return;
-                                }
-
-                                if (emptyIndices.isNotEmpty) {
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    SnackBar(
-                                      content: Text(
-                                        'Please fill in all options. Empty: ${emptyIndices.join(', ')}',
-                                      ),
-                                    ),
-                                  );
-                                  return;
-                                }
-
-                                if (correctIndex == null) {
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    SnackBar(
-                                        content: Text(
-                                            'Please select a correct answer.')),
-                                  );
-                                  return;
-                                }
-
-                                if (question.isNotEmpty &&
-                                    options.length >= 2 &&
-                                    correctIndex != null) {
-                                  final trivia = {
-                                    'question': question,
-                                    'answers': options,
-                                    'correctAnswer': options[correctIndex!],
-                                    'correctIndex': correctIndex,
-                                  };
-
-                                  widget.onConfirm(trivia);
-                                  setState(() {
-                                    _isConfirmed = true;
-                                  });
-                                } else {
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    SnackBar(
-                                        content: Text(
-                                            'Please enter a question, at least 2 options, and select a correct answer.')),
-                                  );
-                                }
-                              },
+                          final trivia = {
+                            'question': question,
+                            'answers': options,
+                            'correctAnswer': options[correctIndex!],
+                            'correctIndex': correctIndex,
+                          };
+                          widget.onConfirm(trivia);
+                          setState(() => _isConfirmed = !_isConfirmed);
+                        },
                         style: ElevatedButton.styleFrom(
                           backgroundColor: theme.colorScheme.primary,
                           padding: const EdgeInsets.symmetric(horizontal: 12),
                         ),
                         child: Text(
-                          'Confirm',
+                          "Confirm",
                           style: theme.textTheme.bodyLarge?.copyWith(
                             color: theme.colorScheme.onSurface,
                             fontWeight: FontWeight.bold,
