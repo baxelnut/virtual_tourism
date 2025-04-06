@@ -6,6 +6,7 @@ import '../../../data/destination_data.dart';
 import '../../../services/firebase/api/destinations_service.dart';
 import '../../widgets/utils/input_dropdown.dart';
 import '../../widgets/utils/input_section.dart';
+import 'add_trivia.dart';
 import 'hotspot_input.dart';
 
 class CreateContentPage extends StatefulWidget {
@@ -22,10 +23,16 @@ class CreateContentPage extends StatefulWidget {
 class _CreateContentPageState extends State<CreateContentPage> {
   final DestinationsService _destinationsService = DestinationsService();
 
-  final nameController = TextEditingController();
-  final descriptionController = TextEditingController();
-  final websiteController = TextEditingController();
-  final addressController = TextEditingController();
+  final TextEditingController nameController = TextEditingController();
+  final TextEditingController descriptionController = TextEditingController();
+  final TextEditingController websiteController = TextEditingController();
+  final TextEditingController addressController = TextEditingController();
+
+  final TextEditingController triviaController = TextEditingController();
+  final List<TextEditingController> optionControllers = [
+    TextEditingController(),
+    TextEditingController(),
+  ];
 
   late String _selectedCategory;
   String? _selectedSubcategory;
@@ -37,6 +44,8 @@ class _CreateContentPageState extends State<CreateContentPage> {
   int hotspotQty = 2;
 
   bool isConfirmedEnabled = true;
+
+  Map<String, dynamic>? _finalTrivia;
 
   void updateConfirmState(bool value) {
     setState(() {
@@ -59,7 +68,18 @@ class _CreateContentPageState extends State<CreateContentPage> {
     descriptionController.dispose();
     websiteController.dispose();
     addressController.dispose();
+
+    triviaController.dispose();
+    for (final controller in optionControllers) {
+      controller.dispose();
+    }
     super.dispose();
+  }
+
+  void addAnswerField() {
+    setState(() {
+      optionControllers.add(TextEditingController());
+    });
   }
 
   @override
@@ -165,6 +185,16 @@ class _CreateContentPageState extends State<CreateContentPage> {
                   });
                 },
               ),
+              AddTrivia(
+                triviaController: triviaController,
+                optionControllers: optionControllers,
+                addAnswerField: addAnswerField,
+                onConfirm: (trivia) {
+                  setState(() {
+                    _finalTrivia = trivia;
+                  });
+                },
+              ),
               Visibility(
                 visible: _selectedType == "Tour",
                 child: HotspotInput(
@@ -232,6 +262,7 @@ class _CreateContentPageState extends State<CreateContentPage> {
                   // infos: infos,
                   // infosPath: infosPath,
                   trynnaDoHotspot: false,
+                  trivia: _finalTrivia,
                 );
               }
               Navigator.of(context).pop();
