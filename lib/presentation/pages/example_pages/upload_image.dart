@@ -241,7 +241,7 @@ class _UploadImageState extends State<UploadImage> {
                               Navigator.of(context).push(
                                 MaterialPageRoute(
                                   builder: (context) => PhotographicScreen(
-                                    imageUrl: imageUrl,
+                                    destinationData: destination,
                                   ),
                                 ),
                               );
