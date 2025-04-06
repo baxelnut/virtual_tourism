@@ -45,8 +45,7 @@ class CardsCurved extends StatelessWidget {
                   Navigator.of(context).push(
                     MaterialPageRoute(
                       builder: (context) => PhotographicScreen(
-                        imageUrl:
-                            destinationData['imagePath'] ?? placeholderPath,
+                        destinationData: destinationData,
                       ),
                     ),
                   );
