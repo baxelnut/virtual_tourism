@@ -54,7 +54,7 @@ class _InputDropdownState extends State<InputDropdown> {
             color: theme.colorScheme.onSurface.withOpacity(0.5),
             width: 1,
           ),
-          borderRadius: BorderRadius.circular(15),
+          borderRadius: BorderRadius.circular(12),
         ),
         title: Text(
           widget.title,
