@@ -6,6 +6,7 @@ import '../../../data/destination_data.dart';
 import '../../../services/firebase/api/destinations_service.dart';
 import '../../widgets/utils/input_dropdown.dart';
 import '../../widgets/utils/input_section.dart';
+import 'add_artefact.dart';
 import 'add_trivia.dart';
 import 'hotspot_input.dart';
 
@@ -28,6 +29,7 @@ class _CreateContentPageState extends State<CreateContentPage> {
   final TextEditingController websiteController = TextEditingController();
   final TextEditingController addressController = TextEditingController();
 
+  final TextEditingController artefactController = TextEditingController();
   final TextEditingController triviaController = TextEditingController();
   final List<TextEditingController> optionControllers = [
     TextEditingController(),
@@ -46,6 +48,7 @@ class _CreateContentPageState extends State<CreateContentPage> {
   bool isConfirmedEnabled = true;
 
   Map<String, dynamic>? _finalTrivia;
+  Map<String, dynamic>? _finalArtefact;
 
   void updateConfirmState(bool value) {
     setState(() {
@@ -70,6 +73,7 @@ class _CreateContentPageState extends State<CreateContentPage> {
     addressController.dispose();
 
     triviaController.dispose();
+    artefactController.dispose();
     for (final controller in optionControllers) {
       controller.dispose();
     }
@@ -148,7 +152,7 @@ class _CreateContentPageState extends State<CreateContentPage> {
               ),
               InputSection(
                 controller: websiteController,
-                hintText: 'Link/Website',
+                hintText: 'Link/Website (Optional)',
                 icon: Icons.description_outlined,
                 decorationColor: theme.colorScheme.onSurface,
                 maxLength: 253,
@@ -220,6 +224,16 @@ class _CreateContentPageState extends State<CreateContentPage> {
                   onConfirmChanged: updateConfirmState,
                 ),
               ),
+              AddArtefact(
+                title: 'Add artefact (Optional)',
+                artefactController: artefactController,
+                sceneLength: _selectedType == "Tour" ? _hotspotData.length : 0,
+                onConfirm: (artefact) {
+                  setState(() {
+                    _finalArtefact = artefact;
+                  });
+                },
+              ),
               (_selectedType == "Tour"
                       // && isConfirmedEnabled
                       ) ||
@@ -264,6 +278,7 @@ class _CreateContentPageState extends State<CreateContentPage> {
                   // infosPath: infosPath,
                   trynnaDoHotspot: false,
                   trivia: _finalTrivia,
+                  artefact: _finalArtefact,
                 );
               }
               Navigator.of(context).pop();
