@@ -186,6 +186,7 @@ class _CreateContentPageState extends State<CreateContentPage> {
                 },
               ),
               AddTrivia(
+                title: "Add trivia question (Optional)",
                 triviaController: triviaController,
                 optionControllers: optionControllers,
                 addAnswerField: addAnswerField,
