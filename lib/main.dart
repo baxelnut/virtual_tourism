@@ -10,8 +10,8 @@ import 'services/firebase/api/destinations_service.dart';
 import 'services/firebase/api/reviews_service.dart';
 import 'services/firebase/api/storage_service.dart';
 import 'services/firebase/api/users_service.dart';
-import 'services/firebase/api/utils_service.dart';
 import 'services/firebase/firebase_options.dart';
+import 'services/gamification/gamification_service.dart';
 
 void main() async {
   Provider.debugCheckInvalidValueType = null;
@@ -32,7 +32,7 @@ void main() async {
   final reviewService = ReviewsService();
   final storageService = StorageService();
   final usersService = UsersService();
-  final utilsService = UtilsService();
+  final gamificationService = GamificationService();
 
   runApp(
     MultiProvider(
@@ -42,7 +42,8 @@ void main() async {
         ChangeNotifierProvider<ReviewsService>.value(value: reviewService),
         ChangeNotifierProvider<StorageService>.value(value: storageService),
         ChangeNotifierProvider<UsersService>.value(value: usersService),
-        ChangeNotifierProvider<UtilsService>.value(value: utilsService),
+        ChangeNotifierProvider<GamificationService>.value(
+            value: gamificationService),
         ChangeNotifierProvider<ThemeProvider>.value(value: themeProvider),
       ],
       child: const MyApp(),
