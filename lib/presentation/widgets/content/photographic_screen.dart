@@ -20,7 +20,7 @@ class _PhotographicScreenState extends State<PhotographicScreen> {
   bool _isLoading = true;
   Image? _loadedImage;
 
-  final GamificationService _GamificationService = GamificationService();
+  final GamificationService _gamificationService = GamificationService();
 
   @override
   void initState() {
@@ -60,47 +60,49 @@ class _PhotographicScreenState extends State<PhotographicScreen> {
               child: PanoramaViewer(
                 sensorControl: SensorControl.orientation,
                 hotspots: [
-                  Hotspot(
-                    latitude: widget.destinationData['artefact']['lat'] ?? 69,
-                    longitude: widget.destinationData['artefact']['lon'] ?? 69,
-                    width: 100,
-                    height: 100,
-                    widget: GestureDetector(
-                      onTap: () {
-                        _GamificationService.announce(
-                          destinationData: widget.destinationData,
-                        );
-                        _GamificationService.updateUserStats(
-                          destinationData: widget.destinationData,
-                        );
-                      },
-                      child: Container(
-                        width: 100,
-                        decoration: BoxDecoration(
-                          color: const Color.fromARGB(100, 0, 0, 0),
-                          borderRadius: BorderRadius.circular(20),
-                        ),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Icon(
-                              Icons.diamond_outlined,
-                              size: 30,
-                              color: Colors.amber,
-                            ),
-                            Text(
-                              widget.destinationData['artefact']['name'] ??
-                                  "Virgin Oil (Extra)",
-                              style: theme.textTheme.titleMedium,
-                              textAlign: TextAlign.center,
-                              maxLines: 2,
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                          ],
+                  if (widget.destinationData['artefact'] != null)
+                    Hotspot(
+                      latitude: widget.destinationData['artefact']['lat'] ?? 69,
+                      longitude:
+                          widget.destinationData['artefact']['lon'] ?? 69,
+                      width: 100,
+                      height: 100,
+                      widget: GestureDetector(
+                        onTap: () {
+                          _gamificationService.announce(
+                            destinationData: widget.destinationData,
+                          );
+                          _gamificationService.updateUserStats(
+                            destinationData: widget.destinationData,
+                          );
+                        },
+                        child: Container(
+                          width: 100,
+                          decoration: BoxDecoration(
+                            color: const Color.fromARGB(100, 0, 0, 0),
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Icon(
+                                Icons.diamond_outlined,
+                                size: 30,
+                                color: Colors.amber,
+                              ),
+                              Text(
+                                widget.destinationData['artefact']['name'] ??
+                                    "Virgin Oil (Extra)",
+                                style: theme.textTheme.titleMedium,
+                                textAlign: TextAlign.center,
+                                maxLines: 2,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ],
+                          ),
                         ),
                       ),
                     ),
-                  ),
                 ],
                 child: _loadedImage!,
               ),
