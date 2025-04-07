@@ -98,7 +98,7 @@ class _AddArtefactState extends State<AddArtefact> {
                         String value = 'Scene ${index + 1}';
                         return DropdownMenuItem<String>(
                           value: value,
-                          child: Text(value),
+                          child: Text('Scene ${index + 1}'),
                         );
                       },
                     ),
@@ -129,6 +129,8 @@ class _AddArtefactState extends State<AddArtefact> {
                     final name = widget.artefactController.text.trim();
                     final latText = latControllers.text.trim();
                     final lonText = lonControllers.text.trim();
+                    final int sceneIndex =
+                        int.parse(_dropDownValue.split(' ').last) - 1;
 
                     if (name.isEmpty) {
                       _showSnackBar("Please enter an artefact's name.");
@@ -148,6 +150,7 @@ class _AddArtefactState extends State<AddArtefact> {
                       'name': name,
                       'lat': lat,
                       'lon': lon,
+                      'sceneIndex': sceneIndex,
                     };
 
                     widget.onConfirm(artefact);
