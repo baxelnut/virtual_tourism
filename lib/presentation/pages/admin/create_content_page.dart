@@ -232,17 +232,13 @@ class _CreateContentPageState extends State<CreateContentPage> {
                   setState(() {
                     _finalArtefact = artefact;
                   });
+                  print("_finalArtefact at field: $_finalArtefact");
                 },
               ),
-              (_selectedType == "Tour"
-                      // && isConfirmedEnabled
-                      ) ||
-                      _selectedType == "Photographic"
-                  ? _buildSubmitButton(
-                      screenSize: screenSize,
-                      theme: theme,
-                    )
-                  : const SizedBox(height: 40),
+              _buildSubmitButton(
+                screenSize: screenSize,
+                theme: theme,
+              ),
             ],
           ),
         ),
@@ -261,26 +257,25 @@ class _CreateContentPageState extends State<CreateContentPage> {
         child: ElevatedButton(
           onPressed: () {
             if (nameController.text.isNotEmpty) {
-              if (_selectedType == "Photographic") {
-                _destinationsService.addDestination(
-                  collectionId: 'verified_user_uploads',
-                  typeShit: _selectedType,
-                  destinationName: nameController.text.trim(),
-                  category: _selectedCategory,
-                  subcategory: _selectedSubcategory ?? '',
-                  description: descriptionController.text.trim(),
-                  externalSource: websiteController.text.trim(),
-                  address: addressController.text.trim(),
-                  continent: _selectedContinent,
-                  country: _selectedCountry ?? '',
-                  hotspotData: _hotspotData,
-                  // infos: infos,
-                  // infosPath: infosPath,
-                  trynnaDoHotspot: false,
-                  trivia: _finalTrivia,
-                  artefact: _finalArtefact,
-                );
-              }
+              _destinationsService.addDestination(
+                collectionId: 'verified_user_uploads',
+                typeShit: _selectedType,
+                destinationName: nameController.text.trim(),
+                category: _selectedCategory,
+                subcategory: _selectedSubcategory ?? '',
+                description: descriptionController.text.trim(),
+                externalSource: websiteController.text.trim(),
+                address: addressController.text.trim(),
+                continent: _selectedContinent,
+                country: _selectedCountry ?? '',
+                hotspotData: _hotspotData,
+                // infos: infos,
+                // infosPath: infosPath,
+                trynnaDoHotspot: false,
+                trivia: _finalTrivia,
+                artefact: _finalArtefact,
+              );
+
               Navigator.of(context).pop();
               _showSnackBar("Please wait...");
             } else {
