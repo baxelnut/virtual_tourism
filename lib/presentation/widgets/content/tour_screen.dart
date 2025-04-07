@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:panorama_viewer/panorama_viewer.dart';
 
@@ -18,8 +19,41 @@ class TourScreen extends StatefulWidget {
 class _TourScreenState extends State<TourScreen> {
   String placeholder = GlobalValues.placeholderPath;
   int _panoIndex = 0;
+  bool _hasObtainedArtefact = false;
 
   final GamificationService _gamificationService = GamificationService();
+
+  @override
+  void initState() {
+    super.initState();
+    checkIfArtefactObtained();
+  }
+
+  Future<void> checkIfArtefactObtained() async {
+    final userId = GlobalValues.user?.uid;
+    final destinationId = widget.destinationData['docId'];
+    if (userId == null || destinationId == null) return;
+
+    try {
+      final userDoc = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(userId)
+          .get();
+
+      final data = userDoc.data();
+      final artefacts =
+          Map<String, dynamic>.from(data?['artefactAcquired'] ?? {});
+
+      if (artefacts.containsKey(destinationId)) {
+        setState(() {
+          _hasObtainedArtefact = true;
+        });
+      }
+    } catch (e) {
+      // ignore: avoid_print
+      print("Error checking artefact on TourScreen: $e");
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -54,14 +88,49 @@ class _TourScreenState extends State<TourScreen> {
             hotspots: [
               if (widget.destinationData['artefact'] != null &&
                   widget.destinationData['artefact']['sceneIndex'] ==
-                      _panoIndex)
+                      _panoIndex &&
+                  !_hasObtainedArtefact)
                 Hotspot(
                   latitude: widget.destinationData['artefact']['lat'] ?? 69,
                   longitude: widget.destinationData['artefact']['lon'] ?? 69,
                   width: 100,
                   height: 100,
                   widget: GestureDetector(
-                    onTap: () {
+                    onTap: () async {
+                      final userId = GlobalValues.user?.uid;
+                      final destinationId = widget.destinationData['docId'];
+                      if (userId == null || destinationId == null) return;
+
+                      setState(() {
+                        _hasObtainedArtefact = true;
+                      });
+
+                      final artefactData = {
+                        "artefactName": widget.destinationData['artefact']
+                            ['name'],
+                        "destinationId": destinationId,
+                        "destinationName": widget.destinationData['name'],
+                        "givenBy": widget.destinationData['userName'],
+                        "timeAcquired": DateTime.now()
+                            .toIso8601String()
+                            .replaceAll(':', '')
+                            .replaceAll('-', '')
+                            .replaceAll('.', '')
+                            .replaceAll('T', '_')
+                            .substring(0, 15),
+                      };
+
+                      print(destinationId);
+
+                      await FirebaseFirestore.instance
+                          .collection('users')
+                          .doc(userId)
+                          .set({
+                        "artefactAcquired": {
+                          destinationId: artefactData,
+                        }
+                      }, SetOptions(merge: true));
+
                       _gamificationService.announce(
                         destinationData: widget.destinationData,
                       );
