@@ -232,7 +232,7 @@ class _CreateContentPageState extends State<CreateContentPage> {
                   setState(() {
                     _finalArtefact = artefact;
                   });
-                  print("_finalArtefact at field: $_finalArtefact");
+                  // print("_finalArtefact at field: $_finalArtefact");
                 },
               ),
               _buildSubmitButton(
@@ -255,9 +255,9 @@ class _CreateContentPageState extends State<CreateContentPage> {
       child: SizedBox(
         width: screenSize.width,
         child: ElevatedButton(
-          onPressed: () {
+          onPressed: () async {
             if (nameController.text.isNotEmpty) {
-              _destinationsService.addDestination(
+              await _destinationsService.addDestination(
                 collectionId: 'verified_user_uploads',
                 typeShit: _selectedType,
                 destinationName: nameController.text.trim(),
@@ -276,7 +276,9 @@ class _CreateContentPageState extends State<CreateContentPage> {
                 artefact: _finalArtefact,
               );
 
-              Navigator.of(context).pop();
+              if (mounted) {
+                Navigator.of(context).pop();
+              }
               _showSnackBar("Please wait...");
             } else {
               _showSnackBar("Title can't be emtpy.");
