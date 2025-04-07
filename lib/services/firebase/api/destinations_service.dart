@@ -4,11 +4,13 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
+import '../../gamification/gamification_service.dart';
 import 'storage_service.dart';
 
 class DestinationsService with ChangeNotifier {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final StorageService storageService = StorageService();
+  final GamificationService gamificationService = GamificationService();
 
   User? user = FirebaseAuth.instance.currentUser;
   bool _isLoading = false;
@@ -129,6 +131,16 @@ class DestinationsService with ChangeNotifier {
       // if (trynnaDoHotspot) {
 
       // }
+
+      if (artefact != null) {
+        gamificationService.addArtefacts(
+          artefactName: artefact['name'],
+          location: destinationName,
+          locationId: docId,
+          fullInfo: artefact,
+          typeShit: typeShit,
+        );
+      }
 
       if (typeShit == "Photographic") {
         final Map<String, String>? urls = await storageService.addImage(
