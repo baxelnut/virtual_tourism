@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:panorama_viewer/panorama_viewer.dart';
 
 import '../../../core/global_values.dart';
-import '../../../services/gamification/gamification_api.dart';
+import '../../../services/gamification/gamification_service.dart';
 
 class TourScreen extends StatefulWidget {
   final Map<String, dynamic> destinationData;
@@ -19,7 +19,7 @@ class _TourScreenState extends State<TourScreen> {
   String placeholder = GlobalValues.placeholderPath;
   int _panoIndex = 0;
 
-  final GamificationApi _gamificationApi = GamificationApi();
+  final GamificationService _GamificationService = GamificationService();
 
   @override
   Widget build(BuildContext context) {
@@ -62,10 +62,10 @@ class _TourScreenState extends State<TourScreen> {
                   height: 100,
                   widget: GestureDetector(
                     onTap: () {
-                      _gamificationApi.announce(
+                      _GamificationService.announce(
                         destinationData: widget.destinationData,
                       );
-                      _gamificationApi.updateUserStats(
+                      _GamificationService.updateUserStats(
                         destinationData: widget.destinationData,
                       );
                     },
