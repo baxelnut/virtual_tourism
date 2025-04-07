@@ -7,6 +7,7 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:virtual_tourism/app.dart';
 
 import '../../../core/global_values.dart';
+import '../../../services/gamification/gamification_service.dart';
 import '../content/load_image.dart';
 import '../content/photographic_screen.dart';
 import '../content/tour_screen.dart';
@@ -24,6 +25,8 @@ class DestinationOverview extends StatefulWidget {
 }
 
 class DestinationOverviewState extends State<DestinationOverview> {
+  final GamificationService gamificationService = GamificationService();
+
   bool _isLoading = false;
   late String publisherImageUrl = '';
 
@@ -216,9 +219,7 @@ class DestinationOverviewState extends State<DestinationOverview> {
                     ),
                   SizedBox(height: screenSize.width / 3),
                   if (_isLoading)
-                    const Center(
-                      child: CircularProgressIndicator(),
-                    ),
+                    const Center(child: CircularProgressIndicator()),
                 ],
               ),
             ),
@@ -259,10 +260,7 @@ class DestinationOverviewState extends State<DestinationOverview> {
             ),
             Divider(),
             SizedBox(height: 5),
-            Text(
-              question,
-              style: theme.textTheme.bodyLarge,
-            ),
+            Text(question, style: theme.textTheme.bodyLarge),
             SizedBox(height: 15),
             ...answers.asMap().entries.map((entry) {
               final index = entry.key;
@@ -389,10 +387,7 @@ class DestinationOverviewState extends State<DestinationOverview> {
               children: [
                 const Spacer(),
                 Text(
-                  formatDate(
-                    widget.destinationData["created"],
-                    "d MMM y",
-                  ),
+                  formatDate(widget.destinationData["created"], "d MMM y"),
                   style: theme.textTheme.labelMedium?.copyWith(
                     color: theme.colorScheme.onPrimary,
                   ),
@@ -430,20 +425,38 @@ class DestinationOverviewState extends State<DestinationOverview> {
       child: SizedBox(
         width: screenSize.width,
         child: ElevatedButton(
-          onPressed: () {
+          onPressed: () async {
+            // Update user passport
+            String? updateStatus = await gamificationService.updatePassport(
+              destinationData: widget.destinationData,
+            );
+
+            if (!mounted) {
+              return;
+            }
+
+            if (updateStatus != null) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text(updateStatus),
+                  duration: Duration(seconds: 1),
+                ),
+              );
+
+              await Future.delayed(Duration(seconds: 1));
+              if (!mounted) return;
+            }
+
             Navigator.of(context).push(
               MaterialPageRoute(
                 builder: (context) {
                   String? type = widget.destinationData["type"];
 
                   if (type == "Tour") {
-                    return TourScreen(
-                      destinationData: widget.destinationData,
-                    );
+                    return TourScreen(destinationData: widget.destinationData);
                   } else {
                     return PhotographicScreen(
-                      destinationData: widget.destinationData,
-                    );
+                        destinationData: widget.destinationData);
                   }
                 },
               ),
@@ -454,7 +467,7 @@ class DestinationOverviewState extends State<DestinationOverview> {
             backgroundColor: theme.colorScheme.secondary,
           ),
           child: Text(
-            'View',
+            "View",
             style: theme.textTheme.titleMedium?.copyWith(
               color: theme.colorScheme.onSecondary,
               fontWeight: FontWeight.w900,
