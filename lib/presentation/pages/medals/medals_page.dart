@@ -14,24 +14,14 @@ class MedalsPage extends StatefulWidget {
 }
 
 class _MedalsPageState extends State<MedalsPage> {
-  late Future<Map<String, bool>> countriesFuture;
+  late Future<Map<String, List<Map<String, dynamic>>>> medalsFuture;
 
-  final GamificationService gamificationService = GamificationService();
+  final GamificationService _gamificationService = GamificationService();
 
   @override
   void initState() {
     super.initState();
-    countriesFuture = fetchPassport();
-  }
-
-  Future<Map<String, bool>> fetchPassport() async {
-    try {
-      final data = await gamificationService.fetchPassport();
-      return data;
-    } catch (e) {
-      print('Error fetching passport data: $e');
-      return {};
-    }
+    medalsFuture = _gamificationService.fetchAllMedals();
   }
 
   @override
@@ -59,39 +49,33 @@ class _MedalsPageState extends State<MedalsPage> {
               centerTitle: true,
             ),
             SliverToBoxAdapter(
-              child: FutureBuilder<Map<String, bool>>(
-                future: countriesFuture,
+              child: FutureBuilder<Map<String, List<Map<String, dynamic>>>>(
+                future: medalsFuture,
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
                     return SizedBox(
                       height: screenSize.height - 120,
-                      child: Center(
-                        child: CircularProgressIndicator(),
-                      ),
+                      child: const Center(child: CircularProgressIndicator()),
                     );
                   } else if (snapshot.hasError) {
                     return SizedBox(
                       height: screenSize.height - 120,
-                      child: Center(
-                        child: Text('Error: ${snapshot.error}'),
-                      ),
+                      child: Center(child: Text('Error: ${snapshot.error}')),
                     );
                   } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
                     return SizedBox(
                       height: screenSize.height - 120,
-                      child: Center(
-                        child: Text('No data available.'),
-                      ),
+                      child: const Center(child: Text('No data available.')),
                     );
                   } else {
-                    final countries = snapshot.data!;
+                    final medalsData = snapshot.data!;
+                    final passports = medalsData['passports'] ?? [];
+                    final artefacts = medalsData['artefacts'] ?? [];
 
                     return Column(
                       children: [
-                        MedalsSection(
-                          title: "Passports",
-                          medals: countries,
-                        ),
+                        MedalsSection(title: "Passports", medals: passports),
+                        MedalsSection(title: "Artefacts", medals: artefacts),
                         SizedBox(height: screenSize.width / 4),
                       ],
                     );
