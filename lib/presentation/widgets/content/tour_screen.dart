@@ -52,7 +52,9 @@ class _TourScreenState extends State<TourScreen> {
             animSpeed: .1,
             sensorControl: SensorControl.orientation,
             hotspots: [
-              if (widget.destinationData['artefact'] != null)
+              if (widget.destinationData['artefact'] != null &&
+                  widget.destinationData['artefact']['sceneIndex'] ==
+                      _panoIndex)
                 Hotspot(
                   latitude: widget.destinationData['artefact']['lat'] ?? 69,
                   longitude: widget.destinationData['artefact']['lon'] ?? 69,
