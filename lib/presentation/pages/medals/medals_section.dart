@@ -6,7 +6,7 @@ import 'full_medals_list.dart';
 
 class MedalsSection extends StatefulWidget {
   final String title;
-  final Map<String, bool> medals;
+  final List<Map<String, dynamic>> medals;
   const MedalsSection({
     super.key,
     required this.title,
@@ -21,7 +21,7 @@ class _MedalsSectionState extends State<MedalsSection> {
   final GamificationService gamificationService = GamificationService();
 
   int get obtainedMedals =>
-      widget.medals.values.where((obtained) => obtained).length;
+      widget.medals.where((entry) => entry['obtained'] == true).length;
   int get totalMedals => widget.medals.length;
 
   @override
@@ -82,17 +82,19 @@ class _MedalsSectionState extends State<MedalsSection> {
     required ThemeData theme,
   }) {
     final obtained =
-        widget.medals.entries.where((entry) => entry.value).toList();
+        widget.medals.where((entry) => entry['obtained'] == true).toList();
     final notObtained =
-        widget.medals.entries.where((entry) => !entry.value).toList();
+        widget.medals.where((entry) => entry['obtained'] != true).toList();
 
-    obtained.sort((a, b) => a.key.compareTo(b.key));
-    notObtained.sort((a, b) => a.key.compareTo(b.key));
+    obtained.sort((a, b) => a['id'].compareTo(b['id']));
+    notObtained.sort((a, b) => a['id'].compareTo(b['id']));
 
     final showFirstCards = [
       ...obtained,
       ...notObtained,
     ].take(6).toList();
+
+    print(showFirstCards);
 
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
@@ -102,11 +104,24 @@ class _MedalsSectionState extends State<MedalsSection> {
           spacing: 10,
           runSpacing: 10,
           children: showFirstCards.map((entry) {
-            String medalName = entry.key;
-            bool isObtained = entry.value;
+            final medalId = entry['id'];
+            final isObtained = entry['obtained'] == true;
+
+            final fullInfo = entry['fullInfo'];
+            String displayName;
+
+            if (fullInfo is Map<String, dynamic>) {
+              displayName = fullInfo['artefactName'] ??
+                  fullInfo['countryName'] ??
+                  medalId;
+            } else {
+              displayName = medalId;
+            }
 
             return GestureDetector(
-              onTap: () {},
+              onTap: () {
+                print("Clicked $displayName");
+              },
               child: Container(
                 height: 110,
                 width: 110,
@@ -118,7 +133,7 @@ class _MedalsSectionState extends State<MedalsSection> {
                 ),
                 child: Center(
                   child: Text(
-                    medalName,
+                    displayName,
                     style: theme.textTheme.bodySmall,
                     textAlign: TextAlign.center,
                     maxLines: 3,
