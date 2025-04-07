@@ -19,7 +19,7 @@ class _TourScreenState extends State<TourScreen> {
   String placeholder = GlobalValues.placeholderPath;
   int _panoIndex = 0;
 
-  final GamificationService _GamificationService = GamificationService();
+  final GamificationService _gamificationService = GamificationService();
 
   @override
   Widget build(BuildContext context) {
@@ -62,10 +62,10 @@ class _TourScreenState extends State<TourScreen> {
                   height: 100,
                   widget: GestureDetector(
                     onTap: () {
-                      _GamificationService.announce(
+                      _gamificationService.announce(
                         destinationData: widget.destinationData,
                       );
-                      _GamificationService.updateUserStats(
+                      _gamificationService.updateUserStats(
                         destinationData: widget.destinationData,
                       );
                     },
