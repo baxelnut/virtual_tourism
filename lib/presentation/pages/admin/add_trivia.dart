@@ -90,7 +90,6 @@ class _AddTriviaState extends State<AddTrivia> {
                       onRemove: () {
                         setState(() {
                           widget.optionControllers.removeAt(index);
-
                           if (correctIndex != null && correctIndex == index) {
                             correctIndex = null;
                           } else if (correctIndex != null &&
@@ -167,6 +166,7 @@ class _AddTriviaState extends State<AddTrivia> {
                             'correctAnswer': options[correctIndex!],
                             'correctIndex': correctIndex,
                           };
+
                           widget.onConfirm(trivia);
                           setState(() => _isConfirmed = !_isConfirmed);
                         },
@@ -213,14 +213,12 @@ class _AddTriviaState extends State<AddTrivia> {
                           setState(() {
                             _isConfirmed = false;
                             correctIndex = null;
-
                             widget.triviaController.clear();
 
                             for (var controller in widget.optionControllers) {
                               controller.dispose();
                             }
                             widget.optionControllers.clear();
-
                             widget.optionControllers.addAll([
                               TextEditingController(),
                               TextEditingController(),
