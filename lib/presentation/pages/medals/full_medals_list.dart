@@ -5,7 +5,7 @@ import 'medals_box.dart';
 
 class FullMedalsList extends StatefulWidget {
   final String title;
-  final Map<String, bool> medals;
+  final List<Map<String, dynamic>> medals;
   const FullMedalsList({
     super.key,
     required this.title,
@@ -18,16 +18,14 @@ class FullMedalsList extends StatefulWidget {
 
 class _FullMedalsListState extends State<FullMedalsList> {
   int get obtainedCount =>
-      widget.medals.values.where((obtained) => obtained).length;
-  int get notObtainedCount =>
-      widget.medals.values.where((obtained) => !obtained).length;
+      widget.medals.where((medal) => medal['obtained'] == true).length;
 
   @override
   Widget build(BuildContext context) {
     final ThemeData theme = GlobalValues.theme(context);
 
-    final sortedMedals = widget.medals.entries.toList()
-      ..sort((a, b) => a.key.compareTo(b.key));
+    final sortedMedals = [...widget.medals]
+      ..sort((a, b) => a['id'].compareTo(b['id']));
 
     return Scaffold(
       body: CustomScrollView(
@@ -54,10 +52,17 @@ class _FullMedalsListState extends State<FullMedalsList> {
                 child: Wrap(
                   spacing: 10,
                   runSpacing: 10,
-                  children: sortedMedals.map((entry) {
+                  children: sortedMedals.map((medal) {
+                    final isObtained = medal['obtained'] == true;
+                    final id = medal['id'];
+                    final fullInfo = medal['fullInfo'] ?? {};
+                    final displayName = fullInfo['artefactName'] ??
+                        fullInfo['countryName'] ??
+                        id;
+
                     return MedalsBox(
-                      medalName: entry.key,
-                      isObtained: entry.value,
+                      medalName: displayName,
+                      isObtained: isObtained,
                     );
                   }).toList(),
                 ),
