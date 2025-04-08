@@ -91,8 +91,8 @@ class _TourScreenState extends State<TourScreen> {
                       _panoIndex &&
                   !_hasObtainedArtefact)
                 Hotspot(
-                  latitude: widget.destinationData['artefact']['lat'] ?? 69,
-                  longitude: widget.destinationData['artefact']['lon'] ?? 69,
+                  latitude: widget.destinationData['artefact']['lat'] ?? 69.69,
+                  longitude: widget.destinationData['artefact']['lon'] ?? 69.69,
                   width: 100,
                   height: 100,
                   widget: GestureDetector(
