@@ -54,7 +54,7 @@ class _FullMedalsListState extends State<FullMedalsList> {
                   runSpacing: 10,
                   children: sortedMedals.map((medal) {
                     final isObtained = medal['obtained'] == true;
-                    final id = medal['id'];
+                    final medalId = medal['id'];
 
                     final fullInfo = medal['fullInfo'];
                     String displayName;
@@ -62,9 +62,10 @@ class _FullMedalsListState extends State<FullMedalsList> {
                     if (fullInfo is Map<String, dynamic>) {
                       displayName = fullInfo['artefactName'] ??
                           fullInfo['countryName'] ??
-                          id;
+                          fullInfo['trivia']['question'] ??
+                          medalId;
                     } else {
-                      displayName = id;
+                      displayName = medalId;
                     }
 
                     return MedalsBox(
