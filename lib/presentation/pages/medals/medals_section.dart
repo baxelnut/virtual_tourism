@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../../core/global_values.dart';
 import '../../../services/gamification/gamification_service.dart';
 import 'full_medals_list.dart';
+import 'medals_box.dart';
 
 class MedalsSection extends StatefulWidget {
   final String title;
@@ -107,12 +108,13 @@ class _MedalsSectionState extends State<MedalsSection> {
             final medalId = entry['id'];
             final isObtained = entry['obtained'] == true;
 
-            final fullInfo = entry['fullInfo'];
+            final fullInfo = entry['fullInfo'] ?? entry['trivia'];
             String displayName;
 
             if (fullInfo is Map<String, dynamic>) {
               displayName = fullInfo['artefactName'] ??
                   fullInfo['countryName'] ??
+                  fullInfo['trivia']['question'] ??
                   medalId;
             } else {
               displayName = medalId;
@@ -122,24 +124,9 @@ class _MedalsSectionState extends State<MedalsSection> {
               onTap: () {
                 // print("Clicked $displayName");
               },
-              child: Container(
-                height: 110,
-                width: 110,
-                decoration: BoxDecoration(
-                  color: isObtained
-                      ? theme.colorScheme.primary
-                      : theme.colorScheme.secondary,
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: Center(
-                  child: Text(
-                    displayName,
-                    style: theme.textTheme.bodySmall,
-                    textAlign: TextAlign.center,
-                    maxLines: 3,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                ),
+              child: MedalsBox(
+                isObtained: isObtained,
+                medalName: displayName,
               ),
             );
           }).toList(),
