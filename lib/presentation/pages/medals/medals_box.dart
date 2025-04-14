@@ -33,12 +33,15 @@ class _MedalsBoxState extends State<MedalsBox> {
         borderRadius: BorderRadius.circular(12),
       ),
       child: Center(
-        child: Text(
-          widget.medalName,
-          style: theme.textTheme.bodySmall,
-          textAlign: TextAlign.center,
-          maxLines: 2,
-          overflow: TextOverflow.ellipsis,
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Text(
+            widget.medalName,
+            style: theme.textTheme.bodySmall,
+            textAlign: TextAlign.center,
+            maxLines: 5,
+            overflow: TextOverflow.ellipsis,
+          ),
         ),
       ),
     );
