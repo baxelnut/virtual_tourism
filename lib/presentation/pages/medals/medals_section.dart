@@ -94,7 +94,7 @@ class _MedalsSectionState extends State<MedalsSection> {
       ...notObtained,
     ].take(6).toList();
 
-    print(showFirstCards);
+    // print(showFirstCards);
 
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
@@ -120,7 +120,7 @@ class _MedalsSectionState extends State<MedalsSection> {
 
             return GestureDetector(
               onTap: () {
-                print("Clicked $displayName");
+                // print("Clicked $displayName");
               },
               child: Container(
                 height: 110,
