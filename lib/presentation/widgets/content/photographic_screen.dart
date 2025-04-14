@@ -131,7 +131,7 @@ class _PhotographicScreenState extends State<PhotographicScreen> {
                           _gamificationService.announce(
                             destinationData: widget.destinationData,
                           );
-                          _gamificationService.updateUserStats(
+                          _gamificationService.updateUserArtefact(
                             destinationData: widget.destinationData,
                           );
                         },
