@@ -69,13 +69,16 @@ class _MedalsPageState extends State<MedalsPage> {
                     );
                   } else {
                     final medalsData = snapshot.data!;
+
                     final passports = medalsData['passports'] ?? [];
                     final artefacts = medalsData['artefacts'] ?? [];
+                    final trivia = medalsData['trivias'] ?? []; 
 
                     return Column(
                       children: [
                         MedalsSection(title: "Passports", medals: passports),
                         MedalsSection(title: "Artefacts", medals: artefacts),
+                        MedalsSection(title: "Trivia", medals: trivia),
                         SizedBox(height: screenSize.width / 4),
                       ],
                     );
