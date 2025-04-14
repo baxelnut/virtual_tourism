@@ -134,7 +134,7 @@ class _TourScreenState extends State<TourScreen> {
                       _gamificationService.announce(
                         destinationData: widget.destinationData,
                       );
-                      _gamificationService.updateUserStats(
+                      _gamificationService.updateUserArtefact(
                         destinationData: widget.destinationData,
                       );
                     },
