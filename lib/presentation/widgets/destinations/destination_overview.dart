@@ -25,7 +25,7 @@ class DestinationOverview extends StatefulWidget {
 }
 
 class DestinationOverviewState extends State<DestinationOverview> {
-  final GamificationService gamificationService = GamificationService();
+  final GamificationService _gamificationService = GamificationService();
 
   bool _isLoading = false;
   late String publisherImageUrl = '';
@@ -272,6 +272,9 @@ class DestinationOverviewState extends State<DestinationOverview> {
               if (selectedAnswerIndex == index) {
                 if (isCorrect) {
                   buttonColor = Colors.green;
+                  _gamificationService.updateUserTrivia(
+                    destinationData: widget.destinationData,
+                  );
                 } else {
                   buttonColor = theme.colorScheme.error;
                 }
@@ -427,7 +430,7 @@ class DestinationOverviewState extends State<DestinationOverview> {
         child: ElevatedButton(
           onPressed: () async {
             // Update user passport
-            String? updateStatus = await gamificationService.updatePassport(
+            String? updateStatus = await _gamificationService.updatePassport(
               destinationData: widget.destinationData,
             );
 
