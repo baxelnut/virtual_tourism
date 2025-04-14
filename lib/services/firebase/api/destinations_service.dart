@@ -1,5 +1,3 @@
-// ignore_for_file: avoid_print
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -42,7 +40,7 @@ class DestinationsService with ChangeNotifier {
 
       return uploadedInfos;
     } catch (e) {
-      print('🔥 Error adding infoPath in database: $e');
+      debugPrint('🔥 Error adding infoPath in database: $e');
       return [];
     }
   }
@@ -142,6 +140,10 @@ class DestinationsService with ChangeNotifier {
         );
       }
 
+      if (trivia != null) {
+        gamificationService.addTrivia(trivia: trivia, locationId: docId);
+      }
+
       if (typeShit == "Photographic") {
         final Map<String, String>? urls = await storageService.addImage(
           collections: collectionId,
@@ -201,7 +203,7 @@ class DestinationsService with ChangeNotifier {
                 }
               }
             } catch (e) {
-              print("Error fetching hotspot0 thumbnailPath: $e");
+              debugPrint("Error fetching hotspot0 thumbnailPath: $e");
             }
 
             String? finalThumbnailPath =
@@ -225,7 +227,7 @@ class DestinationsService with ChangeNotifier {
 
       return docId;
     } catch (e) {
-      print('Error adding/updating destination in database: $e');
+      debugPrint('Error adding/updating destination in database: $e');
     } finally {
       _isLoading = false;
       notifyListeners();
@@ -259,7 +261,7 @@ class DestinationsService with ChangeNotifier {
           .get();
       return doc.data();
     } catch (e) {
-      print('Error fetching user data: $e');
+      debugPrint('Error fetching user data: $e');
       return null;
     } finally {
       _isLoading = false;
@@ -279,7 +281,7 @@ class DestinationsService with ChangeNotifier {
       final querySnapshot = await _firestore.collection(collection).get();
       return querySnapshot.docs.map((doc) => doc.data()).toList();
     } catch (e) {
-      print('Error fetching case studies: $e');
+      debugPrint('Error fetching case studies: $e');
       return [];
     } finally {
       _isLoading = false;
@@ -299,7 +301,7 @@ class DestinationsService with ChangeNotifier {
           await _firestore.collection(collectionId).doc(docId).get();
 
       if (!docSnapshot.exists) {
-        print("⚠️ Destination not found.");
+        debugPrint("⚠️ Destination not found.");
         return;
       }
 
@@ -329,9 +331,9 @@ class DestinationsService with ChangeNotifier {
       }
 
       await _firestore.collection(collectionId).doc(docId).delete();
-      print("🔥 Destination and associated images deleted successfully!");
+      debugPrint("🔥 Destination and associated images deleted successfully!");
     } catch (e) {
-      print("❌ Error deleting destination: $e");
+      debugPrint("❌ Error deleting destination: $e");
     }
   }
 
@@ -345,7 +347,7 @@ class DestinationsService with ChangeNotifier {
     String docId = destinationData['docId'] ?? '';
 
     if (docId.isEmpty) {
-      print("❌ Error: docId is missing!");
+      debugPrint("❌ Error: docId is missing!");
       return;
     }
 
@@ -354,9 +356,9 @@ class DestinationsService with ChangeNotifier {
           .collection(collectionId)
           .doc(docId)
           .update(destinationData);
-      print("✅ Destination updated successfully!");
+      debugPrint("✅ Destination updated successfully!");
     } catch (e) {
-      print("❌ Error updating destination: $e");
+      debugPrint("❌ Error updating destination: $e");
     } finally {
       _isLoading = false;
       notifyListeners();
