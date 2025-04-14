@@ -185,7 +185,7 @@ class _TourScreenState extends State<TourScreen> {
                 ),
               if (hotDesc != "")
                 Hotspot(
-                  latitude: clampedLat - 16,
+                  latitude: clampedLat - 22,
                   longitude: clampedLon,
                   width: (hotUrl == placeholder ? 300 : 400),
                   height: estimatedHeight.clamp(
