@@ -1,5 +1,3 @@
-// ignore_for_file: avoid_print
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -43,13 +41,13 @@ class GamificationService with ChangeNotifier {
         },
       }, SetOptions(merge: true));
 
-      print("Announcement updated at $formattedDate");
+      debugPrint("Announcement updated at $formattedDate");
     } catch (e) {
-      print("Error: $e");
+      debugPrint("Error: $e");
     }
   }
 
-  Future<void> updateUserStats({
+  Future<void> updateUserArtefact({
     required final Map<String, dynamic> destinationData,
   }) async {
     try {
@@ -59,7 +57,7 @@ class GamificationService with ChangeNotifier {
       final String artefactName =
           destinationData['artefact']?['name'] ?? "Virgin Oil (Extra)";
       final String destinationName =
-          destinationData['destinationName'] ?? "destinationName";
+          destinationData['destinationName'] ?? "No destinationName?!";
       final String destinationId = destinationData['docId'] ?? 'NO ID?!';
 
       final String formattedDate =
@@ -76,14 +74,48 @@ class GamificationService with ChangeNotifier {
       };
 
       await _firestore.collection("users").doc(userId).set({
-        "artefactAcquired": {
-          destinationId: info,
-        },
+        "artefactAcquired": {destinationId: info},
       }, SetOptions(merge: true));
 
-      print("User stats updated at $formattedDate");
+      debugPrint("User stats updated at $formattedDate");
     } catch (e) {
-      print("Error: $e");
+      debugPrint("Error: $e");
+    }
+  }
+
+  Future<void> updateUserTrivia({
+    required final Map<String, dynamic> destinationData,
+  }) async {
+    try {
+      await initializeDateFormatting('id_ID', null);
+
+      final String userId = user?.uid ?? "Anonymous";
+      final String destinationName =
+          destinationData['destinationName'] ?? "No destinationName?1";
+      final String destinationId = destinationData['docId'] ?? 'NO ID?!';
+
+      final String formattedDate =
+          DateFormat('yyyyMMdd_HHmmss', 'id_ID').format(DateTime.now());
+
+      final String givenBy = destinationData['userName'] ?? "Dev";
+
+      final dynamic trivia = destinationData['trivia'] ?? "No Trivia?!";
+
+      final info = {
+        "destinationId": destinationId,
+        "destinationName": destinationName,
+        "timeAcquired": formattedDate,
+        "givenBy": givenBy,
+        "trivia": trivia,
+      };
+
+      await _firestore.collection("users").doc(userId).set({
+        "triviaAnswered": {destinationId: info},
+      }, SetOptions(merge: true));
+
+      debugPrint("User stats updated at $formattedDate");
+    } catch (e) {
+      debugPrint("Error: $e");
     }
   }
 
@@ -103,7 +135,7 @@ class GamificationService with ChangeNotifier {
         return {};
       }
     } catch (e) {
-      print('Error fetching passport data: $e');
+      debugPrint('Error fetching passport data: $e');
       return {};
     }
   }
@@ -119,7 +151,7 @@ class GamificationService with ChangeNotifier {
     final passport = data['passport'] as Map<String, dynamic>?;
 
     if (passport == null) return [];
-    print(passport.keys);
+    debugPrint(passport.keys.toString());
     return passport.keys.toList();
   }
 
@@ -145,7 +177,8 @@ class GamificationService with ChangeNotifier {
           userData?['passport'] as Map<String, dynamic>? ?? {};
 
       if (currentPassport.containsKey(countryName)) {
-        print("Country $countryName already in passport, skipping update.");
+        debugPrint(
+            "Country $countryName already in passport, skipping update.");
         return null;
       }
       final info = {
@@ -200,7 +233,35 @@ class GamificationService with ChangeNotifier {
         locationId: artefactData,
       }, SetOptions(merge: true));
     } catch (e) {
-      print("Error adding artefact: $e");
+      debugPrint("Error adding artefact: $e");
+    }
+  }
+
+  Future<void> addTrivia({
+    required final dynamic trivia,
+    required final String locationId,
+  }) async {
+    try {
+      await initializeDateFormatting('id_ID', null);
+      final String formattedDate =
+          DateFormat('yyyyMMdd_HHmmss', 'id_ID').format(DateTime.now());
+
+      final String creator = user?.displayName ?? "Anonymous";
+      final String creatorId = user?.uid ?? "NO ID??!!";
+
+      final Map<String, dynamic> triviaData = {
+        "trivia": trivia,
+        "creator": creator,
+        "creatorId": creatorId,
+        "locationId": locationId,
+        "created": formattedDate,
+      };
+
+      await _firestore.collection("medals").doc("trivia").set({
+        locationId: triviaData,
+      }, SetOptions(merge: true));
+    } catch (e) {
+      debugPrint("Error adding trivia: $e");
     }
   }
 
@@ -231,7 +292,39 @@ class GamificationService with ChangeNotifier {
         return [];
       }
     } catch (e) {
-      print('Error fetching artefact data: $e');
+      debugPrint('Error fetching artefact data: $e');
+      return [];
+    }
+  }
+
+  Future<List<Map<String, dynamic>>> fetchTrivia() async {
+    try {
+      final snapshot =
+          await _firestore.collection('medals').doc('trivia').get();
+
+      final uid = user?.uid;
+      if (uid == null) throw Exception('User not logged in');
+
+      final answeredTriviaId = await fetchUserAnsweredTrivia(uid);
+
+      if (snapshot.exists && snapshot.data() != null) {
+        final data = snapshot.data()!;
+
+        return data.entries.map((entry) {
+          final id = entry.key;
+          final fullInfo = entry.value;
+          final obtained = answeredTriviaId.contains(id);
+          return {
+            "id": id,
+            "obtained": obtained,
+            "fullInfo": fullInfo,
+          };
+        }).toList();
+      } else {
+        return [];
+      }
+    } catch (e) {
+      debugPrint('Error fetching artefact data: $e');
       return [];
     }
   }
@@ -248,7 +341,24 @@ class GamificationService with ChangeNotifier {
         return {};
       }
     } catch (e) {
-      print('Error fetching user artefacts: $e');
+      debugPrint('Error fetching user artefacts: $e');
+      return {};
+    }
+  }
+
+  Future<Set<String>> fetchUserAnsweredTrivia(String uid) async {
+    try {
+      final userDoc = await _firestore.collection('users').doc(uid).get();
+      final triviaMap =
+          userDoc.data()?['triviaAnswered'] as Map<String, dynamic>?;
+
+      if (triviaMap != null) {
+        return triviaMap.keys.toSet(); // returns a set of artefact IDs
+      } else {
+        return {};
+      }
+    } catch (e) {
+      debugPrint('Error fetching user artefacts: $e');
       return {};
     }
   }
@@ -269,7 +379,7 @@ class GamificationService with ChangeNotifier {
         };
       }).toList();
     } catch (e) {
-      print('Error fetching passport with status: $e');
+      debugPrint('Error fetching passport with status: $e');
       return [];
     }
   }
@@ -277,10 +387,12 @@ class GamificationService with ChangeNotifier {
   Future<Map<String, List<Map<String, dynamic>>>> fetchAllMedals() async {
     final passports = await fetchPassportWithStatus();
     final artefacts = await fetchArtefacts();
+    final trivias = await fetchTrivia();
 
     return {
       'passports': passports,
       'artefacts': artefacts,
+      'trivias': trivias,
     };
   }
 
