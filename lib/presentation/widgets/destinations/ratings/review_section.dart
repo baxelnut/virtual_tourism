@@ -3,10 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 import '../../../../core/global_values.dart';
-import '../button_donate.dart';
-import '../button_share.dart';
-import '../button_shop.dart';
-import '../button_write_review.dart';
+import '../actions/button_donate.dart';
+import '../actions/button_share.dart';
+import '../actions/button_shop.dart';
+import '../actions/button_write_review.dart';
 import 'rating_average.dart';
 import 'rating_indicator_bar.dart';
 import 'rating_reviewer_qty.dart';
