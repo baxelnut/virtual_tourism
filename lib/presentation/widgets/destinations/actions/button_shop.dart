@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-import '../../../core/global_values.dart';
-import '../../pages/shop/shop_page.dart';
+import '../../../../core/global_values.dart';
+import '../../../pages/shop/shop_page.dart';
 
 class ButtonShop extends StatelessWidget {
   final Map<String, dynamic> destinationData;

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:share_plus/share_plus.dart';
 
-import '../../../core/global_values.dart';
+import '../../../../core/global_values.dart';
 
 class ButtonShare extends StatelessWidget {
   final Map<String, dynamic> destinationData;

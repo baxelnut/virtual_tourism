@@ -2,7 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-import '../../../core/global_values.dart';
+import '../../../../core/global_values.dart';
 
 class ButtonDonate extends StatefulWidget {
   final Map<String, dynamic> destinationData;

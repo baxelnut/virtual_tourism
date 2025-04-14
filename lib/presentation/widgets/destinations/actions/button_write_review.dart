@@ -1,8 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
-import '../../../core/global_values.dart';
-import '../../../services/firebase/api/reviews_service.dart';
+import '../../../../core/global_values.dart';
+import '../../../../services/firebase/api/reviews_service.dart';
 
 class ButtonWriteReview extends StatefulWidget {
   final dynamic destinationData;
