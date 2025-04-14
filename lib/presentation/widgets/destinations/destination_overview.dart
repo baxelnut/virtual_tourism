@@ -613,6 +613,7 @@ class DestinationOverviewState extends State<DestinationOverview> {
                             style: const TextStyle(
                               color: Colors.blue,
                               decoration: TextDecoration.underline,
+                              fontStyle: FontStyle.italic,
                             ),
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
@@ -620,7 +621,7 @@ class DestinationOverviewState extends State<DestinationOverview> {
                         )
                       : Text(
                           entry.value.toString(),
-                          maxLines: 1,
+                          maxLines: 4,
                           overflow: TextOverflow.ellipsis,
                         ),
                 ),
